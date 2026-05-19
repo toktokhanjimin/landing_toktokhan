@@ -3,13 +3,20 @@
 import { useState, useEffect, CSSProperties } from "react";
 import { getInsights, saveInsights, InsightItem } from "../../lib/store";
 
+const CATEGORY_CONFIG: Record<string, { thumb: string; img?: string }> = {
+  log:   { thumb: "linear-gradient(135deg,#34D399,#059669)", img: "/assets/log.png" },
+  talk:  { thumb: "linear-gradient(135deg,#8B5CF6,#3B82F6)", img: "/assets/talk.png" },
+  tech:  { thumb: "linear-gradient(135deg,#38BDF8,#6366F1)", img: "/assets/tech.png" },
+  other: { thumb: "linear-gradient(135deg,#1a1d24,#0a0a0a)" },
+};
+
 const EMPTY_ITEM: InsightItem = {
   mark: "",
   markColor: "#0a0a0a",
-  thumb: "linear-gradient(135deg,#1a1d24,#0a0a0a)",
-  thumbImg: "",
+  thumb: CATEGORY_CONFIG.log.thumb,
+  thumbImg: CATEGORY_CONFIG.log.img,
   title: "",
-  tag: "기술 블로그",
+  tag: "log",
   date: "",
   excerpt: "",
   url: "",
@@ -66,7 +73,7 @@ const btnBase: CSSProperties = {
   border: "none",
 };
 
-function compressImage(file: File, maxSize = 360, quality = 0.75): Promise<string> {
+function compressImage(file: File, maxSize = 360, quality = 0.92): Promise<string> {
   return new Promise((resolve) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
@@ -270,50 +277,57 @@ export default function AdminInsightPage() {
 
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
 
+              {/* 썸네일 미리보기 (항상 표시) */}
               <div>
-                <label style={labelStyle}>썸네일 이미지</label>
-                <div style={{
-                  width: "100%",
-                  height: 160,
-                  borderRadius: 10,
-                  border: "2px dashed rgba(10,10,10,.15)",
-                  background: form.thumbImg ? "transparent" : form.thumb,
-                  overflow: "hidden",
-                  position: "relative",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-                  onClick={() => document.getElementById("thumb-file-input")?.click()}
-                >
-                  {form.thumbImg ? (
+                <label style={labelStyle}>썸네일 미리보기</label>
+                <div style={{ width: "100%", height: 140, borderRadius: 10, overflow: "hidden", background: form.thumb }}>
+                  {form.thumbImg?.startsWith("data:") && (
                     <img src={form.thumbImg} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                  ) : (
-                    <span style={{ font: "400 13px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.4)" }}>클릭해서 이미지 업로드</span>
                   )}
-                  <input
-                    id="thumb-file-input"
-                    type="file"
-                    accept="image/*"
-                    style={{ display: "none" }}
-                    onChange={async (e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-                      const compressed = await compressImage(file);
-                      setForm((prev) => ({ ...prev, thumbImg: compressed }));
-                    }}
-                  />
+                  {!form.thumbImg?.startsWith("data:") && CATEGORY_CONFIG[form.tag]?.img && (
+                    <img src={CATEGORY_CONFIG[form.tag].img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  )}
                 </div>
-                {form.thumbImg && (
-                  <button
-                    onClick={() => setForm({ ...form, thumbImg: "" })}
-                    style={{ ...btnBase, marginTop: 8, background: "transparent", color: "#e53e3e", border: "1px solid #e53e3e", font: "500 12px/1 var(--font-sans, sans-serif)", padding: "6px 12px" }}
-                  >
-                    이미지 제거
-                  </button>
-                )}
               </div>
+
+              {/* other 카테고리일 때만 업로드 */}
+              {form.tag === "other" && (
+                <div>
+                  <label style={labelStyle}>썸네일 이미지 업로드</label>
+                  <div style={{
+                    width: "100%", height: 48, borderRadius: 8,
+                    border: "1px dashed rgba(10,10,10,.2)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    cursor: "pointer", background: "transparent",
+                  }}
+                    onClick={() => document.getElementById("thumb-file-input")?.click()}
+                  >
+                    <span style={{ font: "400 13px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.45)" }}>
+                      {form.thumbImg?.startsWith("data:") ? "다른 이미지로 변경" : "클릭해서 이미지 업로드"}
+                    </span>
+                    <input
+                      id="thumb-file-input"
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const compressed = await compressImage(file);
+                        setForm((prev) => ({ ...prev, thumbImg: compressed }));
+                      }}
+                    />
+                  </div>
+                  {form.thumbImg?.startsWith("data:") && (
+                    <button
+                      onClick={() => setForm({ ...form, thumbImg: "" })}
+                      style={{ ...btnBase, marginTop: 8, background: "transparent", color: "#e53e3e", border: "1px solid #e53e3e", font: "500 12px/1 var(--font-sans, sans-serif)", padding: "6px 12px" }}
+                    >
+                      이미지 제거
+                    </button>
+                  )}
+                </div>
+              )}
 
               <div>
                 <label style={labelStyle}>Title</label>
@@ -327,14 +341,25 @@ export default function AdminInsightPage() {
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <div>
-                  <label style={labelStyle}>Tag</label>
+                  <label style={labelStyle}>카테고리</label>
                   <select
                     style={inputStyle}
                     value={form.tag}
-                    onChange={(e) => setForm({ ...form, tag: e.target.value })}
+                    onChange={(e) => {
+                      const cat = e.target.value;
+                      const cfg = CATEGORY_CONFIG[cat];
+                      setForm((prev) => ({
+                        ...prev,
+                        tag: cat,
+                        thumb: cfg?.thumb ?? prev.thumb,
+                        thumbImg: cfg?.img ?? "",
+                      }));
+                    }}
                   >
-                    <option value="기술 블로그">기술 블로그</option>
-                    <option value="링크드인">링크드인</option>
+                    <option value="log">log</option>
+                    <option value="talk">talk</option>
+                    <option value="tech">tech</option>
+                    <option value="other">other</option>
                   </select>
                 </div>
                 <div>
@@ -364,8 +389,15 @@ export default function AdminInsightPage() {
                   style={inputStyle}
                   value={form.url ?? ""}
                   onChange={(e) => setForm({ ...form, url: e.target.value })}
-                  placeholder="https://..."
-                  type="url"
+                  onBlur={(e) => {
+                    const v = e.target.value.trim();
+                    if (!v) return;
+                    if (!v.startsWith("http://") && !v.startsWith("https://")) {
+                      setForm((prev) => ({ ...prev, url: `https://${v}` }));
+                    }
+                  }}
+                  placeholder="example.com"
+                  type="text"
                 />
               </div>
             </div>

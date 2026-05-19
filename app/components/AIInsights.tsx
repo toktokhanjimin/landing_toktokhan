@@ -76,10 +76,11 @@ export default function AIInsights() {
               rel={it.url ? "noopener noreferrer" : undefined}
               style={{ display: "grid", gridTemplateColumns: "180px 1fr", gap: 28, alignItems: "flex-start", cursor: it.url ? "pointer" : "default", textDecoration: "none", color: "inherit" }}
             >
-              <div className="ins-thumb" style={{ width: 180, height: 180, borderRadius: 22, background: it.thumb, flexShrink: 0, overflow: "clip", transform: "translateZ(0)", WebkitMaskImage: "-webkit-radial-gradient(white, black)" }}>
-                {it.thumbImg && (
-                  <img src={it.thumbImg} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                )}
+              <div className="ins-thumb" style={{ width: 180, height: 180, borderRadius: 22, background: it.thumb, flexShrink: 0, overflow: "hidden", transform: "translateZ(0)", WebkitMaskImage: "-webkit-radial-gradient(white, black)" }}>
+                {(() => {
+                  const src = it.thumbImg?.startsWith("data:") ? it.thumbImg : ["log","talk","tech"].includes(it.tag) ? `/assets/${it.tag}.png` : null;
+                  return src ? <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} /> : null;
+                })()}
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 20, paddingTop: 4 }}>
                 <h3 style={{ font: "700 20px/1.4 var(--font-sans)", letterSpacing: "-.02em", color: "#0a0a0a", margin: 0, whiteSpace: "pre-line" }}>{it.title}</h3>
