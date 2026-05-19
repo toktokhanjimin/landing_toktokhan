@@ -1,53 +1,49 @@
 "use client";
 
-import { useRef, useState, useEffect, CSSProperties } from "react";
+import { useRef, useState, useEffect } from "react";
 
 type Tile = {
   h: number;
   bg: string;
-  label?: string;
-  sub?: string;
-  dark?: boolean;
-  heavy?: boolean;
   border?: boolean;
 };
 
 const cols: { speed: number; tiles: Tile[] }[] = [
   { speed: 120, tiles: [
-    { h: 260, bg: "linear-gradient(135deg,#ffe4c2,#ffb873)", label: "Growth Studio", sub: "New York" },
-    { h: 340, bg: "#0a0a0a", label: "Act now,\nlive longer", dark: true },
-    { h: 220, bg: "linear-gradient(135deg,#ffd6ea,#ff9fcd)", label: "A PRESENT\nFORCE", heavy: true },
-    { h: 300, bg: "linear-gradient(135deg,#f2b88a,#e07a3a)", label: "Going Rogue" },
+    { h: 260, bg: "linear-gradient(135deg,#ffe4c2,#ffb873)" },
+    { h: 340, bg: "#0a0a0a" },
+    { h: 220, bg: "linear-gradient(135deg,#ffd6ea,#ff9fcd)" },
+    { h: 300, bg: "linear-gradient(135deg,#f2b88a,#e07a3a)" },
   ]},
   { speed: 180, tiles: [
-    { h: 380, bg: "#101b2c", label: "ARCHIPEL", sub: "Architecture", dark: true },
-    { h: 260, bg: "#f6f6f4", label: "The new standard\nin compliance" },
+    { h: 380, bg: "#101b2c" },
+    { h: 260, bg: "#f6f6f4" },
     { h: 300, bg: "linear-gradient(135deg,#fff4c9,#ffe07a)" },
-    { h: 240, bg: "#1b1c1d", label: "Datalands", dark: true, heavy: true },
+    { h: 240, bg: "#1b1c1d" },
   ]},
   { speed: 60, tiles: [
-    { h: 300, bg: "linear-gradient(135deg,#e3e9ff,#b9c7ff)", label: "Algo", sub: "Voice AI" },
-    { h: 260, bg: "#ff6b35", label: "Haptic", dark: true, sub: "Ambitious teams" },
-    { h: 340, bg: "linear-gradient(135deg,#aaeccb,#3fbd88)", label: "Build with\nthe best" },
-    { h: 220, bg: "#2b2b2b", label: "Page Break", dark: true },
+    { h: 300, bg: "linear-gradient(135deg,#e3e9ff,#b9c7ff)" },
+    { h: 260, bg: "#ff6b35" },
+    { h: 340, bg: "linear-gradient(135deg,#aaeccb,#3fbd88)" },
+    { h: 220, bg: "#2b2b2b" },
   ]},
   { speed: 220, tiles: [
-    { h: 360, bg: "linear-gradient(180deg,#2b2533,#5e3e6b)", label: "OH,\nELLE", heavy: true, dark: true },
-    { h: 260, bg: "#f2d745", label: "NOVEL READING\nRETREATS", heavy: true },
-    { h: 280, bg: "#ece3d1", label: "A personal\nAI assistant" },
-    { h: 240, bg: "#1a1a1a", label: "Watch OS", dark: true },
+    { h: 360, bg: "linear-gradient(180deg,#2b2533,#5e3e6b)" },
+    { h: 260, bg: "#f2d745" },
+    { h: 280, bg: "#ece3d1" },
+    { h: 240, bg: "#1a1a1a" },
   ]},
   { speed: 100, tiles: [
-    { h: 280, bg: "#eeeeee", label: "Ultra-realistic\nvoice AI" },
-    { h: 320, bg: "linear-gradient(135deg,#ff7a59,#b33a7a)", label: "Immersive\nbrand", dark: true },
-    { h: 240, bg: "#f7e8d4", label: "Cream" },
-    { h: 300, bg: "#111", label: "Dataviz", dark: true },
+    { h: 280, bg: "#eeeeee" },
+    { h: 320, bg: "linear-gradient(135deg,#ff7a59,#b33a7a)" },
+    { h: 240, bg: "#f7e8d4" },
+    { h: 300, bg: "#111" },
   ]},
   { speed: 160, tiles: [
-    { h: 340, bg: "linear-gradient(135deg,#5DD3FF,#00B7FF)", label: "Bento Grid", dark: true },
-    { h: 260, bg: "#0a0a0a", label: "REM-IX\nIT'S A\nMARA", heavy: true, dark: true },
-    { h: 280, bg: "linear-gradient(135deg,#d6f0e8,#8dc8b5)", label: "Sustain" },
-    { h: 240, bg: "#fff", label: "For\nSustaina-\nbility", border: true },
+    { h: 340, bg: "linear-gradient(135deg,#5DD3FF,#00B7FF)" },
+    { h: 260, bg: "#0a0a0a" },
+    { h: 280, bg: "linear-gradient(135deg,#d6f0e8,#8dc8b5)" },
+    { h: 240, bg: "#fff", border: true },
   ]},
 ];
 
@@ -84,27 +80,12 @@ export default function PortfolioWall() {
                 <div
                   key={ti}
                   style={{
-                    borderRadius: 14, overflow: "hidden", padding: 22,
-                    display: "flex", flexDirection: "column", justifyContent: "space-between",
+                    borderRadius: 14, overflow: "hidden",
                     height: t.h, background: t.bg,
-                    color: t.dark ? "#fff" : "#0a0a0a",
                     border: t.border ? "1px solid rgba(0,0,0,.08)" : "none",
                     boxShadow: "0 12px 28px rgba(0,0,0,.18)",
                   }}
-                >
-                  <span style={{ alignSelf: "flex-start", padding: "6px 10px", borderRadius: 999, background: "rgba(0,0,0,.6)", color: "#fff", font: "500 11px/1 var(--font-sans)" }}>
-                    {ci === 0 && ti === 0 ? "NEW" : "LIVE"}
-                  </span>
-                  <div>
-                    {t.label && (
-                      <div style={t.heavy
-                        ? { font: "900 30px/.95 var(--font-sans)", letterSpacing: "-.04em", whiteSpace: "pre-line", textTransform: "uppercase" }
-                        : { font: "700 18px/1.15 var(--font-sans)", letterSpacing: "-.02em", whiteSpace: "pre-line" }
-                      }>{t.label}</div>
-                    )}
-                    {t.sub && <div style={{ font: "500 11px/1 var(--font-mono)", letterSpacing: ".1em", opacity: .6, marginTop: 8 }}>{t.sub}</div>}
-                  </div>
-                </div>
+                />
               ))}
             </div>
           );

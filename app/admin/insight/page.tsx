@@ -7,6 +7,7 @@ const EMPTY_ITEM: InsightItem = {
   mark: "",
   markColor: "#0a0a0a",
   thumb: "linear-gradient(135deg,#1a1d24,#0a0a0a)",
+  thumbImg: "",
   title: "",
   tag: "기술 블로그",
   date: "",
@@ -159,9 +160,11 @@ export default function AdminInsightPage() {
               borderRadius: 10,
               background: item.thumb,
               flexShrink: 0,
-              position: "relative",
               overflow: "hidden",
             }}>
+              {item.thumbImg && (
+                <img src={item.thumbImg} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+              )}
             </div>
 
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -249,14 +252,49 @@ export default function AdminInsightPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
 
               <div>
-                <label style={labelStyle}>Thumb 그라디언트 (CSS)</label>
-                <input
-                  style={inputStyle}
-                  value={form.thumb}
-                  onChange={(e) => setForm({ ...form, thumb: e.target.value })}
-                  placeholder="linear-gradient(135deg,#1a1d24,#0a0a0a)"
-                />
-                <div style={{ marginTop: 8, height: 32, borderRadius: 6, background: form.thumb }} />
+                <label style={labelStyle}>썸네일 이미지</label>
+                <div style={{
+                  width: "100%",
+                  height: 160,
+                  borderRadius: 10,
+                  border: "2px dashed rgba(10,10,10,.15)",
+                  background: form.thumbImg ? "transparent" : form.thumb,
+                  overflow: "hidden",
+                  position: "relative",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                  onClick={() => document.getElementById("thumb-file-input")?.click()}
+                >
+                  {form.thumbImg ? (
+                    <img src={form.thumbImg} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  ) : (
+                    <span style={{ font: "400 13px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.4)" }}>클릭해서 이미지 업로드</span>
+                  )}
+                  <input
+                    id="thumb-file-input"
+                    type="file"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const reader = new FileReader();
+                      reader.onload = (ev) => setForm({ ...form, thumbImg: ev.target?.result as string });
+                      reader.readAsDataURL(file);
+                    }}
+                  />
+                </div>
+                {form.thumbImg && (
+                  <button
+                    onClick={() => setForm({ ...form, thumbImg: "" })}
+                    style={{ ...btnBase, marginTop: 8, background: "transparent", color: "#e53e3e", border: "1px solid #e53e3e", font: "500 12px/1 var(--font-sans, sans-serif)", padding: "6px 12px" }}
+                  >
+                    이미지 제거
+                  </button>
+                )}
               </div>
 
               <div>

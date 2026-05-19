@@ -18,6 +18,7 @@ export interface InsightItem {
   mark: string;
   markColor: string;
   thumb: string;
+  thumbImg?: string;
   title: string;
   tag: string;
   date: string;
