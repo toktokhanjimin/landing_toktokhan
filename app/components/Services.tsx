@@ -105,7 +105,7 @@ function CardIcon({ kind }: { kind: string }) {
 
 export default function Services() {
   return (
-    <section style={{ background: "transparent", color: "#fff", padding: "0 24px 90px" }}>
+    <section style={{ background: "transparent", color: "#fff", padding: "20px 24px 90px" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
           {items.map((it) => (

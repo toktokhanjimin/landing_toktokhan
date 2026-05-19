@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 const cols = [
   { h: "서비스", items: ["AX 컨설팅", "교육", "개발", "AI 에이전트"] },
   { h: "회사", items: ["회사 소개", "작업 사례", "인사이트", "채용"] },
@@ -14,7 +16,7 @@ export default function Footer() {
         {/* Top grid */}
         <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr 1fr", gap: 48, paddingBottom: 48 }}>
           <div style={{ display: "flex", flexDirection: "column", gap: 14, alignItems: "flex-start" }}>
-            <img src="/assets/tok-logo-black.svg" alt="TOKTOKHAN.DEV" style={{ height: 56, width: "auto", display: "block" }} />
+            <Image src="/assets/tok-logo-black.svg" alt="TOKTOKHAN.DEV" width={220} height={56} style={{ height: 56, width: "auto", display: "block" }} />
           </div>
           {cols.map((c) => (
             <div key={c.h}>

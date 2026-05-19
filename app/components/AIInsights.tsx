@@ -78,7 +78,8 @@ export default function AIInsights() {
             >
               <div className="ins-thumb" style={{ width: 180, height: 180, borderRadius: 22, background: it.thumb, flexShrink: 0, overflow: "hidden", transform: "translateZ(0)", WebkitMaskImage: "-webkit-radial-gradient(white, black)" }}>
                 {(() => {
-                  const src = it.thumbImg?.startsWith("data:") ? it.thumbImg : ["log","talk","tech"].includes(it.tag) ? `/assets/${it.tag}.png` : null;
+                  const cat = it.category ?? it.tag;
+                  const src = it.thumbImg?.startsWith("data:") ? it.thumbImg : ["log","talk","tech"].includes(cat) ? `/assets/${cat}.png` : null;
                   return src ? <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} /> : null;
                 })()}
               </div>

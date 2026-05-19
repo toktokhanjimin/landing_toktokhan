@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, CSSProperties } from "react";
+import Image from "next/image";
 
 const LIGHT_SECTIONS = ["03 KPI", "03b Team Reveal", "04 Work", "05 Clients", "06 Products", "07 Insights", "08 FAQ", "09 Footer"];
 
@@ -76,8 +77,8 @@ export default function SiteHeader({ forceLight = false, current = "" }: { force
         <div style={{ maxWidth: 1200, margin: "0 auto", height: "100%", display: "flex", alignItems: "center" }}>
           {/* Logo */}
           <a href="/" style={{ height: 30, display: "block", flex: "0 0 auto", marginRight: 56, position: "relative", width: 190 }} aria-label="TOKTOKHAN.DEV">
-            <img src="/assets/tok-logo-white.svg" alt="" style={{ position: "absolute", top: 0, left: 0, height: 30, opacity: light ? 0 : 1, transition: "opacity .25s ease" }} />
-            <img src="/assets/tok-logo-black.svg" alt="" style={{ position: "absolute", top: 0, left: 0, height: 30, opacity: light ? 1 : 0, transition: "opacity .25s ease" }} />
+            <Image src="/assets/tok-logo-white.svg" alt="" width={190} height={30} priority style={{ position: "absolute", top: 0, left: 0, height: 30, width: "auto", opacity: light ? 0 : 1, transition: "opacity .25s ease" }} />
+            <Image src="/assets/tok-logo-black.svg" alt="" width={190} height={30} priority style={{ position: "absolute", top: 0, left: 0, height: 30, width: "auto", opacity: light ? 1 : 0, transition: "opacity .25s ease" }} />
           </a>
 
           {/* Nav links */}

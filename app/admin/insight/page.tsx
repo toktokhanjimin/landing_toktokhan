@@ -16,7 +16,8 @@ const EMPTY_ITEM: InsightItem = {
   thumb: CATEGORY_CONFIG.log.thumb,
   thumbImg: CATEGORY_CONFIG.log.img,
   title: "",
-  tag: "log",
+  tag: "기술 블로그",
+  category: "log",
   date: "",
   excerpt: "",
   url: "",
@@ -284,14 +285,14 @@ export default function AdminInsightPage() {
                   {form.thumbImg?.startsWith("data:") && (
                     <img src={form.thumbImg} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                   )}
-                  {!form.thumbImg?.startsWith("data:") && CATEGORY_CONFIG[form.tag]?.img && (
-                    <img src={CATEGORY_CONFIG[form.tag].img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  {!form.thumbImg?.startsWith("data:") && CATEGORY_CONFIG[form.category ?? ""]?.img && (
+                    <img src={CATEGORY_CONFIG[form.category ?? ""].img} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                   )}
                 </div>
               </div>
 
               {/* other 카테고리일 때만 업로드 */}
-              {form.tag === "other" && (
+              {form.category === "other" && (
                 <div>
                   <label style={labelStyle}>썸네일 이미지 업로드</label>
                   <div style={{
@@ -341,16 +342,16 @@ export default function AdminInsightPage() {
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <div>
-                  <label style={labelStyle}>카테고리</label>
+                  <label style={labelStyle}>썸네일 카테고리</label>
                   <select
                     style={inputStyle}
-                    value={form.tag}
+                    value={form.category ?? "log"}
                     onChange={(e) => {
                       const cat = e.target.value;
                       const cfg = CATEGORY_CONFIG[cat];
                       setForm((prev) => ({
                         ...prev,
-                        tag: cat,
+                        category: cat,
                         thumb: cfg?.thumb ?? prev.thumb,
                         thumbImg: cfg?.img ?? "",
                       }));
@@ -362,6 +363,22 @@ export default function AdminInsightPage() {
                     <option value="other">other</option>
                   </select>
                 </div>
+                <div>
+                  <label style={labelStyle}>태그</label>
+                  <select
+                    style={inputStyle}
+                    value={form.tag}
+                    onChange={(e) => setForm({ ...form, tag: e.target.value })}
+                  >
+                    <option value="기술 블로그">기술 블로그</option>
+                    <option value="링크드인">링크드인</option>
+                    <option value="유튜브">유튜브</option>
+                    <option value="아티클">아티클</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
                 <div>
                   <label style={labelStyle}>Date</label>
                   <input

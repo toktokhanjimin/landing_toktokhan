@@ -9,7 +9,8 @@ export interface WorkItem {
   desc: string;
   title: string;
   lead: string;
-  sections: { h: string; p: string; grad: string }[];
+  thumbImg?: string;
+  sections: { h: string; p: string; grad: string; img?: string }[];
   points: string[];
   featured?: boolean;
 }
@@ -21,6 +22,7 @@ export interface InsightItem {
   thumbImg?: string;
   title: string;
   tag: string;
+  category?: string;
   date: string;
   excerpt: string;
   url?: string;
@@ -240,7 +242,15 @@ export const getWork = (): WorkItem[] => {
   if (typeof window === "undefined") return DEFAULT_WORK;
   try {
     const raw = localStorage.getItem("ttk_work");
-    return raw ? (JSON.parse(raw) as WorkItem[]) : DEFAULT_WORK;
+    const items: WorkItem[] = raw ? (JSON.parse(raw) as WorkItem[]) : DEFAULT_WORK;
+    return items.map((it) => {
+      const thumb = localStorage.getItem(`ttk_work_thumb_${it.id}`);
+      const sections = it.sections.map((sec, si) => {
+        const img = localStorage.getItem(`ttk_work_sec_${it.id}_${si}`);
+        return img ? { ...sec, img } : sec;
+      });
+      return { ...it, sections, ...(thumb ? { thumbImg: thumb } : {}) };
+    });
   } catch {
     return DEFAULT_WORK;
   }
@@ -248,7 +258,25 @@ export const getWork = (): WorkItem[] => {
 
 export const saveWork = (data: WorkItem[]): void => {
   if (typeof window === "undefined") return;
-  localStorage.setItem("ttk_work", JSON.stringify(data));
+  const withoutImgs = data.map((it) => {
+    if (it.thumbImg) {
+      localStorage.setItem(`ttk_work_thumb_${it.id}`, it.thumbImg);
+    } else {
+      localStorage.removeItem(`ttk_work_thumb_${it.id}`);
+    }
+    const sections = it.sections.map((sec, si) => {
+      if (sec.img) {
+        localStorage.setItem(`ttk_work_sec_${it.id}_${si}`, sec.img);
+      } else {
+        localStorage.removeItem(`ttk_work_sec_${it.id}_${si}`);
+      }
+      const { img: _, ...rest } = sec;
+      return rest;
+    });
+    const { thumbImg: _, ...rest } = it;
+    return { ...rest, sections } as WorkItem;
+  });
+  localStorage.setItem("ttk_work", JSON.stringify(withoutImgs));
 };
 
 export const getInsights = (): InsightItem[] => {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, CSSProperties } from "react";
-import GlitchWord from "./GlitchWord";
+import Image from "next/image";
 
 /* ======================== Visuals ======================== */
 
@@ -79,7 +79,7 @@ function VisualEndToEnd() {
         marginBottom: 2,
         marginInline: "12px",
       }}>
-        <img src="/assets/asterisk-blue.png" alt="" style={{ width: 16, height: 16, objectFit: "contain", flexShrink: 0 }} />
+        <Image src="/assets/asterisk-blue.png" alt="" width={16} height={16} style={{ objectFit: "contain", flexShrink: 0 }} />
         <span style={{ font: "600 12px/1 var(--font-sans)", color: "#0a0a0a", letterSpacing: "-.01em" }}>
           프로젝트가 시작되었습니다.
         </span>
@@ -111,7 +111,7 @@ function VisualEndToEnd() {
               flexShrink: 0,
               overflow: "hidden",
             }}>
-              <img src={step.icon} alt={step.title} style={{ width: 22, height: 22, objectFit: "contain" }} />
+              <Image src={step.icon} alt={step.title} width={22} height={22} style={{ objectFit: "contain" }} />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ font: "600 13px/1 var(--font-sans)", color: "#0a0a0a", marginBottom: 5 }}>
@@ -245,7 +245,7 @@ function VisualInternalize() {
             boxSizing: "border-box", zIndex: 1,
           }}>
             <div style={{ width: 40, height: 40, flexShrink: 0 }}>
-              <img src={d.img} alt={d.id} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+              <Image src={d.img} alt={d.id} width={40} height={40} style={{ objectFit: "contain" }} />
             </div>
             <div>
               <div style={{ font: "600 13px/1 var(--font-sans)", color: "#0a0a0a", marginBottom: 5 }}>{d.id}</div>
@@ -517,7 +517,7 @@ export default function WhyToktok() {
         {/* Sticky left title */}
         <div style={{ position: "sticky", top: 120, alignSelf: "start", transform: `translateY(${titleShift}px)`, willChange: "transform" }}>
           <h2 style={{ font: "700 clamp(28px,2.8vw,40px)/1.28 var(--font-sans)", letterSpacing: "-.025em", margin: 0, color: "#fff" }}>
-            기업 <GlitchWord>AX</GlitchWord> 파트너,<br />왜 똑똑한개발자<br />일까요?
+            기업 AX 파트너,<br />왜 똑똑한개발자<br />일까요?
           </h2>
         </div>
 

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const logos = [
   { img: "/assets/clients/appsintoss.png", alt: "apps in toss" },
   { img: "/assets/clients/bluegarage.png", alt: "BLUE GARAGE" },
@@ -38,8 +40,8 @@ function LogoRow({ items, duration, reverse }: { items: typeof logos; duration: 
     <div style={{ overflow: "hidden", maskImage: MASK, WebkitMaskImage: MASK }}>
       <div style={{ display: "flex", gap: 56, width: "max-content", animation: anim, alignItems: "center" }}>
         {loop.map((l, i) => (
-          <div key={i} style={{ flexShrink: 0, display: "inline-flex", alignItems: "center", height: 52 }}>
-            <img src={l.img} alt={l.alt} style={{ height: 38, width: "auto", objectFit: "contain", display: "block" }} />
+          <div key={i} style={{ flexShrink: 0, display: "inline-flex", alignItems: "center", height: 52, position: "relative", width: 120 }}>
+            <Image src={l.img} alt={l.alt} fill style={{ objectFit: "contain" }} sizes="120px" />
           </div>
         ))}
       </div>

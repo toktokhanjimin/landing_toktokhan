@@ -75,7 +75,14 @@ export default function GlitchWord({ children, style, delay = 0 }: Props) {
       <span
         ref={ref}
         className={active ? "gw-rgb" : ""}
-        style={{ position: "relative", display: "inline-block", ...style }}
+        style={{
+          position: "relative",
+          display: "inline-block",
+          fontFamily: "var(--font-serif)",
+          fontStyle: "italic",
+          fontWeight: 300,
+          ...style,
+        }}
       >
         {children}
         {pixels.map((p, i) => (

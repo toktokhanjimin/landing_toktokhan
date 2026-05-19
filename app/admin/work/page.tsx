@@ -3,6 +3,8 @@
 import { useState, useEffect, CSSProperties } from "react";
 import { getWork, saveWork, WorkItem } from "../../lib/store";
 
+const EMPTY_SECTION = { h: "", p: "", grad: "", img: "" };
+
 const EMPTY_ITEM: Omit<WorkItem, "id"> = {
   client: "",
   tag: "",
@@ -13,10 +15,11 @@ const EMPTY_ITEM: Omit<WorkItem, "id"> = {
   desc: "",
   title: "",
   lead: "",
+  thumbImg: "",
   sections: [
-    { h: "", p: "", grad: "" },
-    { h: "", p: "", grad: "" },
-    { h: "", p: "", grad: "" },
+    { ...EMPTY_SECTION },
+    { ...EMPTY_SECTION },
+    { ...EMPTY_SECTION },
   ],
   points: [],
   featured: false,
@@ -24,6 +27,25 @@ const EMPTY_ITEM: Omit<WorkItem, "id"> = {
 
 function genId() {
   return Math.random().toString(36).slice(2, 10);
+}
+
+function compressImage(file: File, maxSize = 480, quality = 0.88): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+      const w = Math.round(img.width * scale);
+      const h = Math.round(img.height * scale);
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL("image/jpeg", quality));
+    };
+    img.src = url;
+  });
 }
 
 const overlayStyle: CSSProperties = {
@@ -42,7 +64,7 @@ const panelStyle: CSSProperties = {
   border: "1px solid rgba(10,10,10,.08)",
   borderRadius: 12,
   width: "100%",
-  maxWidth: 600,
+  maxWidth: 640,
   maxHeight: "90dvh",
   overflowY: "auto",
   padding: "32px 28px",
@@ -67,6 +89,77 @@ const labelStyle: CSSProperties = {
   marginBottom: 6,
   display: "block",
 };
+
+const btnBase: CSSProperties = {
+  font: "500 13px/1 var(--font-sans, sans-serif)",
+  padding: "8px 14px",
+  borderRadius: 7,
+  cursor: "pointer",
+  border: "none",
+};
+
+function ImageUpload({
+  value,
+  onChange,
+  inputId,
+  height = 100,
+  label,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  inputId: string;
+  height?: number;
+  label?: string;
+}) {
+  return (
+    <div>
+      {label && <label style={labelStyle}>{label}</label>}
+      {value ? (
+        <div style={{ position: "relative", width: "100%", height, borderRadius: 8, overflow: "hidden", marginBottom: 6 }}>
+          <img src={value} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          <button
+            onClick={() => onChange("")}
+            style={{
+              position: "absolute", top: 6, right: 6,
+              background: "rgba(0,0,0,.6)", color: "#fff",
+              border: "none", borderRadius: 5, padding: "4px 8px",
+              font: "500 11px/1 var(--font-sans, sans-serif)", cursor: "pointer",
+            }}
+          >
+            제거
+          </button>
+        </div>
+      ) : (
+        <div
+          style={{
+            width: "100%", height: 48, borderRadius: 8,
+            border: "1px dashed rgba(10,10,10,.2)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: "pointer", background: "transparent",
+          }}
+          onClick={() => document.getElementById(inputId)?.click()}
+        >
+          <span style={{ font: "400 13px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.45)" }}>
+            클릭해서 이미지 업로드
+          </span>
+        </div>
+      )}
+      <input
+        id={inputId}
+        type="file"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={async (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          const compressed = await compressImage(file);
+          onChange(compressed);
+          e.target.value = "";
+        }}
+      />
+    </div>
+  );
+}
 
 export default function AdminWorkPage() {
   const [items, setItems] = useState<WorkItem[]>([]);
@@ -126,18 +219,19 @@ export default function AdminWorkPage() {
     setItems(updated);
   }
 
-  function setSection(idx: number, field: "h" | "p" | "grad", val: string) {
+  function setSection(idx: number, field: keyof typeof EMPTY_SECTION, val: string) {
     const sections = form.sections.map((s, i) => i === idx ? { ...s, [field]: val } : s);
     setForm({ ...form, sections });
   }
 
-  const btnBase: CSSProperties = {
-    font: "500 13px/1 var(--font-sans, sans-serif)",
-    padding: "8px 14px",
-    borderRadius: 7,
-    cursor: "pointer",
-    border: "none",
-  };
+  function addSection() {
+    setForm({ ...form, sections: [...form.sections, { ...EMPTY_SECTION }] });
+  }
+
+  function removeSection(idx: number) {
+    if (form.sections.length <= 3) return;
+    setForm({ ...form, sections: form.sections.filter((_, i) => i !== idx) });
+  }
 
   return (
     <div>
@@ -162,7 +256,7 @@ export default function AdminWorkPage() {
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ borderBottom: "1px solid rgba(10,10,10,.08)" }}>
-              {["Client", "Tag", "Category", "Year", "메인 노출", ""].map((h) => (
+              {["썸네일", "Client", "Tag", "Category", "Year", "메인 노출", ""].map((h) => (
                 <th key={h} style={{
                   padding: "14px 16px",
                   font: "500 12px/1 var(--font-sans, sans-serif)",
@@ -178,6 +272,16 @@ export default function AdminWorkPage() {
           <tbody>
             {items.map((item) => (
               <tr key={item.id} style={{ borderBottom: "1px solid rgba(10,10,10,.05)" }}>
+                <td style={{ padding: "12px 16px" }}>
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 8, overflow: "hidden",
+                    background: item.bg || "#eee", flexShrink: 0,
+                  }}>
+                    {item.thumbImg && (
+                      <img src={item.thumbImg} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    )}
+                  </div>
+                </td>
                 <td style={{ padding: "14px 16px", font: "600 14px/1 var(--font-sans, sans-serif)", color: "#0a0a0a" }}>
                   {item.client}
                 </td>
@@ -187,10 +291,8 @@ export default function AdminWorkPage() {
                 <td style={{ padding: "14px 16px" }}>
                   <span style={{
                     font: "500 11px/1 var(--font-sans, sans-serif)",
-                    padding: "4px 8px",
-                    borderRadius: 5,
-                    background: "rgba(10,10,10,.06)",
-                    color: "#0a0a0a",
+                    padding: "4px 8px", borderRadius: 5,
+                    background: "rgba(10,10,10,.06)", color: "#0a0a0a",
                   }}>
                     {item.category}
                   </span>
@@ -233,7 +335,7 @@ export default function AdminWorkPage() {
             ))}
             {items.length === 0 && (
               <tr>
-                <td colSpan={6} style={{ padding: "40px 16px", textAlign: "center", font: "400 14px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.35)" }}>
+                <td colSpan={7} style={{ padding: "40px 16px", textAlign: "center", font: "400 14px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.35)" }}>
                   콘텐츠가 없어요. 추가해보세요.
                 </td>
               </tr>
@@ -250,35 +352,31 @@ export default function AdminWorkPage() {
             </h2>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+
+              {/* 썸네일 */}
+              <ImageUpload
+                label="썸네일 이미지"
+                value={form.thumbImg ?? ""}
+                onChange={(v) => setForm({ ...form, thumbImg: v })}
+                inputId="work-thumb-input"
+                height={120}
+              />
+
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
                 <div>
                   <label style={labelStyle}>Client</label>
-                  <input
-                    style={inputStyle}
-                    value={form.client}
-                    onChange={(e) => setForm({ ...form, client: e.target.value })}
-                    placeholder="BLUEGARAGE"
-                  />
+                  <input style={inputStyle} value={form.client} onChange={(e) => setForm({ ...form, client: e.target.value })} placeholder="BLUEGARAGE" />
                 </div>
                 <div>
                   <label style={labelStyle}>Tag</label>
-                  <input
-                    style={inputStyle}
-                    value={form.tag}
-                    onChange={(e) => setForm({ ...form, tag: e.target.value })}
-                    placeholder="JYP360"
-                  />
+                  <input style={inputStyle} value={form.tag} onChange={(e) => setForm({ ...form, tag: e.target.value })} placeholder="JYP360" />
                 </div>
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
                 <div>
                   <label style={labelStyle}>Category</label>
-                  <select
-                    style={inputStyle}
-                    value={form.category}
-                    onChange={(e) => setForm({ ...form, category: e.target.value })}
-                  >
+                  <select style={inputStyle} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
                     <option value="AX">AX</option>
                     <option value="AI">AI</option>
                     <option value="Ops">Ops</option>
@@ -286,98 +384,89 @@ export default function AdminWorkPage() {
                 </div>
                 <div>
                   <label style={labelStyle}>Year</label>
-                  <input
-                    style={inputStyle}
-                    value={form.year}
-                    onChange={(e) => setForm({ ...form, year: e.target.value })}
-                    placeholder="2026"
-                  />
+                  <input style={inputStyle} value={form.year} onChange={(e) => setForm({ ...form, year: e.target.value })} placeholder="2026" />
                 </div>
                 <div>
                   <label style={labelStyle}>Date</label>
-                  <input
-                    style={inputStyle}
-                    value={form.date}
-                    onChange={(e) => setForm({ ...form, date: e.target.value })}
-                    placeholder="2026.03.18"
-                  />
+                  <input style={inputStyle} value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} placeholder="2026.03.18" />
                 </div>
               </div>
 
               <div>
                 <label style={labelStyle}>Title</label>
-                <input
-                  style={inputStyle}
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  placeholder="프로젝트 제목"
-                />
+                <input style={inputStyle} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="프로젝트 제목" />
               </div>
 
               <div>
                 <label style={labelStyle}>Lead (소개 문구)</label>
-                <textarea
-                  style={{ ...inputStyle, height: 80, resize: "vertical" }}
-                  value={form.lead}
-                  onChange={(e) => setForm({ ...form, lead: e.target.value })}
-                  placeholder="프로젝트 소개..."
-                />
+                <textarea style={{ ...inputStyle, height: 80, resize: "vertical" }} value={form.lead} onChange={(e) => setForm({ ...form, lead: e.target.value })} placeholder="프로젝트 소개..." />
               </div>
 
-              {form.sections.map((sec, i) => (
-                <div key={i} style={{ padding: "16px", background: "#f9f9f9", borderRadius: 8 }}>
-                  <div style={{ font: "600 12px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.5)", marginBottom: 12, letterSpacing: ".06em" }}>
-                    섹션 {i + 1}
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                    <div>
-                      <label style={labelStyle}>제목 (h)</label>
-                      <input
-                        style={inputStyle}
-                        value={sec.h}
-                        onChange={(e) => setSection(i, "h", e.target.value)}
-                        placeholder="문제 / 접근 / 결과"
-                      />
-                    </div>
-                    <div>
-                      <label style={labelStyle}>내용 (p)</label>
-                      <textarea
-                        style={{ ...inputStyle, height: 72, resize: "vertical" }}
-                        value={sec.p}
-                        onChange={(e) => setSection(i, "p", e.target.value)}
-                      />
-                    </div>
-                  </div>
+              {/* 섹션 */}
+              <div>
+                <div style={{ font: "600 13px/1 var(--font-sans, sans-serif)", color: "#0a0a0a", marginBottom: 12 }}>
+                  섹션 ({form.sections.length}개)
                 </div>
-              ))}
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  {form.sections.map((sec, i) => (
+                    <div key={i} style={{ padding: 16, background: "#f9f9f9", borderRadius: 8, position: "relative" }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                        <div style={{ font: "600 12px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.5)", letterSpacing: ".06em" }}>
+                          섹션 {i + 1}
+                        </div>
+                        {form.sections.length > 3 && (
+                          <button
+                            onClick={() => removeSection(i)}
+                            style={{ ...btnBase, background: "transparent", color: "#e53e3e", border: "1px solid #e53e3e", padding: "4px 8px", font: "500 11px/1 var(--font-sans, sans-serif)" }}
+                          >
+                            삭제
+                          </button>
+                        )}
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                        <div>
+                          <label style={labelStyle}>제목 (h)</label>
+                          <input style={inputStyle} value={sec.h} onChange={(e) => setSection(i, "h", e.target.value)} placeholder="문제 / 접근 / 결과" />
+                        </div>
+                        <div>
+                          <label style={labelStyle}>내용 (p)</label>
+                          <textarea style={{ ...inputStyle, height: 72, resize: "vertical" }} value={sec.p} onChange={(e) => setSection(i, "p", e.target.value)} />
+                        </div>
+                        <ImageUpload
+                          label="섹션 이미지"
+                          value={sec.img ?? ""}
+                          onChange={(v) => setSection(i, "img", v)}
+                          inputId={`work-sec-img-${i}`}
+                          height={80}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={addSection}
+                  style={{ ...btnBase, marginTop: 10, width: "100%", background: "transparent", color: "rgba(10,10,10,.6)", border: "1px dashed rgba(10,10,10,.2)", padding: "10px 14px", textAlign: "center" as const }}
+                >
+                  + 섹션 추가
+                </button>
+              </div>
 
               <div>
                 <label style={labelStyle}>핵심 포인트 (한 줄에 하나씩)</label>
                 <textarea
                   style={{ ...inputStyle, height: 80, resize: "vertical" }}
                   value={form.points.join("\n")}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      points: e.target.value.split("\n").filter((p) => p.trim()),
-                    })
-                  }
+                  onChange={(e) => setForm({ ...form, points: e.target.value.split("\n").filter((p) => p.trim()) })}
                   placeholder={"포인트 1\n포인트 2\n포인트 3"}
                 />
               </div>
             </div>
 
             <div style={{ display: "flex", gap: 10, marginTop: 28, justifyContent: "flex-end" }}>
-              <button
-                onClick={closeModal}
-                style={{ ...btnBase, background: "transparent", color: "rgba(10,10,10,.6)", border: "1px solid rgba(10,10,10,.14)" }}
-              >
+              <button onClick={closeModal} style={{ ...btnBase, background: "transparent", color: "rgba(10,10,10,.6)", border: "1px solid rgba(10,10,10,.14)" }}>
                 취소
               </button>
-              <button
-                onClick={handleSave}
-                style={{ ...btnBase, background: "#0a0a0a", color: "#fff", padding: "10px 20px" }}
-              >
+              <button onClick={handleSave} style={{ ...btnBase, background: "#0a0a0a", color: "#fff", padding: "10px 20px" }}>
                 저장
               </button>
             </div>
