@@ -1,26 +1,209 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
 @import "tailwindcss";
 
+/* ==========================================================================
+   TOKTOKHAN.DEV — Design System Foundations
+   ========================================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Raw colors */
+  --white: #ffffff;
+  --black: #000000;
+
+  --grey-50:  #f9f9fa;
+  --grey-100: #eaebec;
+  --grey-200: #cfd2d5;
+  --grey-300: #9fa4a9;
+  --grey-400: #6a6d71;
+  --grey-500: #4e5053;
+  --grey-600: #4a4d55;
+  --grey-700: #333537;
+  --grey-800: #272727;
+  --grey-900: #1b1c1d;
+
+  --blue-50:  #eef0ff;
+  --blue-100: #d6dbff;
+  --blue-200: #A8E5FF;
+  --blue-300: #5DD3FF;
+  --blue-400: #5DD3FF;
+  --blue-500: #5DD3FF;
+  --blue-600: #00B7FF;
+  --blue-700: #0A8FCC;
+  --blue-800: #0078A8;
+  --blue-900: #0d1464;
+
+  --rust-400: #e07a3a;
+  --rust-600: #b34512;
+
+  --red-500:    #ee3538;
+  --blue-info:  #0a86f8;
+  --green-500:  #1f8a3f;
+  --yellow-500: #d9a400;
+  --magenta:    #fe35f6;
+
+  --black-a8:  rgba(0,0,0,.08);
+  --black-a16: rgba(0,0,0,.16);
+  --black-a40: rgba(0,0,0,.40);
+  --white-a8:  rgba(255,255,255,.08);
+  --white-a16: rgba(255,255,255,.16);
+  --white-a40: rgba(255,255,255,.40);
+  --white-a60: rgba(255,255,255,.60);
+
+  /* Semantic tokens */
+  --bg:            var(--white);
+  --bg-elev:       var(--grey-50);
+  --bg-inverse:    var(--grey-900);
+  --bg-dark:       #0a0a0a;
+  --bg-dark-2:     #111214;
+  --bg-dark-panel: #1b1c1d;
+
+  --fg-1: var(--grey-900);
+  --fg-2: var(--grey-500);
+  --fg-3: var(--grey-300);
+  --fg-on-dark-1: var(--white);
+  --fg-on-dark-2: rgba(255,255,255,.70);
+  --fg-on-dark-3: rgba(255,255,255,.40);
+
+  --border:        var(--grey-100);
+  --border-strong: var(--grey-200);
+  --border-dark:   rgba(255,255,255,.10);
+
+  --brand:        var(--blue-600);
+  --brand-bright: var(--blue-500);
+  --brand-deep:   var(--blue-800);
+  --on-brand:     var(--white);
+
+  --hover-overlay:      rgba(0,0,0,.04);
+  --hover-overlay-dark: rgba(255,255,255,.06);
+  --focus-ring:         0 0 0 3px rgba(73,80,255,.35);
+
+  /* Radii */
+  --r-0:   0px;
+  --r-xs:  4px;
+  --r-sm:  8px;
+  --r-md:  12px;
+  --r-lg:  16px;
+  --r-xl:  24px;
+  --r-2xl: 40px;
+  --r-full: 9999px;
+
+  /* Spacing */
+  --s-1:  4px;  --s-2:  8px;  --s-3: 12px;  --s-4:  16px;
+  --s-5: 20px;  --s-6: 24px;  --s-8: 32px;  --s-10: 40px;
+  --s-12: 48px; --s-16: 64px; --s-20: 80px; --s-24: 96px;
+  --s-32: 128px;
+
+  /* Elevation */
+  --elev-1: 0 1px 2px rgba(0,0,0,.04), 0 1px 1px rgba(0,0,0,.04);
+  --elev-2: 0 2px 8px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --elev-3: 0 8px 24px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.04);
+  --elev-4: 0 24px 48px rgba(0,0,0,.12), 0 6px 12px rgba(0,0,0,.06);
+
+  /* Container */
+  --container-max: 1280px;
+  --gutter: 24px;
+
+  /* Motion */
+  --ease-out:    cubic-bezier(.2,.6,.2,1);
+  --ease-in-out: cubic-bezier(.65,.05,.36,1);
+  --ease-soft:   cubic-bezier(.4,0,.2,1);
+  --dur-1: 120ms; --dur-2: 200ms; --dur-3: 320ms; --dur-4: 560ms;
+
+  /* Typography */
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+               "Apple SD Gothic Neo", "Noto Sans KR", "Segoe UI", Roboto, sans-serif;
+  --font-display: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+
+  --display-1: 700 120px/1.13 var(--font-display);
+  --display-2: 700 80px/1.17 var(--font-display);
+  --display-3: 700 64px/1.21 var(--font-display);
+
+  --h1: 700 48px/1.25 var(--font-display);
+  --h2: 700 40px/1.30 var(--font-display);
+  --h3: 700 32px/1.35 var(--font-display);
+  --h4: 700 24px/1.44 var(--font-display);
+  --h5: 600 20px/1.51 var(--font-sans);
+  --h6: 600 18px/1.57 var(--font-sans);
+
+  --body-lg: 400 18px/1.6 var(--font-sans);
+  --body-md: 400 16px/1.6 var(--font-sans);
+  --body-sm: 400 14px/1.55 var(--font-sans);
+  --caption:  500 14px/1.4 var(--font-sans);
+  --overline: 500 12px/1.3 var(--font-mono);
+  --code:     500 14px/1.5 var(--font-mono);
+
+  --tracking-display: -0.02em;
+  --tracking-heading: -0.01em;
+  --tracking-body:    -0.005em;
+  --tracking-label:   0.02em;
+  --tracking-mono:    0.04em;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Base */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #0a0a0a;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: var(--tracking-body);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+a { color: inherit; text-decoration: none; }
+button { font-family: var(--font-sans); }
+::selection { background: #00B7FF; color: #fff; }
+
+/* Reveal-on-scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .7s var(--ease-out), transform .7s var(--ease-out);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Global button/link transitions */
+button, a {
+  transition: background-color .35s var(--ease-soft), color .35s var(--ease-soft),
+              border-color .35s var(--ease-soft), box-shadow .45s var(--ease-soft),
+              transform .45s var(--ease-soft), opacity .35s var(--ease-soft);
+}
+
+/* Dark-section utility */
+.tok-dark {
+  background: var(--bg-dark);
+  color: var(--fg-on-dark-1);
+}
+
+/* Clients marquee */
+@keyframes clientsMarquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Toast animation */
+@keyframes toastIn {
+  from { opacity: 0; transform: translate(-50%, -6px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* Modal animations */
+@keyframes modalFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes drawerSlide {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
 }
