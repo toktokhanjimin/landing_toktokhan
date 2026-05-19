@@ -4,7 +4,7 @@ export default function AXDefinition() {
       <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1.1fr", gap: 80, alignItems: "start" }}>
         <div>
           <h2 style={{ font: "700 clamp(26px,2.8vw,42px)/1.31 var(--font-sans)", letterSpacing: "-.02em", margin: 0 }}>
-            AX, AI 도입이 아닌<br />일하는 방식을 다시 짜는 일
+            똑똑한 AX,<br />조직의 일하는 방식을<br />다시 짜는 일
           </h2>
         </div>
         <div>
