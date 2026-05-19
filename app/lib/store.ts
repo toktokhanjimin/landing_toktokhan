@@ -255,7 +255,11 @@ export const getInsights = (): InsightItem[] => {
   if (typeof window === "undefined") return DEFAULT_INSIGHTS;
   try {
     const raw = localStorage.getItem("ttk_insights");
-    return raw ? (JSON.parse(raw) as InsightItem[]) : DEFAULT_INSIGHTS;
+    const items: InsightItem[] = raw ? (JSON.parse(raw) as InsightItem[]) : DEFAULT_INSIGHTS;
+    return items.map((it, i) => {
+      const img = localStorage.getItem(`ttk_insight_img_${i}`);
+      return img ? { ...it, thumbImg: img } : it;
+    });
   } catch {
     return DEFAULT_INSIGHTS;
   }
@@ -263,7 +267,21 @@ export const getInsights = (): InsightItem[] => {
 
 export const saveInsights = (data: InsightItem[]): void => {
   if (typeof window === "undefined") return;
-  localStorage.setItem("ttk_insights", JSON.stringify(data));
+  // 이미지는 별도 키에 저장해 메인 JSON 크기를 줄임
+  const withoutImgs = data.map((it, i) => {
+    if (it.thumbImg) {
+      localStorage.setItem(`ttk_insight_img_${i}`, it.thumbImg);
+    } else {
+      localStorage.removeItem(`ttk_insight_img_${i}`);
+    }
+    const { thumbImg: _, ...rest } = it;
+    return rest as InsightItem;
+  });
+  // 기존 이미지 키 중 더 이상 없는 인덱스 정리
+  for (let i = data.length; i < data.length + 20; i++) {
+    localStorage.removeItem(`ttk_insight_img_${i}`);
+  }
+  localStorage.setItem("ttk_insights", JSON.stringify(withoutImgs));
 };
 
 export const getFAQs = (): FAQItem[] => {

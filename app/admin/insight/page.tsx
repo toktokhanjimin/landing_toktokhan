@@ -66,6 +66,25 @@ const btnBase: CSSProperties = {
   border: "none",
 };
 
+function compressImage(file: File, maxSize = 360, quality = 0.75): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+      const w = Math.round(img.width * scale);
+      const h = Math.round(img.height * scale);
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL("image/jpeg", quality));
+    };
+    img.src = url;
+  });
+}
+
 export default function AdminInsightPage() {
   const [items, setItems] = useState<InsightItem[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -278,12 +297,11 @@ export default function AdminInsightPage() {
                     type="file"
                     accept="image/*"
                     style={{ display: "none" }}
-                    onChange={(e) => {
+                    onChange={async (e) => {
                       const file = e.target.files?.[0];
                       if (!file) return;
-                      const reader = new FileReader();
-                      reader.onload = (ev) => setForm({ ...form, thumbImg: ev.target?.result as string });
-                      reader.readAsDataURL(file);
+                      const compressed = await compressImage(file);
+                      setForm((prev) => ({ ...prev, thumbImg: compressed }));
                     }}
                   />
                 </div>
