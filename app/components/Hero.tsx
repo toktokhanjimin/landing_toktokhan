@@ -6,7 +6,7 @@ export default function Hero() {
       <div style={{ position: "relative", textAlign: "center", maxWidth: 960, width: "100%" }}>
         <div style={{ height: 54 }} aria-hidden="true" />
         <h1 style={{ font: "700 clamp(32px,4.4vw,60px)/1.24 var(--font-sans)", letterSpacing: "-.03em", margin: 0 }}>
-          AI 도입을 넘어,<br />엔터프라이즈 조직의<br />일하는 방식을 바꿉니다
+          AI 도입을 넘어 조직의 일하는 방식을 바꿉니다
         </h1>
         <p style={{ marginTop: 22, font: "400 clamp(15px,1.1vw,17px)/1.55 var(--font-sans)", color: "rgba(255,255,255,.62)", maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
           똑똑한개발자는 복잡한 업무 흐름과 기존 시스템을 이해하고,<br />
