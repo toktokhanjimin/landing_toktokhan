@@ -6,11 +6,11 @@ export default function Hero() {
       <div style={{ position: "relative", textAlign: "center", maxWidth: 960, width: "100%" }}>
         <div style={{ height: 54 }} aria-hidden="true" />
         <h1 style={{ font: "700 clamp(32px,4.4vw,60px)/1.24 var(--font-sans)", letterSpacing: "-.03em", margin: 0 }}>
-          AI와 일하는 조직<br />똑똑한개발자와 함께
+          AI 도입을 넘어,<br />엔터프라이즈 조직의<br />일하는 방식을 바꿉니다
         </h1>
         <p style={{ marginTop: 22, font: "400 clamp(15px,1.1vw,17px)/1.55 var(--font-sans)", color: "rgba(255,255,255,.62)", maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
-          AI를 도입하는 게 아니라, 일하는 방식을 다시 짭니다.<br />
-          똑똑한개발자는 사람과 AI가 함께 일하는 조직을 만들어요.
+          똑똑한개발자는 복잡한 업무 흐름과 기존 시스템을 이해하고,<br />
+          AI가 실제 업무 안에서 작동하도록 전략·개발·운영까지 함께 설계합니다.
         </p>
         <div style={{ marginTop: 30, display: "flex", gap: 10, justifyContent: "center" }}>
           <button
@@ -20,7 +20,7 @@ export default function Hero() {
             프로젝트 문의하기
           </button>
           <a href="/work" style={{ font: "500 14px/1 var(--font-sans)", padding: "12px 18px", borderRadius: 10, background: "rgba(255,255,255,.08)", color: "#fff", border: "1px solid rgba(255,255,255,.14)", cursor: "pointer", textDecoration: "none" }}>
-            고객 사례 보기
+            AX 사례 보기
           </a>
         </div>
       </div>

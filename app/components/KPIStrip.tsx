@@ -35,10 +35,10 @@ function CountUp({ prefix, value, suffix, duration = 900 }: { prefix: string; va
 }
 
 const kpis = [
-  { prefix: "−", value: 42, suffix: "%", tail: "제안서 작성 시간이 줄었어요", line2: ["리드 정리·견적·초안까지", "AI가 먼저 만들어둬요"], part: "영업 파트" },
-  { prefix: "", value: 3, suffix: "배", tail: "지원자 검토 속도가 빨라졌어요", line2: ["이력서 스크리닝과 일정 조율을", "자동으로 처리해요"], part: "HR 파트" },
-  { prefix: "−", value: 60, suffix: "%", tail: "스펙 정리 시간이 줄었어요", line2: ["회의록에서 티켓·리포트가", "바로 정리돼요"], part: "PM 파트" },
-  { prefix: "+", value: 45, suffix: "%", tail: "1차 응대를 AI가 먼저 처리해요", line2: ["반복 문의와 백오피스 작업을", "미리 해결해둬요"], part: "운영 파트" },
+  { prefix: "−", value: 42, suffix: "%", tail: "제안서 작성 시간이 줄었어요", line2: ["리드 정리부터 초안 작성까지", "AI가 먼저 만들어줘요."], part: "영업 파트" },
+  { prefix: "", value: 3, suffix: "배", tail: "지원자 검토 속도가 빨라졌어요", line2: ["이력서, 스크리닝, 일정 조율을", "자동으로 처리해요."], part: "HR 파트" },
+  { prefix: "−", value: 60, suffix: "%", tail: "스프린트 정리 시간이 줄었어요", line2: ["회의록에서 티켓과 리포트가", "바로 정리돼요."], part: "PM 파트" },
+  { prefix: "+", value: 45, suffix: "%", tail: "1차 응대를 AI가 먼저 처리해요", line2: ["반복 문의와 백오피스 작업을", "미리 해결해요."], part: "운영 파트" },
 ];
 
 export default function KPIStrip() {
@@ -56,7 +56,7 @@ export default function KPIStrip() {
       <div style={{ position: "relative", maxWidth: 1200, margin: "0 auto" }}>
         <div style={{ textAlign: "left", marginBottom: 88, maxWidth: 720 }}>
           <h2 style={{ font: "700 clamp(26px,2.8vw,42px)/1.24 var(--font-sans)", letterSpacing: "-.02em", margin: 0 }}>
-            우리 조직에 먼저 적용해봤어요.
+            우리 조직에 먼저 적용해봤어요
           </h2>
           <p style={{ marginTop: 20, font: "400 15px/1.65 var(--font-sans)", color: "rgba(10,10,10,.6)", maxWidth: 560 }}>
             고객사에 권하기 전에, 똑똑한개발자 각 파트가 직접 AX를 도입했어요.<br />
@@ -76,6 +76,19 @@ export default function KPIStrip() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div style={{ marginTop: 88, maxWidth: 720 }}>
+          <h3 style={{ font: "700 clamp(22px,2vw,30px)/1.3 var(--font-sans)", letterSpacing: "-.02em", margin: "0 0 20px", color: "#0a0a0a" }}>
+            사람은 문제에 더 가까워질 수 있도록
+          </h3>
+          <p style={{ font: "400 15px/1.75 var(--font-sans)", color: "rgba(10,10,10,.6)", margin: 0 }}>
+            AI가 반복 업무를 덜어내면,<br />
+            사람은 더 중요한 문제를 발견하고 해결하는 일에 집중할 수 있습니다.<br /><br />
+            똑똑한개발자가 지향하는 AX는<br />
+            사람을 대체하는 것이 아니라,<br />
+            사람이 더 잘 일하게 만드는 구조입니다.
+          </p>
         </div>
       </div>
     </section>

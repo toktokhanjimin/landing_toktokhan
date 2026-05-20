@@ -64,7 +64,7 @@ export default function Clients() {
 
       <div style={{ maxWidth: 1200, margin: "0 auto 56px", textAlign: "center", padding: "0 24px" }}>
         <h2 style={{ font: "700 clamp(26px,2.8vw,42px)/1.24 var(--font-sans)", letterSpacing: "-.02em", margin: "0 auto", maxWidth: 720, color: "#0a0a0a" }}>
-          다양한 고객과 일하며 쌓은<br />AX 노하우로, 기업 맞춤 컨설팅을 해요
+          대기업, 공공기관, 플랫폼 기업과 함께하며<br />복잡한 조직의 문제를 해결해왔습니다
         </h2>
       </div>
 
