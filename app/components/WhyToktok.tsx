@@ -519,9 +519,6 @@ export default function WhyToktok() {
           <h2 style={{ font: "700 clamp(28px,2.8vw,40px)/1.28 var(--font-sans)", letterSpacing: "-.025em", margin: 0, color: "#fff" }}>
             엔터프라이즈 AX에<br />똑똑한개발자가<br />맞는 이유
           </h2>
-          <p style={{ marginTop: 20, font: "400 14.5px/1.7 var(--font-sans)", color: "rgba(255,255,255,.62)", margin: "20px 0 0" }}>
-            엔터프라이즈 AX는 단순한 자동화나 툴 도입으로 해결되지 않습니다.<br />복잡한 요구사항, 기존 시스템, 조직별 업무 방식까지 이해해야<br />실제로 작동하는 AI 전환을 만들 수 있습니다.
-          </p>
         </div>
 
         {/* Right: card rows */}
@@ -551,7 +548,6 @@ export default function WhyToktok() {
                 <div style={{ display: "flex", flexDirection: "column", gap: 16, paddingTop: 40 }}>
                   <h3 style={{ font: "700 clamp(22px,2vw,30px)/1.25 var(--font-sans)", letterSpacing: "-.02em", margin: 0, color: "#fff" }}>{it.en}</h3>
                   <p style={{ font: "400 14.5px/1.7 var(--font-sans)", color: "rgba(255,255,255,.62)", margin: 0, maxWidth: 320 }}>{it.desc}</p>
-                  <a href="#contact" style={{ marginTop: 8, font: "500 13px/1 var(--font-sans)", color: "#fff", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6, alignSelf: "flex-start" }}>자세히 보기 ›</a>
                 </div>
               </div>
             );
