@@ -78,18 +78,6 @@ export default function KPIStrip() {
           ))}
         </div>
 
-        <div style={{ marginTop: 88, maxWidth: 720 }}>
-          <h3 style={{ font: "700 clamp(22px,2vw,30px)/1.3 var(--font-sans)", letterSpacing: "-.02em", margin: "0 0 20px", color: "#0a0a0a" }}>
-            사람은 문제에 더 가까워질 수 있도록
-          </h3>
-          <p style={{ font: "400 15px/1.75 var(--font-sans)", color: "rgba(10,10,10,.6)", margin: 0 }}>
-            AI가 반복 업무를 덜어내면,<br />
-            사람은 더 중요한 문제를 발견하고 해결하는 일에 집중할 수 있습니다.<br /><br />
-            똑똑한개발자가 지향하는 AX는<br />
-            사람을 대체하는 것이 아니라,<br />
-            사람이 더 잘 일하게 만드는 구조입니다.
-          </p>
-        </div>
       </div>
     </section>
   );
