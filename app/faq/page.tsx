@@ -117,39 +117,6 @@ export default function FAQPage() {
             })}
           </div>
 
-          {/* Footer row */}
-          <div style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: 40,
-            flexWrap: "wrap",
-            gap: 16,
-          }}>
-            <p style={{
-              font: "400 15px/1.5 var(--font-sans)",
-              color: "rgba(10,10,10,.6)",
-              margin: 0,
-            }}>
-              여기에 없는 질문도 환영이에요. 편하게 문의 주세요.
-            </p>
-            <a
-              href="/#contact"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
-                font: "500 14px/1 var(--font-sans)",
-                padding: "12px 18px",
-                borderRadius: 10,
-                background: "#0a0a0a",
-                color: "#fff",
-                textDecoration: "none",
-              }}
-            >
-              문의하기 <span style={{ fontSize: 16 }}>→</span>
-            </a>
-          </div>
         </div>
       </section>
 

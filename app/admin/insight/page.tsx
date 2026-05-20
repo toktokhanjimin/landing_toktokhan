@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, CSSProperties } from "react";
+import { useState, useEffect, useRef, CSSProperties } from "react";
 import { getInsights, saveInsights, InsightItem } from "../../lib/store";
 
 const CATEGORY_CONFIG: Record<string, { thumb: string; img?: string }> = {
@@ -96,6 +96,7 @@ function compressImage(file: File, maxSize = 360, quality = 0.92): Promise<strin
 export default function AdminInsightPage() {
   const [items, setItems] = useState<InsightItem[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const mouseDownOnOverlay = useRef(false);
   const [editingIdx, setEditingIdx] = useState<number | null>(null);
   const [form, setForm] = useState<InsightItem>(EMPTY_ITEM);
 
@@ -270,7 +271,7 @@ export default function AdminInsightPage() {
       </div>
 
       {modalOpen && (
-        <div style={overlayStyle} onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}>
+        <div style={overlayStyle} onMouseDown={(e) => { mouseDownOnOverlay.current = e.target === e.currentTarget; }} onClick={(e) => { if (mouseDownOnOverlay.current && e.target === e.currentTarget) closeModal(); }}>
           <div style={panelStyle}>
             <h2 style={{ font: "700 20px/1.2 var(--font-sans, sans-serif)", color: "#0a0a0a", margin: "0 0 24px" }}>
               {editingIdx !== null ? "인사이트 수정" : "인사이트 추가"}

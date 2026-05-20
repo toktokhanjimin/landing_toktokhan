@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, CSSProperties } from "react";
+import { useState, useEffect, useRef, CSSProperties } from "react";
 import { getWork, saveWork, WorkItem } from "../../lib/store";
 
 const EMPTY_SECTION = { h: "", p: "", grad: "", img: "" };
@@ -166,6 +166,7 @@ export default function AdminWorkPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<WorkItem | null>(null);
   const [form, setForm] = useState<Omit<WorkItem, "id">>(EMPTY_ITEM);
+  const mouseDownOnOverlay = useRef(false);
 
   useEffect(() => {
     setItems(getWork());
@@ -345,7 +346,7 @@ export default function AdminWorkPage() {
       </div>
 
       {modalOpen && (
-        <div style={overlayStyle} onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}>
+        <div style={overlayStyle} onMouseDown={(e) => { mouseDownOnOverlay.current = e.target === e.currentTarget; }} onClick={(e) => { if (mouseDownOnOverlay.current && e.target === e.currentTarget) closeModal(); }}>
           <div style={panelStyle}>
             <h2 style={{ font: "700 20px/1.2 var(--font-sans, sans-serif)", color: "#0a0a0a", margin: "0 0 24px" }}>
               {editing ? "케이스 수정" : "케이스 추가"}

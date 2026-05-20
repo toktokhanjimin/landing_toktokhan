@@ -42,6 +42,9 @@ export default function CaseDetailPage() {
 
       {/* Cover */}
       <section style={{ background: c.bg, padding: "168px 24px 80px", color: "#fff", position: "relative", overflow: "hidden" }}>
+        {c.thumbImg && (
+          <img src={c.thumbImg} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.35, display: "block" }} />
+        )}
         <div style={{ maxWidth: 1248, margin: "0 auto", position: "relative", zIndex: 1 }}>
           <div style={{
             display: "flex", gap: 14, alignItems: "center",
@@ -84,7 +87,11 @@ export default function CaseDetailPage() {
               <p style={{ font: "400 17px/1.75 var(--font-sans)", color: "rgba(10,10,10,.78)", margin: 0, maxWidth: 720 }}>
                 {sec.p}
               </p>
-              <div style={{ height: 320, borderRadius: 14, background: sec.grad, position: "relative", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,.08)" }} />
+              <div style={{ height: 320, borderRadius: 14, background: sec.grad, position: "relative", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,.08)" }}>
+                {sec.img && (
+                  <img src={sec.img} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                )}
+              </div>
             </div>
           </section>
         ))}

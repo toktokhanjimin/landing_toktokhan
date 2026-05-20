@@ -125,7 +125,16 @@ function InsightCard({ item }: { item: InsightItem }) {
         flexShrink: 0,
         overflow: "hidden",
         boxShadow: "0 4px 20px rgba(0,0,0,.06)",
-      }} />
+        position: "relative",
+      }}>
+        {(() => {
+          const cat = item.category ?? item.tag;
+          const src = item.thumbImg?.startsWith("data:") ? item.thumbImg
+            : ["log", "talk", "tech"].includes(cat) ? `/assets/${cat}.png`
+            : null;
+          return src ? <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} /> : null;
+        })()}
+      </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 12, paddingTop: 4 }}>
         <h3 style={{

@@ -29,7 +29,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom row */}
-        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 4fr auto", paddingTop: 56, alignItems: "end", gap: 24 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 4fr auto", paddingTop: 36, alignItems: "end", gap: 24 }}>
           <div />
           <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
             <div style={{ font: "400 13px/1.4 var(--font-sans)", color: "rgba(10,10,10,.45)", marginBottom: 4 }}>04039 서울시 마포구 홍익로5안길 28, 5층</div>

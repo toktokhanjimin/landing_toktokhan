@@ -65,8 +65,11 @@ export default function SiteHeader({ forceLight = false, current = "" }: { force
   };
 
   const itemStyle = (key: string): CSSProperties => ({
-    cursor: "pointer", color: "inherit", textDecoration: "none",
+    cursor: "pointer", textDecoration: "none",
     fontWeight: current === key ? 600 : 500,
+    color: current && current !== key
+      ? (light ? "rgba(10,10,10,.35)" : "rgba(255,255,255,.35)")
+      : "inherit",
     padding: "10px 16px", borderRadius: 8,
     transition: "background .2s ease, color .2s ease",
   });

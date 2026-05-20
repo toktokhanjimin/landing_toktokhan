@@ -4,7 +4,6 @@ const logos = [
   { img: "/assets/clients/appsintoss.png", alt: "apps in toss" },
   { img: "/assets/clients/bluegarage.png", alt: "BLUE GARAGE" },
   { img: "/assets/clients/nhnacademy.png", alt: "NHN ACADEMY" },
-  { img: "/assets/clients/kinkos.png", alt: "kinko's" },
   { img: "/assets/clients/woowa.png", alt: "우아한형제들" },
   { img: "/assets/clients/kakao.png", alt: "kakao" },
   { img: "/assets/clients/tmoney.png", alt: "Tmoney" },
@@ -34,7 +33,7 @@ const row2 = logos.slice(mid);
 const MASK = "linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)";
 
 function LogoRow({ items, duration, reverse }: { items: typeof logos; duration: string; reverse?: boolean }) {
-  const loop = [...items, ...items];
+  const loop = [...items, ...items, ...items, ...items];
   const anim = reverse ? `clientsMarqueeR ${duration} linear infinite` : `clientsMarquee ${duration} linear infinite`;
   return (
     <div style={{ overflow: "hidden", maskImage: MASK, WebkitMaskImage: MASK }}>
@@ -51,10 +50,14 @@ function LogoRow({ items, duration, reverse }: { items: typeof logos; duration: 
 
 export default function Clients() {
   return (
-    <section style={{ background: "transparent", color: "#0a0a0a", padding: "120px 0" }}>
+    <section style={{ background: "transparent", color: "#0a0a0a", padding: "60px 0" }}>
       <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes clientsMarquee {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-25%); }
+        }
         @keyframes clientsMarqueeR {
-          from { transform: translateX(-50%); }
+          from { transform: translateX(-25%); }
           to   { transform: translateX(0); }
         }
       ` }} />

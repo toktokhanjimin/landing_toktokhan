@@ -31,6 +31,14 @@ export default function WorkPage() {
 
   return (
     <div style={{ background: "#ffffff", color: "#0a0a0a", minHeight: "100dvh" }}>
+      <style>{`
+        .wk-card .wk-thumb { transition: transform .55s cubic-bezier(.4,0,.2,1); }
+        .wk-card:hover .wk-thumb { transform: scale(1.05) !important; }
+        .wk-card .wk-overlay { opacity: 0; transition: opacity .35s ease; }
+        .wk-card:hover .wk-overlay { opacity: 1; }
+        .wk-card .wk-info { opacity: 0; transform: translateY(10px); transition: opacity .35s ease, transform .35s ease; }
+        .wk-card:hover .wk-info { opacity: 1; transform: translateY(0); }
+      `}</style>
       <SiteHeader forceLight current="Work" />
 
       {/* Page hero */}
@@ -106,62 +114,57 @@ function WorkCard({ item }: { item: WorkItem }) {
   return (
     <a
       href={`/work/${item.id}`}
+      className="wk-card"
       style={{
         borderRadius: 18,
         overflow: "hidden",
         position: "relative",
         cursor: "pointer",
-        display: "flex",
-        flexDirection: "column",
+        display: "block",
         aspectRatio: "5/4",
         background: item.bg,
         textDecoration: "none",
       }}
-      onMouseEnter={(e) => { const t = e.currentTarget.querySelector<HTMLElement>(".wk-thumb"); if (t) t.style.transform = "scale(.97)"; }}
-      onMouseLeave={(e) => { const t = e.currentTarget.querySelector<HTMLElement>(".wk-thumb"); if (t) t.style.transform = "scale(1)"; }}
     >
-      <div style={{
-        width: "100%",
-        height: "100%",
-        padding: 24,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
+      {/* 이미지 */}
+      {item.thumbImg && (
+        <img
+          src={item.thumbImg}
+          alt=""
+          className="wk-thumb"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        />
+      )}
+
+      {/* 호버 그라디언트 */}
+      <div
+        className="wk-overlay"
+        style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.18) 50%, transparent 100%)" }}
+      />
+
+      {/* 연도 배지 — 항상 표시 */}
+      <span style={{
+        position: "absolute", top: 20, left: 20,
+        font: "500 11px/1 var(--font-sans)",
+        letterSpacing: ".14em",
+        padding: "5px 8px",
+        borderRadius: 4,
+        background: "rgba(255,255,255,.15)",
+        color: "rgba(255,255,255,.9)",
       }}>
-        <span style={{
-          display: "inline-block",
-          font: "500 11px/1 var(--font-mono, 'IBM Plex Mono',monospace)",
-          letterSpacing: ".14em",
-          padding: "5px 8px",
-          borderRadius: 4,
-          background: "rgba(255,255,255,.12)",
-          color: "rgba(255,255,255,.85)",
-          alignSelf: "flex-start",
-        }}>
-          {item.year}
-        </span>
+        {item.year}
+      </span>
 
-        <div className="wk-thumb" style={{
-          alignSelf: "center",
-          width: "55%",
-          height: "55%",
-          background: "rgba(255,255,255,.12)",
-          borderRadius: 10,
-          boxShadow: "0 8px 32px rgba(0,0,0,.3)",
-          border: "1px solid rgba(255,255,255,.08)",
-          transition: "transform .5s cubic-bezier(.4,0,.2,1)",
-        }} />
-
-        <div>
-          <div style={{ font: "700 15px/1 var(--font-sans)", letterSpacing: ".04em", color: "#fff" }}>
-            {item.client}
-          </div>
-          <div style={{ font: "500 12px/1 var(--font-mono, 'IBM Plex Mono',monospace)", color: "rgba(255,255,255,.6)", marginTop: 6 }}>
-            {item.tag}
-          </div>
-          <div style={{ font: "400 13px/1.5 var(--font-sans)", color: "rgba(255,255,255,.7)", marginTop: 10 }}>
-            {item.desc}
-          </div>
+      {/* 텍스트 — 호버 시 등장 */}
+      <div
+        className="wk-info"
+        style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "24px 24px 22px" }}
+      >
+        <div style={{ font: "700 15px/1 var(--font-sans)", letterSpacing: ".02em", color: "#fff" }}>
+          {item.client}
+        </div>
+        <div style={{ font: "500 12px/1 var(--font-sans)", color: "rgba(255,255,255,.65)", marginTop: 6 }}>
+          {item.tag}
         </div>
       </div>
     </a>
