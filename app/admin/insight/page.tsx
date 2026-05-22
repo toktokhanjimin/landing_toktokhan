@@ -74,7 +74,7 @@ const btnBase: CSSProperties = {
   border: "none",
 };
 
-function compressImage(file: File, maxSize = 360, quality = 0.92): Promise<string> {
+function compressImage(file: File, maxSize = 1200, quality = 0.92): Promise<string> {
   return new Promise((resolve) => {
     const img = new Image();
     const url = URL.createObjectURL(file);

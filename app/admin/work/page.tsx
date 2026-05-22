@@ -30,7 +30,7 @@ function genId() {
   return Math.random().toString(36).slice(2, 10);
 }
 
-function compressImage(file: File, maxSize = 480, quality = 0.88): Promise<string> {
+function compressImage(file: File, maxSize = 1200, quality = 0.88): Promise<string> {
   return new Promise((resolve) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
