@@ -1,10 +1,10 @@
-import { CSSProperties, ReactNode } from "react";
+import React, { CSSProperties, ReactNode } from "react";
 
 interface ContainerProps {
   children: ReactNode;
   style?: CSSProperties;
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: keyof React.JSX.IntrinsicElements;
 }
 
 export default function Container({ children, style, className, as: Tag = "div" }: ContainerProps) {
