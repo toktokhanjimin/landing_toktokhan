@@ -13,6 +13,7 @@ export interface WorkItem {
   sections: { h: string; p: string; grad: string; img?: string }[];
   points: string[];
   featured?: boolean;
+  relatedInsights?: number[];
 }
 
 export interface InsightItem {
@@ -33,6 +34,28 @@ export interface FAQItem {
   q: string;
   a: string;
 }
+
+export interface StickyAction {
+  label: string;
+  url: string;
+  type: "link" | "download";
+  fileName?: string;
+}
+
+export interface StickyConfig {
+  enabled: boolean;
+  buttonLabel: string;
+  actions: StickyAction[];
+}
+
+const DEFAULT_STICKY: StickyConfig = {
+  enabled: true,
+  buttonLabel: "똑똑한개발자 더 알아보기",
+  actions: [
+    { label: "AX 서비스 소개서 다운로드", url: "", type: "download" },
+    { label: "똑똑한 AX교육 이동하기", url: "", type: "link" },
+  ],
+};
 
 const DEFAULT_WORK: WorkItem[] = [
   {
@@ -325,4 +348,51 @@ export const getFAQs = (): FAQItem[] => {
 export const saveFAQs = (data: FAQItem[]): void => {
   if (typeof window === "undefined") return;
   localStorage.setItem("ttk_faqs", JSON.stringify(data));
+};
+
+export const getStickyConfig = (): StickyConfig => {
+  if (typeof window === "undefined") return DEFAULT_STICKY;
+  try {
+    const raw = localStorage.getItem("ttk_sticky");
+    return raw ? { ...DEFAULT_STICKY, ...JSON.parse(raw) } : DEFAULT_STICKY;
+  } catch { return DEFAULT_STICKY; }
+};
+
+export const saveStickyConfig = (data: StickyConfig): void => {
+  if (typeof window === "undefined") return;
+  localStorage.setItem("ttk_sticky", JSON.stringify(data));
+};
+
+// ─── Click Tracking ───────────────────────────────────────────────────────────
+
+/** Work 클릭 수: { [workId]: count } */
+export const getWorkClicks = (): Record<string, number> => {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = localStorage.getItem("ttk_work_clicks");
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+};
+
+export const recordWorkClick = (id: string): void => {
+  if (typeof window === "undefined") return;
+  const clicks = getWorkClicks();
+  clicks[id] = (clicks[id] ?? 0) + 1;
+  localStorage.setItem("ttk_work_clicks", JSON.stringify(clicks));
+};
+
+/** Insight 클릭 수: { [title]: count } */
+export const getInsightClicks = (): Record<string, number> => {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = localStorage.getItem("ttk_insight_clicks");
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+};
+
+export const recordInsightClick = (title: string): void => {
+  if (typeof window === "undefined") return;
+  const clicks = getInsightClicks();
+  clicks[title] = (clicks[title] ?? 0) + 1;
+  localStorage.setItem("ttk_insight_clicks", JSON.stringify(clicks));
 };

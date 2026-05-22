@@ -52,10 +52,10 @@ export default function KPIStrip() {
   }, []);
 
   return (
-    <section ref={wrapRef} style={{ position: "relative", background: "transparent", color: "#0a0a0a", padding: "100px 24px 0", overflow: "hidden" }}>
+    <section ref={wrapRef} style={{ position: "relative", background: "transparent", color: "var(--fg-1)", padding: "100px 24px 0", overflow: "hidden" }}>
       <div style={{ position: "relative", maxWidth: 1200, margin: "0 auto" }}>
         <div style={{ textAlign: "left", marginBottom: 88, maxWidth: 720 }}>
-          <h2 style={{ font: "700 clamp(26px,2.8vw,42px)/1.24 var(--font-sans)", letterSpacing: "-.02em", margin: 0 }}>
+          <h2 className="section-title">
             우리 조직에 먼저 적용해봤어요
           </h2>
           <p style={{ marginTop: 20, font: "400 15px/1.65 var(--font-sans)", color: "rgba(10,10,10,.6)", maxWidth: 560 }}>
@@ -64,13 +64,13 @@ export default function KPIStrip() {
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 40 }}>
+        <div className="kpi-grid" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 40 }}>
           {kpis.map((k) => (
             <div key={k.part} style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ font: "600 clamp(36px,3.6vw,52px)/1 var(--font-sans)", letterSpacing: "-.03em", color: "#0a0a0a", marginBottom: 16, fontVariantNumeric: "tabular-nums" }}>
+              <div style={{ font: "600 clamp(36px,3.6vw,52px)/1 var(--font-sans)", letterSpacing: "-.03em", color: "var(--fg-1)", marginBottom: 16, fontVariantNumeric: "tabular-nums" }}>
                 <CountUp prefix={k.prefix} value={k.value} suffix={k.suffix} />
               </div>
-              <div style={{ font: "600 clamp(16px,1.2vw,18px)/1.4 var(--font-sans)", letterSpacing: "-.01em", color: "#0a0a0a", marginBottom: 10 }}>{k.tail}</div>
+              <div style={{ font: "600 clamp(16px,1.2vw,18px)/1.4 var(--font-sans)", letterSpacing: "-.01em", color: "var(--fg-1)", marginBottom: 10 }}>{k.tail}</div>
               <div style={{ font: "400 14px/1.6 var(--font-sans)", color: "rgba(10,10,10,.5)" }}>
                 {k.line2[0]}<br />{k.line2[1]}
               </div>

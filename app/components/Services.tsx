@@ -1,6 +1,6 @@
 "use client";
 
-import { CSSProperties } from "react";
+import { CSSProperties, useEffect, useRef } from "react";
 
 const items = [
   {
@@ -37,137 +37,92 @@ const items = [
 
 
 function CardIcon({ kind }: { kind: string }) {
-  // 설계 — 5개 타원 링 공전
+  // 설계 — 시계
   if (kind === "fullstack") {
-    const blobs = [
-      { cx: 18, cy: 4,  r: 5.5, begin: "0s"    },
-      { cx: 31, cy: 14, r: 4.5, begin: "-1.2s" },
-      { cx: 26, cy: 29, r: 5,   begin: "-2.4s" },
-      { cx: 10, cy: 29, r: 4.5, begin: "-3.6s" },
-      { cx: 5,  cy: 14, r: 5,   begin: "-4.8s" },
-    ];
     return (
-      <div style={{ width: 24, height: 24, overflow: "visible" }}>
-        <svg width="24" height="24" viewBox="0 0 36 36" fill="none" overflow="visible">
-          {blobs.map((b, i) => (
-            <ellipse key={i} cx={b.cx} cy={b.cy} rx={b.r} ry={b.r * 0.85} fill="rgba(255,255,255,.88)">
-              <animateTransform attributeName="transform" type="rotate"
-                from="0 18 18" to="360 18 18"
-                dur="6s" begin={b.begin} repeatCount="indefinite" />
-            </ellipse>
-          ))}
-        </svg>
-      </div>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v5l3 3" />
+      </svg>
     );
   }
-  // 운영 — 유기적 blob 모핑
+  // 운영 — 방패
   if (kind === "embedded") {
     return (
-      <div style={{ width: 24, height: 24, overflow: "visible", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <style>{`
-          @keyframes svc-blob-morph {
-            0%,100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: rotate(0deg) scale(1); }
-            25%     { border-radius: 40% 60% 55% 45% / 45% 55% 45% 55%; transform: rotate(90deg) scale(1.08); }
-            50%     { border-radius: 30% 70% 60% 40% / 30% 60% 40% 70%; transform: rotate(180deg) scale(0.95); }
-            75%     { border-radius: 55% 45% 40% 60% / 50% 40% 60% 50%; transform: rotate(270deg) scale(1.05); }
-          }
-        `}</style>
-        <div style={{
-          width: 19, height: 19,
-          background: "rgba(255,255,255,.88)",
-          animation: "svc-blob-morph 4s ease-in-out infinite",
-        }} />
-      </div>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 3l8 3.5v5c0 4.5-3.5 7.5-8 9-4.5-1.5-8-4.5-8-9v-5L12 3z" />
+      </svg>
     );
   }
-  // 검증 — 3개 원이 삼각형 꼭짓점을 순환하며 중앙에서 교차
-  const ks = ".4 0 .2 1;.4 0 .2 1;.4 0 .2 1";
-  const kt = "0;0.333;0.667;1";
+  // 검증 — 체크 원
   return (
-    <div style={{ width: 24, height: 24, overflow: "visible" }}>
-      <svg width="24" height="24" viewBox="0 0 36 36" fill="none" overflow="visible">
-        {/* A(18,8) → B(27,23) → C(9,23) → A */}
-        <circle r="5.5" fill="rgba(255,255,255,.88)">
-          <animate attributeName="cx" values="18;27;9;18" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines={ks} keyTimes={kt}/>
-          <animate attributeName="cy" values="8;23;23;8"  dur="4s" repeatCount="indefinite" calcMode="spline" keySplines={ks} keyTimes={kt}/>
-        </circle>
-        {/* B → C → A → B */}
-        <circle r="5" fill="rgba(255,255,255,.88)">
-          <animate attributeName="cx" values="27;9;18;27" dur="4s" repeatCount="indefinite" calcMode="spline" keySplines={ks} keyTimes={kt}/>
-          <animate attributeName="cy" values="23;23;8;23"  dur="4s" repeatCount="indefinite" calcMode="spline" keySplines={ks} keyTimes={kt}/>
-        </circle>
-        {/* C → A → B → C */}
-        <circle r="5" fill="rgba(255,255,255,.88)">
-          <animate attributeName="cx" values="9;18;27;9"  dur="4s" repeatCount="indefinite" calcMode="spline" keySplines={ks} keyTimes={kt}/>
-          <animate attributeName="cy" values="23;8;23;23"  dur="4s" repeatCount="indefinite" calcMode="spline" keySplines={ks} keyTimes={kt}/>
-        </circle>
-      </svg>
-    </div>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8.5 12.5l2.5 2.5 4.5-5" />
+    </svg>
   );
 }
 
 export default function Services() {
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          (e.target as HTMLElement).classList.add("svc-revealed");
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0, rootMargin: "0px 0px -60px 0px" });
+    cardRefs.current.forEach((el) => el && io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <section style={{ background: "transparent", color: "#fff", padding: "20px 24px 90px" }}>
+    <section className="svc-section" style={{ background: "transparent", color: "var(--fg-on-dark-1)", padding: "20px 24px 90px" }}>
+      <style dangerouslySetInnerHTML={{ __html: `
+        .svc-card { opacity: 0; transform: translateY(28px); }
+        .svc-card.svc-revealed { opacity: 1; transform: translateY(0); }
+        .svc-card:hover { transform: translateY(-4px) !important; }
+      ` }} />
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
-          {items.map((it) => (
+        <div className="svc-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
+          {items.map((it, i) => (
             <div
               key={it.kind}
+              ref={(el) => { cardRefs.current[i] = el; }}
+              className="svc-card"
               style={{
                 position: "relative",
                 background: "#252528",
-                borderRadius: 20,
+                borderRadius: "var(--r-xl)",
                 padding: "28px 28px 32px",
                 display: "flex",
                 flexDirection: "column",
-                transition: "transform .4s cubic-bezier(.4,0,.2,1)",
                 boxShadow: "0 1px 0 rgba(255,255,255,.03) inset",
+                transition: `opacity .6s ease ${i * 0.12}s, transform .6s cubic-bezier(.2,.7,.2,1) ${i * 0.12}s`,
               }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
             >
-              {/* Top: icon + category */}
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 32 }}>
+              {/* Top: icon only */}
+              <div style={{ marginBottom: "auto" }}>
                 <CardIcon kind={it.kind} />
-                <span style={{
-                  font: "500 13px/1 var(--font-sans)",
-                  color: "rgba(255,255,255,.45)",
-                  letterSpacing: ".01em",
-                }}>
-                  {it.category}
-                </span>
               </div>
 
-              {/* Title */}
-              <div style={{ marginBottom: 28 }}>
+              {/* Bottom: title + description */}
+              <div style={{ marginTop: 60 }}>
                 <div style={{
-                  font: "700 40px/1 var(--font-sans)",
+                  font: "var(--h3)",
                   letterSpacing: "-.04em",
-                  color: "#fff",
+                  color: "var(--fg-on-dark-1)",
+                  marginBottom: 16,
                 }}>
                   {it.en}
                 </div>
+                <p style={{ font: "400 14px/1.65 var(--font-sans)", color: "rgba(255,255,255,.55)", margin: 0 }}>
+                  {it.d}
+                </p>
               </div>
-              <p style={{ font: "400 14px/1.65 var(--font-sans)", color: "rgba(255,255,255,.55)", margin: "0 0 24px" }}>
-                {it.d}
-              </p>
-
-              {/* Bullets */}
-              <ul style={{ display: "flex", flexWrap: "wrap", gap: 8, listStyle: "none", margin: 0, padding: 0, marginTop: "auto" }}>
-                {it.bullets.map((b) => (
-                  <li key={b} style={{
-                    font: "400 12px/1 var(--font-sans)",
-                    color: "rgba(255,255,255,.6)",
-                    padding: "7px 12px",
-                    borderRadius: 999,
-                    border: "1px solid rgba(255,255,255,.1)",
-                    background: "rgba(255,255,255,.04)",
-                  }}>
-                    {b}
-                  </li>
-                ))}
-              </ul>
             </div>
           ))}
         </div>

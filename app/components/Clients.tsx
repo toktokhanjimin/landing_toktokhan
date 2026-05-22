@@ -1,4 +1,3 @@
-import Image from "next/image";
 
 const logos = [
   { img: "/assets/clients/appsintoss.png", alt: "apps in toss" },
@@ -33,16 +32,18 @@ const row2 = logos.slice(mid);
 const MASK = "linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)";
 
 function LogoRow({ items, duration, reverse }: { items: typeof logos; duration: string; reverse?: boolean }) {
-  const loop = [...items, ...items, ...items, ...items];
   const anim = reverse ? `clientsMarqueeR ${duration} linear infinite` : `clientsMarquee ${duration} linear infinite`;
+  // 2카피만 사용, -50% = 정확히 카피 1개 너비
+  const renderItems = (keyOffset: number) => items.map((l, i) => (
+    <div key={keyOffset + i} style={{ flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", height: 52, width: 120, marginRight: 56 }}>
+      <img src={l.img} alt={l.alt} style={{ maxWidth: 120, maxHeight: 52, width: "auto", height: "auto", display: "block" }} />
+    </div>
+  ));
   return (
     <div style={{ overflow: "hidden", maskImage: MASK, WebkitMaskImage: MASK }}>
-      <div style={{ display: "flex", gap: 56, width: "max-content", animation: anim, alignItems: "center" }}>
-        {loop.map((l, i) => (
-          <div key={i} style={{ flexShrink: 0, display: "inline-flex", alignItems: "center", height: 52, position: "relative", width: 120 }}>
-            <Image src={l.img} alt={l.alt} fill style={{ objectFit: "contain" }} sizes="120px" />
-          </div>
-        ))}
+      <div style={{ display: "flex", width: "max-content", animation: anim, alignItems: "center" }}>
+        {renderItems(0)}
+        {renderItems(1000)}
       </div>
     </div>
   );
@@ -50,21 +51,21 @@ function LogoRow({ items, duration, reverse }: { items: typeof logos; duration: 
 
 export default function Clients() {
   return (
-    <section style={{ background: "transparent", color: "#0a0a0a", padding: "60px 0" }}>
+    <section style={{ background: "transparent", color: "var(--fg-1)", padding: "60px 0" }}>
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes clientsMarquee {
           from { transform: translateX(0); }
-          to   { transform: translateX(-25%); }
+          to   { transform: translateX(-50%); }
         }
         @keyframes clientsMarqueeR {
-          from { transform: translateX(-25%); }
+          from { transform: translateX(-50%); }
           to   { transform: translateX(0); }
         }
       ` }} />
 
       <div style={{ maxWidth: 1200, margin: "0 auto 56px", textAlign: "center", padding: "0 24px" }}>
-        <h2 style={{ font: "700 clamp(26px,2.8vw,42px)/1.24 var(--font-sans)", letterSpacing: "-.02em", margin: "0 auto", maxWidth: 720, color: "#0a0a0a" }}>
-          대기업, 공공기관, 플랫폼 기업과 함께하며<br />복잡한 조직의 문제를 해결해왔습니다
+        <h2 className="section-title" style={{ margin: "0 auto", maxWidth: 720, color: "var(--fg-1)" }}>
+          다양한 기업의 복잡한 문제를<br />함께 해결해왔습니다
         </h2>
       </div>
 

@@ -53,8 +53,8 @@ export default function TypeAI() {
   ];
 
   const section: CSSProperties = {
-    background: "#ffffff",
-    color: "#0a0a0a",
+    background: "var(--bg)",
+    color: "var(--fg-1)",
     borderTop: "1px solid rgba(10,10,10,.08)",
     borderBottom: "1px solid rgba(10,10,10,.08)",
     position: "relative",
@@ -86,7 +86,7 @@ export default function TypeAI() {
     letterSpacing: "-.025em",
     margin: "0 0 56px",
     whiteSpace: "pre-line",
-    color: "#0a0a0a",
+    color: "var(--fg-1)",
   };
 
   const preview: CSSProperties = {
@@ -96,7 +96,7 @@ export default function TypeAI() {
     minHeight: 480,
     background: "#0f1013",
     border: "1px solid rgba(255,255,255,.08)",
-    borderRadius: 18,
+    borderRadius: "var(--r-lg)",
     overflow: "hidden",
     boxShadow: "0 40px 80px rgba(0,0,0,.5)",
   };
@@ -141,7 +141,7 @@ export default function TypeAI() {
                   >
                     <div style={{
                       font: "600 15px/1.2 var(--font-sans)",
-                      color: on ? "#0a0a0a" : "rgba(10,10,10,.4)",
+                      color: on ? "var(--fg-1)" : "rgba(10,10,10,.4)",
                       letterSpacing: "-.01em",
                       transition: "color .4s var(--ease-out)",
                     }}>
@@ -156,7 +156,7 @@ export default function TypeAI() {
                         <div style={{ font: "400 14px/1.65 var(--font-sans)", color: "rgba(10,10,10,.6)" }}>
                           {t.desc}
                         </div>
-                        <a style={{ display: "inline-flex", alignItems: "center", gap: 4, marginTop: 14, font: "500 13px/1 var(--font-sans)", color: "#0a0a0a" }}>
+                        <a style={{ display: "inline-flex", alignItems: "center", gap: 4, marginTop: 14, font: "500 13px/1 var(--font-sans)", color: "var(--fg-1)" }}>
                           Learn more ›
                         </a>
                       </div>
@@ -226,7 +226,7 @@ function DesignPreview() {
   const card: CSSProperties = {
     background: "rgba(20,22,26,.85)",
     border: "1px solid rgba(255,255,255,.07)",
-    borderRadius: 14,
+    borderRadius: "var(--r-md)",
     overflow: "hidden",
     position: "relative",
   };
@@ -347,15 +347,15 @@ function TaskTree({ t }: { t: number }) {
         alignItems: "center",
         gap: 8,
         padding: "9px 18px",
-        borderRadius: 999,
+        borderRadius: "var(--r-full)",
         background: "linear-gradient(180deg,#33C6FF,#00B7FF)",
         boxShadow: `0 0 ${12 + Math.sin(phase * Math.PI * 2) * 8}px rgba(93,211,255,.55)`,
         font: "600 13px/1 var(--font-sans)",
-        color: "#fff",
+        color: "var(--fg-on-dark-1)",
         letterSpacing: "-.005em",
         zIndex: 2,
       }}>
-        <span style={{ width: 6, height: 6, borderRadius: 999, background: "#fff", opacity: 0.6 + Math.sin(phase * Math.PI * 2) * 0.4 }} />
+        <span style={{ width: 6, height: 6, borderRadius: "var(--r-full)", background: "#fff", opacity: 0.6 + Math.sin(phase * Math.PI * 2) * 0.4 }} />
         하나의 TASK
       </div>
 
@@ -392,7 +392,7 @@ function TaskTree({ t }: { t: number }) {
               position: "relative",
               minWidth: 0,
               padding: "12px 10px 12px",
-              borderRadius: 12,
+              borderRadius: "var(--r-md)",
               background: on
                 ? "linear-gradient(180deg, rgba(93,211,255,.08), rgba(93,211,255,.02))"
                 : "rgba(255,255,255,.025)",
@@ -408,7 +408,7 @@ function TaskTree({ t }: { t: number }) {
               <div style={{
                 width: 30,
                 height: 30,
-                borderRadius: 8,
+                borderRadius: "var(--r-sm)",
                 background: on ? `${n.accent}1f` : "rgba(255,255,255,.04)",
                 border: `1px solid ${on ? n.accent + "55" : "rgba(255,255,255,.07)"}`,
                 display: "grid",
@@ -419,12 +419,12 @@ function TaskTree({ t }: { t: number }) {
               }}>
                 {n.icon}
               </div>
-              <div style={{ font: "700 13px/1.1 var(--font-sans)", color: "#fff", marginTop: 1, whiteSpace: "nowrap" }}>{n.title}</div>
+              <div style={{ font: "700 13px/1.1 var(--font-sans)", color: "var(--fg-on-dark-1)", marginTop: 1, whiteSpace: "nowrap" }}>{n.title}</div>
               <div style={{ font: "500 9.5px/1.2 var(--font-mono, 'IBM Plex Mono',monospace)", color: "rgba(255,255,255,.42)", letterSpacing: ".02em", textAlign: "center", whiteSpace: "nowrap" }}>{n.sub}</div>
               <div style={{
                 marginTop: "auto",
                 padding: "3px 8px",
-                borderRadius: 999,
+                borderRadius: "var(--r-full)",
                 background: on ? n.chipBg : "rgba(255,255,255,.06)",
                 color: on ? "#fff" : "rgba(255,255,255,.5)",
                 font: "600 9.5px/1 var(--font-sans)",
@@ -478,7 +478,7 @@ function ThroughputChart({ t }: { t: number }) {
       <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 2, minWidth: 0 }}>
         <div style={{ minWidth: 0 }}>
           <div style={{ font: "500 9px/1 var(--font-mono, 'IBM Plex Mono',monospace)", color: "rgba(255,255,255,.45)", letterSpacing: ".06em", whiteSpace: "nowrap" }}>TASKS / MIN</div>
-          <div style={{ font: "700 20px/1.1 var(--font-sans)", color: "#fff", letterSpacing: "-.02em", fontVariantNumeric: "tabular-nums" }}>{live}</div>
+          <div style={{ font: "700 20px/1.1 var(--font-sans)", color: "var(--fg-on-dark-1)", letterSpacing: "-.02em", fontVariantNumeric: "tabular-nums" }}>{live}</div>
         </div>
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", height: "auto", display: "block" }}>
@@ -506,7 +506,7 @@ function ThroughputChart({ t }: { t: number }) {
 function Legend({ dot, label }: { dot: string; label: string }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 5, font: "500 10px/1 var(--font-sans)", color: "rgba(255,255,255,.55)" }}>
-      <span style={{ width: 6, height: 6, borderRadius: 999, background: dot }} />{label}
+      <span style={{ width: 6, height: 6, borderRadius: "var(--r-full)", background: dot }} />{label}
     </div>
   );
 }
@@ -547,7 +547,7 @@ function ActivityLog({ t }: { t: number }) {
               padding: "0 4px",
               borderBottom: "1px solid rgba(255,255,255,.04)",
             }}>
-              <span style={{ width: 6, height: 6, borderRadius: 999, background: r.dot, flexShrink: 0, boxShadow: `0 0 8px ${r.dot}` }} />
+              <span style={{ width: 6, height: 6, borderRadius: "var(--r-full)", background: r.dot, flexShrink: 0, boxShadow: `0 0 8px ${r.dot}` }} />
               <span style={{ flex: 1, font: "500 11px/1 var(--font-sans)", color: "rgba(255,255,255,.78)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{r.label}</span>
               <span style={{
                 font: "600 9px/1 var(--font-mono, 'IBM Plex Mono',monospace)",
@@ -555,7 +555,7 @@ function ActivityLog({ t }: { t: number }) {
                 textTransform: "uppercase",
                 color: r.tagColor,
                 padding: "3px 6px",
-                borderRadius: 4,
+                borderRadius: "var(--r-xs)",
                 background: `${r.tagColor}15`,
                 border: `1px solid ${r.tagColor}30`,
               }}>{r.tag}</span>
@@ -608,9 +608,9 @@ function OperatePreview() {
   return (
     <div style={{ width: "100%", height: "100%", background: "#0f1013", padding: 40, display: "flex", flexDirection: "column", justifyContent: "center", gap: 10 }}>
       {rows.map((r, i) => (
-        <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", background: "#17181a", borderRadius: 12, border: "1px solid rgba(255,255,255,.06)" }}>
-          <span style={{ width: 8, height: 8, borderRadius: 999, background: r.dot, flexShrink: 0 }} />
-          <span style={{ flex: 1, font: "500 14px/1.2 var(--font-sans)", color: "#fff" }}>{r.label}</span>
+        <div key={i} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 18px", background: "#17181a", borderRadius: "var(--r-md)", border: "1px solid rgba(255,255,255,.06)" }}>
+          <span style={{ width: 8, height: 8, borderRadius: "var(--r-full)", background: r.dot, flexShrink: 0 }} />
+          <span style={{ flex: 1, font: "500 14px/1.2 var(--font-sans)", color: "var(--fg-on-dark-1)" }}>{r.label}</span>
           <span style={{ font: "500 12px/1 var(--font-mono, 'IBM Plex Mono',monospace)", color: "rgba(255,255,255,.45)" }}>{r.time}</span>
           <span style={{ font: "500 12px/1 var(--font-mono, 'IBM Plex Mono',monospace)", color: r.color, minWidth: 90, textAlign: "right" }}>{r.status}</span>
         </div>

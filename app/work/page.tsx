@@ -22,15 +22,15 @@ export default function WorkPage() {
   const chip = (on: boolean): CSSProperties => ({
     font: "500 14px/1 var(--font-sans)",
     padding: "10px 16px",
-    borderRadius: 8,
+    borderRadius: "var(--r-sm)",
     border: on ? "1px solid #0a0a0a" : "1px solid rgba(10,10,10,.14)",
-    background: on ? "#0a0a0a" : "transparent",
-    color: on ? "#fff" : "rgba(10,10,10,.7)",
+    background: on ? "var(--bg-dark)" : "transparent",
+    color: on ? "var(--fg-on-dark-1)" : "rgba(10,10,10,.7)",
     cursor: "pointer",
   });
 
   return (
-    <div style={{ background: "#ffffff", color: "#0a0a0a", minHeight: "100dvh" }}>
+    <div style={{ background: "var(--bg)", color: "var(--fg-1)", minHeight: "100dvh" }}>
       <style>{`
         .wk-card .wk-thumb { transition: transform .55s cubic-bezier(.4,0,.2,1); }
         .wk-card:hover .wk-thumb { transform: scale(1.05) !important; }
@@ -42,7 +42,7 @@ export default function WorkPage() {
       <SiteHeader forceLight current="Work" />
 
       {/* Page hero */}
-      <header style={{
+      <header className="wk-header page-hero-header" style={{
         padding: "180px 24px 80px",
         maxWidth: 1248,
         margin: "0 auto",
@@ -54,12 +54,12 @@ export default function WorkPage() {
           font: "700 clamp(32px,4.4vw,60px)/1.24 var(--font-sans)",
           letterSpacing: "-.03em",
           margin: 0,
-          color: "#0a0a0a",
+          color: "var(--fg-1)",
         }}>
           Work
         </h1>
         <p style={{
-          font: "400 17px/1.6 var(--font-sans)",
+          font: "var(--body-lg)",
           color: "rgba(10,10,10,.6)",
           maxWidth: 620,
           margin: 0,
@@ -92,7 +92,7 @@ export default function WorkPage() {
               해당 카테고리의 작업이 아직 없어요.
             </div>
           ) : (
-            <div style={{
+            <div className="wk-grid" style={{
               display: "grid",
               gridTemplateColumns: "repeat(3, 1fr)",
               gap: 20,
@@ -116,7 +116,7 @@ function WorkCard({ item }: { item: WorkItem }) {
       href={`/work/${item.id}`}
       className="wk-card"
       style={{
-        borderRadius: 18,
+        borderRadius: "var(--r-lg)",
         overflow: "hidden",
         position: "relative",
         cursor: "pointer",
@@ -142,25 +142,12 @@ function WorkCard({ item }: { item: WorkItem }) {
         style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.18) 50%, transparent 100%)" }}
       />
 
-      {/* 연도 배지 — 항상 표시 */}
-      <span style={{
-        position: "absolute", top: 20, left: 20,
-        font: "500 11px/1 var(--font-sans)",
-        letterSpacing: ".14em",
-        padding: "5px 8px",
-        borderRadius: 4,
-        background: "rgba(255,255,255,.15)",
-        color: "rgba(255,255,255,.9)",
-      }}>
-        {item.year}
-      </span>
-
       {/* 텍스트 — 호버 시 등장 */}
       <div
         className="wk-info"
         style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "24px 24px 22px" }}
       >
-        <div style={{ font: "700 15px/1 var(--font-sans)", letterSpacing: ".02em", color: "#fff" }}>
+        <div style={{ font: "700 15px/1 var(--font-sans)", letterSpacing: ".02em", color: "var(--fg-on-dark-1)" }}>
           {item.client}
         </div>
         <div style={{ font: "500 12px/1 var(--font-sans)", color: "rgba(255,255,255,.65)", marginTop: 6 }}>

@@ -11,16 +11,16 @@ const cols = [
 
 export default function Footer() {
   return (
-    <footer style={{ background: "#F9F9F9", color: "#0a0a0a", padding: "56px 24px 48px" }}>
+    <footer style={{ background: "var(--bg-elev)", color: "var(--fg-1)", padding: "26px 24px 48px" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         {/* Top grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr 1fr", gap: 48, paddingBottom: 48 }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 14, alignItems: "flex-start" }}>
-            <Image src="/assets/tok-logo-black.svg" alt="TOKTOKHAN.DEV" width={220} height={56} style={{ height: 56, width: "auto", display: "block" }} />
+        <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr 1fr", gap: 48, paddingBottom: 48, paddingTop: 20 }}>
+          <div className="footer-logo-col" style={{ display: "flex", flexDirection: "column", gap: 14, alignItems: "flex-start" }}>
+            <Image src="/assets/tok-logo-black.svg" alt="TOKTOKHAN.DEV" width={220} height={56} style={{ height: 56, width: "auto", display: "block", marginLeft: -10 }} />
           </div>
           {cols.map((c) => (
             <div key={c.h}>
-              <div style={{ font: "700 14px/1 var(--font-sans)", letterSpacing: "-.01em", color: "#0a0a0a", marginBottom: 24 }}>{c.h}</div>
+              <div style={{ font: "700 14px/1 var(--font-sans)", letterSpacing: "-.01em", color: "var(--fg-1)", marginBottom: 24 }}>{c.h}</div>
               {c.items.map((item) => (
                 <a key={item} style={{ font: "400 14px/1 var(--font-sans)", color: "rgba(10,10,10,.5)", marginBottom: 14, display: "block", cursor: "pointer" }}>{item}</a>
               ))}
@@ -29,8 +29,8 @@ export default function Footer() {
         </div>
 
         {/* Bottom row */}
-        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 4fr auto", paddingTop: 36, alignItems: "end", gap: 24 }}>
-          <div />
+        <div className="footer-bottom" style={{ display: "grid", gridTemplateColumns: "1.4fr 4fr auto", paddingTop: 36, alignItems: "end", gap: 24 }}>
+          <div className="footer-spacer" />
           <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
             <div style={{ font: "400 13px/1.4 var(--font-sans)", color: "rgba(10,10,10,.45)", marginBottom: 4 }}>04039 서울시 마포구 홍익로5안길 28, 5층</div>
             <div style={{ display: "flex", gap: "8px 32px", flexWrap: "wrap", alignItems: "center", font: "400 13px/1.4 var(--font-sans)", color: "rgba(10,10,10,.45)" }}>
@@ -41,7 +41,7 @@ export default function Footer() {
           </div>
           <button
             aria-label="맨 위로"
-            style={{ width: 56, height: 56, borderRadius: 999, background: "#E6E6E6", border: 0, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#0a0a0a", transition: "background .2s ease, transform .2s ease" }}
+            style={{ width: 56, height: 56, borderRadius: "var(--r-full)", background: "#E6E6E6", border: 0, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--fg-1)", transition: "background .2s ease, transform .2s ease" }}
             onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#dcdcdc"; (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; }}
             onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "#E6E6E6"; (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

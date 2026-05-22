@@ -40,8 +40,9 @@ export default function PortfolioWall() {
   }, []);
 
   return (
-    <section ref={ref} style={{ position: "relative", background: "#0a0a0a", overflow: "hidden", height: "80vh", minHeight: 560, marginBottom: 20 }} aria-hidden="true">
-      <div style={{ position: "absolute", inset: 0, display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 14, padding: "60px 14px 0" }}>
+    <section ref={ref} className="no-px" style={{ position: "relative", background: "#0a0a0a", overflow: "hidden", height: "80vh", minHeight: 560, marginBottom: 20 }} aria-hidden="true">
+      <style>{`@media(max-width:767px){.pw-grid{grid-template-columns:repeat(3,1fr)!important}.pw-grid>div:nth-child(n+4){display:none}.pw-tile{height:160px!important}}`}</style>
+      <div className="pw-grid" style={{ position: "absolute", inset: 0, display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 10, padding: "60px 10px 0" }}>
         {cols.map((c, ci) => {
           const y = -c.speed * Math.max(0, p);
           return (
@@ -49,8 +50,9 @@ export default function PortfolioWall() {
               {c.tiles.map((t, ti) => (
                 <div
                   key={ti}
+                  className="pw-tile"
                   style={{
-                    borderRadius: 14, overflow: "hidden",
+                    borderRadius: "var(--r-md)", overflow: "hidden",
                     height: t.h, background: "#1a1a1a",
                     boxShadow: "0 12px 28px rgba(0,0,0,.18)",
                     flexShrink: 0, position: "relative",

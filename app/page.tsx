@@ -14,8 +14,17 @@ import Clients from "./components/Clients";
 import AIInsights from "./components/AIInsights";
 import FAQ from "./components/FAQ";
 import Footer from "./components/Footer";
+import StickyActionButton from "./components/StickyActionButton";
 
 export default function Home() {
+  // Always scroll to top on page load/refresh
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      history.scrollRestoration = "manual";
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
   // Framer-style reveal on scroll
   useEffect(() => {
     const io = new IntersectionObserver(
@@ -40,6 +49,7 @@ export default function Home() {
   return (
     <>
       <SiteHeader />
+      <StickyActionButton />
       <div data-screen-label="00 Hero">
         <Hero />
       </div>
@@ -49,7 +59,7 @@ export default function Home() {
       <div data-screen-label="01 AX Definition">
         <AXDefinition />
       </div>
-      <div data-screen-label="02 Services">
+      <div data-screen-label="02 Services" data-no-reveal>
         <Services />
       </div>
 <div data-screen-label="02b Why Toktok" data-no-reveal>
@@ -61,13 +71,13 @@ export default function Home() {
       <div data-screen-label="03b Team Reveal" data-no-reveal>
         <TeamReveal />
       </div>
-      <div data-screen-label="04 Work">
+      <div data-screen-label="04 Work" data-no-reveal>
         <WorkGrid />
       </div>
       <div data-screen-label="05 Clients">
         <Clients />
       </div>
-      <div data-screen-label="07 Insights">
+      <div data-screen-label="07 Insights" data-no-reveal>
         <AIInsights />
       </div>
       <div data-screen-label="08 FAQ">

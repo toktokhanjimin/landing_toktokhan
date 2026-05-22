@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, CSSProperties } from "react";
-import { getWork, saveWork, WorkItem } from "../../lib/store";
+import { getWork, saveWork, getInsights, WorkItem, InsightItem } from "../../lib/store";
 
 const EMPTY_SECTION = { h: "", p: "", grad: "", img: "" };
 
@@ -23,6 +23,7 @@ const EMPTY_ITEM: Omit<WorkItem, "id"> = {
   ],
   points: [],
   featured: false,
+  relatedInsights: [],
 };
 
 function genId() {
@@ -89,6 +90,22 @@ const labelStyle: CSSProperties = {
   marginBottom: 6,
   display: "block",
 };
+
+function FieldWithCount({ label, value, maxLength, children }: { label: string; value: string; maxLength: number; children: React.ReactNode }) {
+  const count = value.length;
+  const over = count > maxLength * 0.9;
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+        <label style={{ ...labelStyle, marginBottom: 0 }}>{label}</label>
+        <span style={{ font: "400 11px/1 var(--font-sans, sans-serif)", color: over ? "#e53e3e" : "rgba(10,10,10,.35)" }}>
+          {count} / {maxLength}
+        </span>
+      </div>
+      {children}
+    </div>
+  );
+}
 
 const btnBase: CSSProperties = {
   font: "500 13px/1 var(--font-sans, sans-serif)",
@@ -163,6 +180,7 @@ function ImageUpload({
 
 export default function AdminWorkPage() {
   const [items, setItems] = useState<WorkItem[]>([]);
+  const [allInsights, setAllInsights] = useState<InsightItem[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<WorkItem | null>(null);
   const [form, setForm] = useState<Omit<WorkItem, "id">>(EMPTY_ITEM);
@@ -170,6 +188,7 @@ export default function AdminWorkPage() {
 
   useEffect(() => {
     setItems(getWork());
+    setAllInsights(getInsights());
   }, []);
 
   function openAdd() {
@@ -364,14 +383,12 @@ export default function AdminWorkPage() {
               />
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <div>
-                  <label style={labelStyle}>Client</label>
-                  <input style={inputStyle} value={form.client} onChange={(e) => setForm({ ...form, client: e.target.value })} placeholder="BLUEGARAGE" />
-                </div>
-                <div>
-                  <label style={labelStyle}>Tag</label>
-                  <input style={inputStyle} value={form.tag} onChange={(e) => setForm({ ...form, tag: e.target.value })} placeholder="JYP360" />
-                </div>
+                <FieldWithCount label="Client" value={form.client} maxLength={20}>
+                  <input style={inputStyle} value={form.client} maxLength={20} onChange={(e) => setForm({ ...form, client: e.target.value })} placeholder="BLUEGARAGE" />
+                </FieldWithCount>
+                <FieldWithCount label="Tag" value={form.tag} maxLength={20}>
+                  <input style={inputStyle} value={form.tag} maxLength={20} onChange={(e) => setForm({ ...form, tag: e.target.value })} placeholder="JYP360" />
+                </FieldWithCount>
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
@@ -393,15 +410,13 @@ export default function AdminWorkPage() {
                 </div>
               </div>
 
-              <div>
-                <label style={labelStyle}>Title</label>
-                <input style={inputStyle} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="프로젝트 제목" />
-              </div>
+              <FieldWithCount label="Title" value={form.title} maxLength={40}>
+                <input style={inputStyle} value={form.title} maxLength={40} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="프로젝트 제목" />
+              </FieldWithCount>
 
-              <div>
-                <label style={labelStyle}>Lead (소개 문구)</label>
-                <textarea style={{ ...inputStyle, height: 80, resize: "vertical" }} value={form.lead} onChange={(e) => setForm({ ...form, lead: e.target.value })} placeholder="프로젝트 소개..." />
-              </div>
+              <FieldWithCount label="Lead (소개 문구)" value={form.lead} maxLength={120}>
+                <textarea style={{ ...inputStyle, height: 80, resize: "vertical" }} value={form.lead} maxLength={120} onChange={(e) => setForm({ ...form, lead: e.target.value })} placeholder="프로젝트 소개..." />
+              </FieldWithCount>
 
               {/* 섹션 */}
               <div>
@@ -425,14 +440,12 @@ export default function AdminWorkPage() {
                         )}
                       </div>
                       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                        <div>
-                          <label style={labelStyle}>제목 (h)</label>
-                          <input style={inputStyle} value={sec.h} onChange={(e) => setSection(i, "h", e.target.value)} placeholder="문제 / 접근 / 결과" />
-                        </div>
-                        <div>
-                          <label style={labelStyle}>내용 (p)</label>
-                          <textarea style={{ ...inputStyle, height: 72, resize: "vertical" }} value={sec.p} onChange={(e) => setSection(i, "p", e.target.value)} />
-                        </div>
+                        <FieldWithCount label="제목 (h)" value={sec.h} maxLength={30}>
+                          <input style={inputStyle} value={sec.h} maxLength={30} onChange={(e) => setSection(i, "h", e.target.value)} placeholder="문제 / 접근 / 결과" />
+                        </FieldWithCount>
+                        <FieldWithCount label="내용 (p)" value={sec.p} maxLength={150}>
+                          <textarea style={{ ...inputStyle, height: 72, resize: "vertical" }} value={sec.p} maxLength={150} onChange={(e) => setSection(i, "p", e.target.value)} />
+                        </FieldWithCount>
                         <ImageUpload
                           label="섹션 이미지"
                           value={sec.img ?? ""}
@@ -452,12 +465,56 @@ export default function AdminWorkPage() {
                 </button>
               </div>
 
+              {/* 관련 인사이트 */}
               <div>
-                <label style={labelStyle}>핵심 포인트 (한 줄에 하나씩)</label>
+                <label style={labelStyle}>관련 인사이트 (최대 3개)</label>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6, maxHeight: 200, overflowY: "auto", padding: "8px 10px", background: "#f9f9f9", borderRadius: 8, border: "1px solid rgba(10,10,10,.1)" }}>
+                  {allInsights.length === 0 && (
+                    <span style={{ font: "400 13px/1.5 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.4)" }}>등록된 인사이트가 없어요.</span>
+                  )}
+                  {allInsights.map((ins, idx) => {
+                    const selected = (form.relatedInsights ?? []).includes(idx);
+                    const atMax = (form.relatedInsights ?? []).length >= 3;
+                    return (
+                      <label key={idx} style={{ display: "flex", alignItems: "flex-start", gap: 8, cursor: "pointer", padding: "6px 4px", borderRadius: 6, background: selected ? "rgba(10,133,248,.08)" : "transparent" }}>
+                        <input
+                          type="checkbox"
+                          checked={selected}
+                          disabled={!selected && atMax}
+                          style={{ marginTop: 2, accentColor: "#0a85f8", flexShrink: 0 }}
+                          onChange={() => {
+                            const prev = form.relatedInsights ?? [];
+                            const next = selected ? prev.filter((i) => i !== idx) : [...prev, idx];
+                            setForm({ ...form, relatedInsights: next });
+                          }}
+                        />
+                        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                          <span style={{ font: "500 13px/1.4 var(--font-sans, sans-serif)", color: selected ? "#0a85f8" : "#0a0a0a" }}>{ins.title}</span>
+                          <span style={{ font: "400 11px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.45)" }}>{ins.tag} · {ins.date}</span>
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
+                {(form.relatedInsights ?? []).length > 0 && (
+                  <div style={{ marginTop: 6, font: "400 12px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.45)" }}>
+                    {(form.relatedInsights ?? []).length}개 선택됨
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                  <label style={{ ...labelStyle, marginBottom: 0 }}>핵심 포인트 (한 줄에 하나씩)</label>
+                  <span style={{ font: "400 11px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.35)" }}>줄당 최대 40자</span>
+                </div>
                 <textarea
                   style={{ ...inputStyle, height: 80, resize: "vertical" }}
                   value={form.points.join("\n")}
-                  onChange={(e) => setForm({ ...form, points: e.target.value.split("\n").filter((p) => p.trim()) })}
+                  onChange={(e) => {
+                    const lines = e.target.value.split("\n").map((l) => l.slice(0, 40));
+                    setForm({ ...form, points: lines.filter((p) => p.trim()) });
+                  }}
                   placeholder={"포인트 1\n포인트 2\n포인트 3"}
                 />
               </div>

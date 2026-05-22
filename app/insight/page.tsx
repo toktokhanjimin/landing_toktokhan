@@ -3,35 +3,66 @@
 import { useState, useEffect, CSSProperties } from "react";
 import SiteHeader from "../components/SiteHeader";
 import Footer from "../components/Footer";
-import { getInsights, type InsightItem } from "../lib/store";
+import { getInsights, recordInsightClick, type InsightItem } from "../lib/store";
 
 const TAGS = ["전체", "기술 블로그", "링크드인"];
+const INITIAL_SIZE = 10;
+const PAGE_SIZE = 6;
 
 export default function InsightPage() {
   const [active, setActive] = useState("전체");
-  const [items, setItems] = useState<InsightItem[]>([]);
+  const [allItems, setAllItems] = useState<InsightItem[]>([]);
+  const [visibleCount, setVisibleCount] = useState(INITIAL_SIZE);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setItems(getInsights());
+    setAllItems(getInsights());
     const prev = document.body.style.background;
     document.body.style.background = "#ffffff";
     return () => { document.body.style.background = prev; };
   }, []);
 
-  const filtered = active === "전체" ? items : items.filter((i) => i.tag === active);
+  // 필터 바뀌면 표시 개수 초기화
+  useEffect(() => { setVisibleCount(INITIAL_SIZE); }, [active]);
+
+  const filtered = active === "전체" ? allItems : allItems.filter((i) => i.tag === active);
+  const visible = filtered.slice(0, visibleCount);
+  const hasMore = visibleCount < filtered.length;
+
+  // 스크롤 기반 무한 로드
+  useEffect(() => {
+    if (!hasMore) return;
+    let triggered = false;
+    const onScroll = () => {
+      if (triggered) return;
+      const scrollBottom = window.scrollY + window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
+      if (scrollBottom >= docHeight - 600) {
+        triggered = true;
+        setLoading(true);
+        setTimeout(() => {
+          setVisibleCount((c) => Math.min(c + PAGE_SIZE, filtered.length));
+          setLoading(false);
+          triggered = false;
+        }, 600);
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [hasMore, filtered.length]);
 
   const chip = (on: boolean): CSSProperties => ({
     font: "500 14px/1 var(--font-sans)",
     padding: "10px 16px",
-    borderRadius: 8,
+    borderRadius: "var(--r-sm)",
     border: on ? "1px solid #0a0a0a" : "1px solid rgba(10,10,10,.14)",
-    background: on ? "#0a0a0a" : "transparent",
-    color: on ? "#fff" : "rgba(10,10,10,.7)",
+    background: on ? "var(--bg-dark)" : "transparent",
+    color: on ? "var(--fg-on-dark-1)" : "rgba(10,10,10,.7)",
     cursor: "pointer",
   });
 
   return (
-    <div style={{ background: "#ffffff", color: "#0a0a0a", minHeight: "100dvh" }}>
+    <div style={{ background: "var(--bg)", color: "var(--fg-1)", minHeight: "100dvh" }}>
       <SiteHeader forceLight current="Insight" />
 
       <style>{`
@@ -42,7 +73,7 @@ export default function InsightPage() {
       `}</style>
 
       {/* Hero */}
-      <header style={{
+      <header className="ins-page-header page-hero-header" style={{
         padding: "180px 24px 80px",
         maxWidth: 1248,
         margin: "0 auto",
@@ -54,12 +85,12 @@ export default function InsightPage() {
           font: "700 clamp(32px,4.4vw,60px)/1.24 var(--font-sans)",
           letterSpacing: "-.03em",
           margin: 0,
-          color: "#0a0a0a",
+          color: "var(--fg-1)",
         }}>
           Insight
         </h1>
         <p style={{
-          font: "400 17px/1.6 var(--font-sans)",
+          font: "var(--body-lg)",
           color: "rgba(10,10,10,.6)",
           maxWidth: 620,
           margin: 0,
@@ -70,7 +101,7 @@ export default function InsightPage() {
       </header>
 
       {/* Archive */}
-      <section style={{ padding: "0 24px 120px" }}>
+      <section className="ins-page-section" style={{ padding: "0 24px 120px" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
           {/* Filters */}
           <div style={{ display: "flex", gap: 8, marginBottom: 48, flexWrap: "wrap", alignItems: "center" }}>
@@ -82,16 +113,27 @@ export default function InsightPage() {
           </div>
 
           {/* Grid */}
-          <div style={{
+          <div className="ins-page-grid" style={{
             display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            columnGap: 56,
-            rowGap: 56,
+            gridTemplateColumns: "1fr",
+            rowGap: 0,
           }}>
-            {filtered.map((it, i) => (
+            {visible.map((it, i) => (
               <InsightCard key={i} item={it} />
             ))}
           </div>
+
+          {loading && (
+            <div style={{ display: "flex", justifyContent: "center", padding: "32px 0" }}>
+              <div style={{
+                width: 22, height: 22, borderRadius: "50%",
+                border: "2px solid rgba(10,10,10,.12)",
+                borderTopColor: "#0a0a0a",
+                animation: "spin .7s linear infinite",
+              }} />
+              <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            </div>
+          )}
         </div>
       </section>
 
@@ -107,24 +149,27 @@ function InsightCard({ item }: { item: InsightItem }) {
       href={item.url || undefined}
       target={item.url ? "_blank" : undefined}
       rel={item.url ? "noopener noreferrer" : undefined}
+      onClick={() => { if (item.url) recordInsightClick(item.title); }}
       style={{
         display: "grid",
-        gridTemplateColumns: "180px 1fr",
-        gap: 28,
-        alignItems: "flex-start",
+        gridTemplateColumns: "100px 1fr",
+        gap: 20,
+        alignItems: "center",
         cursor: item.url ? "pointer" : "default",
         textDecoration: "none",
         color: "inherit",
+        padding: "20px 0",
+        borderBottom: "1px solid rgba(10,10,10,.07)",
       }}
     >
       <div className="ins-thumb" style={{
-        width: 180,
-        height: 180,
-        borderRadius: 22,
+        width: 100,
+        height: 100,
+        borderRadius: "var(--r-md)",
         background: item.thumb,
         flexShrink: 0,
         overflow: "hidden",
-        boxShadow: "0 4px 20px rgba(0,0,0,.06)",
+        boxShadow: "0 2px 12px rgba(0,0,0,.08)",
         position: "relative",
       }}>
         {(() => {
@@ -138,15 +183,15 @@ function InsightCard({ item }: { item: InsightItem }) {
 
       <div style={{ display: "flex", flexDirection: "column", gap: 12, paddingTop: 4 }}>
         <h3 style={{
-          font: "600 18px/1.4 var(--font-sans)",
+          font: "var(--h6)",
           letterSpacing: "-.01em",
-          color: "#0a0a0a",
+          color: "var(--fg-1)",
           margin: 0,
           whiteSpace: "pre-line",
         }}>
           {item.title}
         </h3>
-        <p style={{
+        <p className="ins-excerpt" style={{
           font: "400 14px/1.6 var(--font-sans)",
           color: "rgba(10,10,10,.6)",
           margin: 0,

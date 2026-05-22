@@ -45,12 +45,12 @@ export default function TeamReveal() {
   const insetX = startInsetX * (1 - eased);
 
   return (
-    <section ref={sectionRef} style={{ position: "relative", height: "calc(56vh + 130px)", background: "transparent" }}>
-      <div style={{ position: "relative", top: 0, height: "100%", width: "100%", overflow: "hidden", background: "transparent", display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: 80 }}>
+    <section ref={sectionRef} className="no-px" style={{ position: "relative", height: "calc(56vh + 90px)", background: "transparent" }}>
+      <div style={{ position: "relative", top: 0, height: "100%", width: "100%", overflow: "hidden", background: "transparent", display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: 60 }}>
         <div style={{
-          position: "relative", width: "100%", height: "56vh", overflow: "hidden",
-          clipPath: `inset(0 ${insetX}vw)`,
-          WebkitClipPath: `inset(0 ${insetX}vw)` as string,
+          position: "relative", width: "100%", height: "calc(56vh - 40px)", overflow: "hidden",
+          clipPath: `inset(50px ${insetX}vw)`,
+          WebkitClipPath: `inset(50px ${insetX}vw)` as string,
           willChange: "clip-path",
         }}>
           <img
@@ -62,13 +62,13 @@ export default function TeamReveal() {
           <h2 style={{
             position: "absolute", inset: 0, margin: 0,
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: "clamp(40px, 5vw, 72px)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.15,
-            color: "#ffffff", textAlign: "center", textShadow: "0 2px 24px rgba(0,0,0,0.35)",
+            fontSize: "clamp(40px, 5vw, 72px)", fontWeight: 700, letterSpacing: "-0.02em", lineHeight: 1.35,
+            color: "var(--fg-on-dark-1)", textAlign: "center", textShadow: "0 2px 24px rgba(0,0,0,0.35)",
             opacity: Math.min(1, eased * 1.4),
             transform: `translateY(${(1 - Math.min(1, eased * 1.4)) * 12}px)`,
             pointerEvents: "none",
           }}>
-            사람은 문제에 더 가까워질 수 있도록
+            사람은 문제에<br />더 가까워질 수 있도록
           </h2>
         </div>
       </div>

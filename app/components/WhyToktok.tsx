@@ -72,7 +72,7 @@ function VisualEndToEnd() {
         display: "inline-flex",
         alignItems: "center",
         gap: 7,
-        background: "#fff",
+        background: "var(--bg)",
         borderRadius: 999,
         padding: "7px 13px",
         boxShadow: "0 2px 8px rgba(0,0,0,.07)",
@@ -80,7 +80,7 @@ function VisualEndToEnd() {
         marginInline: "12px",
       }}>
         <Image src="/assets/asterisk-blue.png" alt="" width={16} height={16} style={{ objectFit: "contain", flexShrink: 0 }} />
-        <span style={{ font: "600 12px/1 var(--font-sans)", color: "#0a0a0a", letterSpacing: "-.01em" }}>
+        <span style={{ font: "600 12px/1 var(--font-sans)", color: "var(--fg-1)", letterSpacing: "-.01em" }}>
           프로젝트가 시작되었습니다.
         </span>
       </div>
@@ -94,7 +94,7 @@ function VisualEndToEnd() {
             display: "flex",
             alignItems: "center",
             gap: 12,
-            background: "#fff",
+            background: "var(--bg)",
             borderRadius: 14,
             padding: "12px 14px",
             boxShadow: "0 1px 6px rgba(0,0,0,.06)",
@@ -114,7 +114,7 @@ function VisualEndToEnd() {
               <Image src={step.icon} alt={step.title} width={22} height={22} style={{ objectFit: "contain" }} />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ font: "600 13px/1 var(--font-sans)", color: "#0a0a0a", marginBottom: 5 }}>
+              <div style={{ font: "600 13px/1 var(--font-sans)", color: "var(--fg-1)", marginBottom: 5 }}>
                 {step.title}
               </div>
               <div style={{ font: "400 11.5px/1.3 var(--font-sans)", color: "rgba(10,10,10,.45)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -213,7 +213,7 @@ function VisualInternalize() {
       {/* ── Top pill: AI 도입 (h=40, y 41–81) ── */}
       <div style={{
         position: "absolute", top: py(41), left: "50%", transform: "translateX(-50%)",
-        height: 40, background: "#0a0a0a", color: "#fff", borderRadius: 999,
+        height: 40, background: "var(--bg-dark)", color: "var(--fg-on-dark-1)", borderRadius: 999,
         padding: "0 22px", display: "flex", alignItems: "center", gap: 9, whiteSpace: "nowrap", zIndex: 1,
         boxSizing: "border-box",
       }}>
@@ -236,7 +236,7 @@ function VisualInternalize() {
             left:   col === 0 ? px(36) : px(184),
             width:  px(140),
             height: py(64),
-            background: "#fff", borderRadius: 14,
+            background: "var(--bg)", borderRadius: 14,
             padding: "0 12px",
             boxShadow: on ? "0 2px 12px rgba(78,95,212,.15)" : "0 1px 6px rgba(0,0,0,.07)",
             border: on ? "1.5px solid rgba(78,95,212,.26)" : "1.5px solid transparent",
@@ -248,7 +248,7 @@ function VisualInternalize() {
               <Image src={d.img} alt={d.id} width={40} height={40} style={{ objectFit: "contain" }} />
             </div>
             <div>
-              <div style={{ font: "600 13px/1 var(--font-sans)", color: "#0a0a0a", marginBottom: 5 }}>{d.id}</div>
+              <div style={{ font: "600 13px/1 var(--font-sans)", color: "var(--fg-1)", marginBottom: 5 }}>{d.id}</div>
               <div style={{ font: "400 11.5px/1.3 var(--font-sans)", color: "rgba(10,10,10,.45)" }}>팀원 : {d.count}명</div>
             </div>
           </div>
@@ -266,7 +266,7 @@ function VisualInternalize() {
         transition: "background .4s, border-color .4s",
         boxSizing: "border-box",
       }}>
-        <div style={{ font: "800 13px/1 var(--font-sans)", color: nativeOn ? "#4e5fd4" : "#0a0a0a", letterSpacing: ".08em", transition: "color .4s" }}>
+        <div style={{ font: "800 13px/1 var(--font-sans)", color: nativeOn ? "#4e5fd4" : "var(--fg-1)", letterSpacing: ".08em", transition: "color .4s" }}>
           AI NATIVE TEAM
         </div>
         <div style={{ font: "400 10px/1 var(--font-sans)", color: "rgba(10,10,10,.5)", marginTop: 4 }}>팀원 : 32명</div>
@@ -424,7 +424,7 @@ function VisualProducts() {
         </span>
       </div>
       {prods.map((p) => (
-        <div key={p.name} style={{ background: "#fff", borderRadius: 16, border: "1px solid rgba(15,18,26,.06)", boxShadow: "0 2px 6px -2px rgba(15,18,26,.08)", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+        <div key={p.name} style={{ background: "var(--bg)", borderRadius: 16, border: "1px solid rgba(15,18,26,.06)", boxShadow: "0 2px 6px -2px rgba(15,18,26,.08)", overflow: "hidden", display: "flex", flexDirection: "column" }}>
           <div style={{ background: p.bg, color: p.fg, padding: "22px 22px", display: "flex", alignItems: "center", gap: 12 }}>
             <div style={{ width: 42, height: 42, borderRadius: 12, background: p.markBg, display: "grid", placeItems: "center", font: "700 22px/1 var(--font-sans)", color: p.fg }}>{p.mark}</div>
             <span style={{ font: "700 22px/1 var(--font-sans)", letterSpacing: "-.02em" }}>{p.name}</span>
@@ -454,10 +454,10 @@ const cardBgs = [
 ];
 
 const items = [
-  { en: "프로덕트의 전체 흐름을 알고 있습니다", ko: "9년동안 직접 해온 경험", desc: "9년간 기획·디자인·개발·운영까지 직접 해왔습니다.\n비즈니스 흐름을 알기 때문에 어떤 업무를\n자동화해야 효과가 나는지 함께 판단할 수 있습니다.", visual: "endtoend" },
-  { en: "AX는 조직 안에 심어져야 합니다", ko: "교육 인프라와 팀 내재화", desc: "AI 도입은 툴 지급으로 끝나지 않습니다.\n검증된 워크플로우와 교육 자산으로\n조직 안에 AX가 실제로 작동하도록 내재화합니다.", visual: "internalize" },
-  { en: "이론이 아니라, 직접 작동시킨 방법입니다", ko: "먼저 설계하고 검증한 방법", desc: "외부 방법론을 그대로 가져오지 않습니다.\n우리 조직에 먼저 적용해 검증한 방식을\n고객사에 맞게 구조화합니다.", visual: "method" },
-  { en: "서비스 런칭 이후의 흐름까지 봅니다", ko: "아웃소싱은 물론 자체 서비스 출시 및 고도화 경험", desc: "외주 개발뿐 아니라 자체 서비스도 직접 만들고 운영합니다.\n출시 이후 비즈니스 확장까지 함께 보기 때문에\n더 현실적인 AX 전략을 제안할 수 있습니다.", visual: "products" },
+  { en: "전체 흐름을\n알고 있기 때문에", ko: "9년동안 직접 해온 경험", desc: "똑똑한개발자는 9년간 기획·디자인·개발·운영까지의\n사이클을 계속해서 경험했기 때문에 조직이 어떤 업무를\n자동화해야 효과가 나는지를 함께 판단할 수 있습니다.", img: "/assets/cd-1.png" },
+  { en: "조직에 심어져야\n하기 때문에", ko: "교육 인프라와 팀 내재화", desc: "AI 도입은 툴 지급으로 끝나지 않습니다.\n검증된 워크플로우와 교육 자산으로\n조직 안에 AX가 실제로 작동하도록 내재화합니다.", img: "/assets/cd-2.png" },
+  { en: "우리가 검증한\n방법이기 때문에", ko: "먼저 설계하고 검증한 방법", desc: "외부 방법론을 그대로 가져오기보다\n우리 조직에 먼저 적용해 검증한 방식을\n다시 고객사에 맞게 구조화합니다.", img: "/assets/cd-3.png" },
+  { en: "런칭 이후까지\n봐왔기 때문에", ko: "아웃소싱은 물론 자체 서비스 출시 및 고도화 경험", desc: "외주 개발뿐 아니라 자체 서비스도 직접 만들고\n운영해보며 출시 이후 비즈니스 확장까지\n함께 보기 때문에 더 현실적인 AX 전략을\n제안할 수 있습니다.", img: "/assets/cd-4.png" },
 ];
 
 export default function WhyToktok() {
@@ -512,12 +512,12 @@ export default function WhyToktok() {
   }, []);
 
   return (
-    <section style={{ background: "transparent", color: "#fff", padding: "120px 24px 40px" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "minmax(0, 320px) minmax(0, 1fr)", gap: 80, alignItems: "start" }}>
+    <section className="wt-section" style={{ background: "transparent", color: "var(--fg-on-dark-1)", padding: "120px 24px 40px" }}>
+      <div className="wt-layout" style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "minmax(0, 320px) minmax(0, 1fr)", gap: 80, alignItems: "start" }}>
         {/* Sticky left title */}
-        <div style={{ position: "sticky", top: 120, alignSelf: "start", transform: `translateY(${titleShift}px)`, willChange: "transform" }}>
-          <h2 style={{ font: "700 clamp(28px,2.8vw,40px)/1.28 var(--font-sans)", letterSpacing: "-.025em", margin: 0, color: "#fff" }}>
-            엔터프라이즈 AX에<br />똑똑한개발자가<br />맞는 이유
+        <div className="wt-sticky" style={{ position: "sticky", top: 120, alignSelf: "start", transform: `translateY(${titleShift}px)`, willChange: "transform" }}>
+          <h2 className="section-title" style={{ color: "var(--fg-on-dark-1)" }}>
+            동작하는 AX,<br />똑똑한개발자가<br />필요한 이유
           </h2>
         </div>
 
@@ -530,23 +530,23 @@ export default function WhyToktok() {
               ? { display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 360px)", gap: 56, alignItems: "start", position: "sticky", top: 120, background: "transparent", zIndex: 2 }
               : { display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 360px)", gap: 56, alignItems: "start" };
             return (
-              <div key={it.en} ref={(el) => { cardRefs.current[i] = el; }} style={rowStyle}>
+              <div key={it.en} ref={(el) => { cardRefs.current[i] = el; }} className="wt-row" style={rowStyle}>
                 <div style={{
-                  background: cardBgs[i], borderRadius: 28, aspectRatio: "1 / 1.06",
-                  padding: 32, display: "flex", alignItems: "center", justifyContent: "center",
+                  borderRadius: 28, aspectRatio: "1 / 1.06",
                   overflow: "hidden", position: "relative",
                   transform: isActive ? "scale(1)" : "scale(0.9)", transformOrigin: "center center",
                   opacity: isActive ? 1 : 0.55, filter: isActive ? "none" : "saturate(.75)",
                   transition: "transform .5s cubic-bezier(.2,.7,.2,1), opacity .5s, filter .5s",
                 }}>
-                  {isActive && (
-                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-                      <WhyVisual variant={it.visual} />
-                    </div>
-                  )}
+                  <Image src={it.img} alt={it.en} fill unoptimized style={{ objectFit: "cover" }} sizes="(max-width: 768px) 100vw, 50vw" />
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 16, paddingTop: 40 }}>
-                  <h3 style={{ font: "700 clamp(22px,2vw,30px)/1.25 var(--font-sans)", letterSpacing: "-.02em", margin: 0, color: "#fff" }}>{it.en}</h3>
+                <div style={{
+                  display: "flex", flexDirection: "column", gap: 16, paddingTop: 0,
+                  opacity: isActive ? 1 : 0,
+                  transform: isActive ? "translateY(0)" : "translateY(12px)",
+                  transition: "opacity .5s cubic-bezier(.2,.7,.2,1), transform .5s cubic-bezier(.2,.7,.2,1)",
+                }}>
+                  <h3 style={{ font: "700 clamp(22px,2vw,30px)/1.45 var(--font-sans)", letterSpacing: "-.02em", margin: 0, color: "var(--fg-on-dark-1)", whiteSpace: "pre-line" }}>{it.en}</h3>
                   <p style={{ font: "400 14.5px/1.7 var(--font-sans)", color: "rgba(255,255,255,.62)", margin: 0, maxWidth: 320, whiteSpace: "pre-line" }}>{it.desc}</p>
                 </div>
               </div>

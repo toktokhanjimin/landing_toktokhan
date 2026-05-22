@@ -20,11 +20,11 @@ export default function FAQPage() {
   const mono = "'IBM Plex Mono', monospace";
 
   return (
-    <div style={{ background: "#ffffff", color: "#0a0a0a", minHeight: "100dvh" }}>
+    <div style={{ background: "var(--bg)", color: "var(--fg-1)", minHeight: "100dvh" }}>
       <SiteHeader forceLight current="FAQ" />
 
       {/* Hero */}
-      <header style={{
+      <header className="page-hero-header" style={{
         padding: "180px 24px 80px",
         maxWidth: 1248,
         margin: "0 auto",
@@ -36,12 +36,12 @@ export default function FAQPage() {
           font: "700 clamp(32px,4.4vw,60px)/1.24 var(--font-sans)",
           letterSpacing: "-.03em",
           margin: 0,
-          color: "#0a0a0a",
+          color: "var(--fg-1)",
         }}>
           FAQ
         </h1>
         <p style={{
-          font: "400 17px/1.6 var(--font-sans)",
+          font: "var(--body-lg)",
           color: "rgba(10,10,10,.6)",
           maxWidth: 620,
           margin: 0,
@@ -72,7 +72,7 @@ export default function FAQPage() {
                       alignItems: "center",
                       cursor: "pointer",
                       textAlign: "left",
-                      color: "#0a0a0a",
+                      color: "var(--fg-1)",
                       font: `${active ? 600 : 500} 22px/1.4 var(--font-sans)`,
                       letterSpacing: "-.02em",
                       transition: "color .2s ease",
@@ -83,8 +83,8 @@ export default function FAQPage() {
                       width: 28,
                       height: 28,
                       borderRadius: "50%",
-                      background: active ? "#0a0a0a" : "rgba(10,10,10,.06)",
-                      color: active ? "#fff" : "#0a0a0a",
+                      background: active ? "var(--bg-dark)" : "rgba(10,10,10,.06)",
+                      color: active ? "var(--fg-on-dark-1)" : "var(--fg-1)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -105,7 +105,7 @@ export default function FAQPage() {
                     padding: active ? "0 60px 32px 4px" : "0 60px 0 4px",
                   }}>
                     <p style={{
-                      font: "400 16px/1.7 var(--font-sans)",
+                      font: "var(--body-md)",
                       color: "rgba(10,10,10,.68)",
                       margin: 0,
                     }}>
