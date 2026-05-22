@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "./ui/Button";
+import StickyActionButton from "./StickyActionButton";
 
 export default function FAQ() {
   return (
@@ -20,6 +21,7 @@ export default function FAQ() {
             자주 묻는 질문 보기
           </Button>
         </div>
+        <StickyActionButton variant="inline" />
       </div>
     </section>
   );

@@ -3,7 +3,11 @@
 import { useEffect, useState, useRef } from "react";
 import { getStickyConfig, type StickyConfig } from "../lib/store";
 
-export default function StickyActionButton() {
+interface Props {
+  variant?: "float" | "inline";
+}
+
+export default function StickyActionButton({ variant = "float" }: Props) {
   const [config, setConfig] = useState<StickyConfig | null>(null);
   const [visible, setVisible] = useState(false);
   const [open, setOpen] = useState(false);
@@ -14,13 +18,24 @@ export default function StickyActionButton() {
     if (cfg.enabled && cfg.actions.length > 0) setConfig(cfg);
   }, []);
 
-  // 스크롤 80px 넘으면 등장
+  // 플로팅: 스크롤 80px 넘으면 등장, CTA 섹션 보이면 숨김
   useEffect(() => {
+    if (variant !== "float") return;
     const onScroll = () => setVisible(window.scrollY > 80);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
+
+    const cta = document.getElementById("contact-cta");
+    if (cta) {
+      const io = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setVisible(false); else setVisible(window.scrollY > 80); },
+        { threshold: 0.1 }
+      );
+      io.observe(cta);
+      return () => { window.removeEventListener("scroll", onScroll); io.disconnect(); };
+    }
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [variant]);
 
   // 외부 클릭 시 닫기
   useEffect(() => {
@@ -34,6 +49,9 @@ export default function StickyActionButton() {
 
   if (!config) return null;
 
+  const isFloat = variant === "float";
+  const isInline = variant === "inline";
+
   return (
     <>
       <style>{`
@@ -43,6 +61,7 @@ export default function StickyActionButton() {
           left: 50%;
           transform: translateX(-50%) translateY(${visible ? "0" : "100px"});
           opacity: ${visible ? 1 : 0};
+          pointer-events: ${visible ? "auto" : "none"};
           transition: transform .4s cubic-bezier(.22,.61,.36,1), opacity .3s ease;
           z-index: 40;
           display: flex;
@@ -52,22 +71,27 @@ export default function StickyActionButton() {
           width: max-content;
           max-width: calc(100vw - 32px);
         }
-        @media (max-width: 640px) {
-          .sticky-btn-wrap {
-            bottom: 20px;
-          }
-          .sticky-trigger {
-            padding: 14px 14px;
-          }
-          .sticky-action-item {
-            padding: 15px 14px;
-            font-size: 14px;
-          }
+        .sticky-btn-wrap-inline {
+          position: relative;
+          display: inline-flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px;
+          width: max-content;
+          max-width: calc(100vw - 48px);
         }
         .sticky-menu {
           background: var(--bg);
           border-radius: var(--r-xl);
           box-shadow: 0 8px 40px rgba(0,0,0,.14), 0 1px 4px rgba(0,0,0,.06);
+          overflow: hidden;
+          transform-origin: bottom center;
+          animation: stickyMenuIn .22s cubic-bezier(.22,.61,.36,1);
+        }
+        .sticky-menu-inline {
+          background: var(--bg);
+          border: 1px solid rgba(10,10,10,.12);
+          border-radius: var(--r-xl);
           overflow: hidden;
           transform-origin: bottom center;
           animation: stickyMenuIn .22s cubic-bezier(.22,.61,.36,1);
@@ -93,14 +117,14 @@ export default function StickyActionButton() {
           border-bottom: 1px solid rgba(10,10,10,.07);
         }
         .sticky-action-item:hover { background: rgba(10,10,10,.04); }
-        .sticky-trigger {
+        .sticky-trigger-float {
           display: inline-flex;
           align-items: center;
           justify-content: center;
           gap: 8px;
           padding: 14px 24px;
           border-radius: var(--r-full);
-          background: var(--btn-primary, #0a86f8);
+          background: var(--btn-primary);
           color: var(--on-brand);
           font: 600 15px/1 var(--font-sans);
           border: none;
@@ -109,20 +133,55 @@ export default function StickyActionButton() {
           white-space: nowrap;
           transition: background .2s ease, box-shadow .2s ease, transform .2s ease;
         }
-        .sticky-trigger:hover {
+        .sticky-trigger-float:hover {
           background: var(--primary-600, #0875df);
           box-shadow: 0 6px 28px rgba(10,134,248,.45);
           transform: translateY(-1px);
+        }
+        .sticky-trigger-inline {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 14px 24px;
+          border-radius: var(--r-full);
+          background: var(--bg);
+          color: var(--fg-1);
+          font: 600 15px/1 var(--font-sans);
+          border: 1px solid rgba(10,10,10,.14);
+          cursor: pointer;
+          white-space: nowrap;
+          transition: background .2s ease, border-color .2s ease;
+        }
+        .sticky-trigger-inline:hover {
+          background: var(--bg-elev);
+          border-color: rgba(10,10,10,.25);
         }
         .sticky-chevron {
           transition: transform .25s ease;
           display: inline-flex;
         }
+        @media (max-width: 640px) {
+          .sticky-btn-wrap {
+            bottom: 20px;
+          }
+          .sticky-trigger-float,
+          .sticky-trigger-inline {
+            padding: 14px 14px;
+          }
+          .sticky-action-item {
+            padding: 15px 14px;
+            font-size: 14px;
+          }
+        }
       `}</style>
 
-      <div className="sticky-btn-wrap" ref={ref}>
+      <div
+        className={isFloat ? "sticky-btn-wrap" : "sticky-btn-wrap-inline"}
+        ref={ref}
+      >
         {open && (
-          <div className="sticky-menu">
+          <div className={isFloat ? "sticky-menu" : "sticky-menu-inline"}>
             {config.actions.map((action, i) => {
               if (!action.label) return null;
               if (action.type === "download" && action.url) {
@@ -148,7 +207,10 @@ export default function StickyActionButton() {
           </div>
         )}
 
-        <button className="sticky-trigger" onClick={() => setOpen((v) => !v)}>
+        <button
+          className={isFloat ? "sticky-trigger-float" : "sticky-trigger-inline"}
+          onClick={() => setOpen((v) => !v)}
+        >
           {config.buttonLabel}
           <span className="sticky-chevron" style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
