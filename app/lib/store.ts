@@ -52,7 +52,7 @@ export interface StickyConfig {
 const DEFAULT_STICKY: StickyConfig = {
   enabled: true,
   buttonLabel: "똑똑한개발자 더 알아보기",
-  description: "AI와 일하는 조직,\n지금 똑똑한개발자와 시작하세요",
+  description: "No.1 AX 파트너\n똑똑한개발자가 궁금하다면?",
   actions: [
     { label: "서비스 소개서 받기", url: "https://www.pluuug.com/form/pbrPZzeYyu", type: "download" },
     { label: "똑똑한 AX 교육 보기", url: "", type: "link" },

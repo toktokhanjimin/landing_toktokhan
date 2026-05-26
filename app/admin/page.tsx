@@ -171,47 +171,30 @@ export default function AdminDashboard() {
               />
             </div>
 
-            {/* 액션 아이템들 */}
+            {/* 링크 버튼 */}
             <div>
-              <label style={{ display: "block", font: "500 12px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.5)", letterSpacing: ".04em", marginBottom: 8 }}>액션 항목 (최대 4개)</label>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {sticky.actions.map((action, i) => (
-                  <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 2fr auto auto", gap: 8, alignItems: "center" }}>
+              <label style={{ display: "block", font: "500 12px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.5)", letterSpacing: ".04em", marginBottom: 8 }}>링크 버튼</label>
+              {(() => {
+                const linkIdx = sticky.actions.findIndex((a) => a.type === "link");
+                if (linkIdx === -1) return null;
+                const action = sticky.actions[linkIdx];
+                return (
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 8 }}>
                     <input
                       style={{ font: "400 13px/1 var(--font-sans, sans-serif)", padding: "9px 10px", border: "1px solid rgba(10,10,10,.14)", borderRadius: 7, color: "#0a0a0a", outline: "none" }}
                       value={action.label}
-                      onChange={(e) => updateAction(i, "label", e.target.value)}
-                      placeholder="항목 이름"
+                      onChange={(e) => updateAction(linkIdx, "label", e.target.value)}
+                      placeholder="버튼 텍스트"
                     />
                     <input
                       style={{ font: "400 13px/1 var(--font-sans, sans-serif)", padding: "9px 10px", border: "1px solid rgba(10,10,10,.14)", borderRadius: 7, color: "#0a0a0a", outline: "none" }}
                       value={action.url}
-                      onChange={(e) => updateAction(i, "url", e.target.value)}
-                      placeholder={action.type === "download" ? "pluuug 폼 URL" : "https://..."}
+                      onChange={(e) => updateAction(linkIdx, "url", e.target.value)}
+                      placeholder="https://..."
                     />
-                    <select
-                      style={{ font: "400 13px/1 var(--font-sans, sans-serif)", padding: "9px 10px", border: "1px solid rgba(10,10,10,.14)", borderRadius: 7, color: "#0a0a0a", background: "#fff", outline: "none", cursor: "pointer" }}
-                      value={action.type}
-                      onChange={(e) => { updateAction(i, "type", e.target.value); updateAction(i, "url", ""); updateAction(i, "fileName", ""); }}
-                    >
-                      <option value="link">링크</option>
-                      <option value="download">다운로드</option>
-                    </select>
-                    <button
-                      onClick={() => setSticky({ ...sticky, actions: sticky.actions.filter((_, j) => j !== i) })}
-                      style={{ width: 32, height: 32, borderRadius: 7, border: "1px solid rgba(10,10,10,.12)", background: "transparent", color: "rgba(10,10,10,.4)", font: "400 16px/1 var(--font-sans, sans-serif)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
-                    >✕</button>
                   </div>
-                ))}
-                {sticky.actions.length < 4 && (
-                  <button
-                    onClick={() => setSticky({ ...sticky, actions: [...sticky.actions, { ...EMPTY_ACTION }] })}
-                    style={{ padding: "9px 14px", border: "1px dashed rgba(10,10,10,.2)", borderRadius: 7, background: "transparent", color: "rgba(10,10,10,.5)", font: "500 13px/1 var(--font-sans, sans-serif)", cursor: "pointer", textAlign: "left" as const }}
-                  >
-                    + 항목 추가
-                  </button>
-                )}
-              </div>
+                );
+              })()}
             </div>
 
             <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, paddingTop: 4 }}>

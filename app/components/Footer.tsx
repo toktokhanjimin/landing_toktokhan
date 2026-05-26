@@ -18,7 +18,9 @@ export default function Footer() {
         {/* Top grid */}
         <div className="footer-grid" style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr 1fr", gap: 48, paddingBottom: 48, paddingTop: 20 }}>
           <div className="footer-logo-col" style={{ display: "flex", flexDirection: "column", gap: 14, alignItems: "flex-start" }}>
-            <Image src="/assets/tok-logo-black.svg" alt="TOKTOKHAN.DEV" width={220} height={56} style={{ height: 56, width: "auto", display: "block", marginLeft: -10 }} />
+            <a href="/" style={{ display: "block" }}>
+              <Image src="/assets/tok-logo-black.svg" alt="TOKTOKHAN.DEV" width={220} height={56} style={{ height: 56, width: "auto", display: "block", marginLeft: -10 }} />
+            </a>
           </div>
           {cols.map((c) => (
             <div key={c.h}>

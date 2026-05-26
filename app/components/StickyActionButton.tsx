@@ -101,14 +101,13 @@ export default function StickyActionButton({ variant = "float" }: Props) {
   const downloadAction = config.actions.find((a) => a.type === "download");
 
   const buttons = (
-    <>
+    <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
       {linkAction && (
         <a
           className="sticky-float-ghost"
           href={linkAction.url || undefined}
           target={linkAction.url ? "_blank" : undefined}
           rel={linkAction.url ? "noopener noreferrer" : undefined}
-          style={{ marginLeft: 16 }}
         >
           {linkAction.label}
         </a>
@@ -130,14 +129,14 @@ export default function StickyActionButton({ variant = "float" }: Props) {
       <button
         className="sticky-float-chat"
         style={{ marginLeft: 8 }}
-        onClick={() => document.getElementById("contact-cta")?.scrollIntoView({ behavior: "smooth" })}
+        onClick={() => window.location.href = "/faq"}
         aria-label="문의하기"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         </svg>
       </button>
-    </>
+    </div>
   );
 
   return (
@@ -153,10 +152,12 @@ export default function StickyActionButton({ variant = "float" }: Props) {
           z-index: 40;
           display: flex;
           align-items: center;
+          justify-content: space-between;
           gap: 0;
           border-radius: var(--r-xl);
           padding: 20px 20px 20px 28px;
           white-space: nowrap;
+          width: 700px;
         }
         .sticky-float-bar[data-theme="light"] {
           background: #fff;
@@ -236,13 +237,18 @@ export default function StickyActionButton({ variant = "float" }: Props) {
           white-space: nowrap;
         }
 
-        @media (max-width: 640px) {
-          .sticky-float-bar { bottom: 20px; padding: 7px 7px 7px 18px; max-width: calc(100vw - 32px); }
+        @media (max-width: 1023px) {
           .sticky-float-desc { display: none; }
-          .sticky-float-ghost { padding: 10px 14px; font-size: 13px; }
-          .sticky-float-primary { padding: 10px 14px; font-size: 13px; }
-          .sticky-float-chat { width: 34px; height: 34px; }
+          .sticky-float-ghost { margin-left: 0 !important; }
+          .sticky-inline-bar .sticky-float-desc { display: none; }
+        }
+        @media (max-width: 767px) {
+          .sticky-float-bar { bottom: 20px; padding: 7px; border-radius: 18px; }
+          .sticky-float-ghost { padding: 14px 14px; font-size: 13px; }
+          .sticky-float-primary { padding: 14px 14px; font-size: 13px; }
+          .sticky-float-chat { width: 44px; height: 44px; }
           .sticky-inline-dock { bottom: 20px !important; }
+          .sticky-inline-bar { padding: 7px; }
         }
 
         @keyframes modalFade { from { opacity:0; } to { opacity:1; } }
