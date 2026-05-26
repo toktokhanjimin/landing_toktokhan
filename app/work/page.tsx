@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect, CSSProperties } from "react";
+import { useState, useEffect } from "react";
 import SiteHeader from "../components/SiteHeader";
 import Footer from "../components/Footer";
+import FilterChip from "../components/ui/FilterChip";
 import { getWork, type WorkItem } from "../lib/store";
 
 const CATEGORIES = ["전체", "AX", "AI", "Ops"];
@@ -18,16 +19,6 @@ export default function WorkPage() {
     return () => { document.body.style.background = prev; };
   }, []);
   const filtered = active === "전체" ? items : items.filter((i) => i.category === active);
-
-  const chip = (on: boolean): CSSProperties => ({
-    font: "500 14px/1 var(--font-sans)",
-    padding: "10px 16px",
-    borderRadius: "var(--r-sm)",
-    border: on ? "1px solid #0a0a0a" : "1px solid rgba(10,10,10,.14)",
-    background: on ? "var(--bg-dark)" : "transparent",
-    color: on ? "var(--fg-on-dark-1)" : "rgba(10,10,10,.7)",
-    cursor: "pointer",
-  });
 
   return (
     <div style={{ background: "var(--bg)", color: "var(--fg-1)", minHeight: "100dvh" }}>
@@ -75,9 +66,9 @@ export default function WorkPage() {
           {/* Filters */}
           <div style={{ display: "flex", gap: 8, marginBottom: 48, flexWrap: "wrap" }}>
             {CATEGORIES.map((c) => (
-              <button key={c} style={chip(active === c)} onClick={() => setActive(c)}>
+              <FilterChip key={c} active={active === c} onClick={() => setActive(c)}>
                 {c}
-              </button>
+              </FilterChip>
             ))}
           </div>
 

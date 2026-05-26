@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect, CSSProperties } from "react";
+import { useState, useEffect } from "react";
 import SiteHeader from "../components/SiteHeader";
 import Footer from "../components/Footer";
+import FilterChip from "../components/ui/FilterChip";
 import { getInsights, recordInsightClick, type InsightItem } from "../lib/store";
 
 const TAGS = ["전체", "기술 블로그", "링크드인"];
@@ -51,16 +52,6 @@ export default function InsightPage() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [hasMore, filtered.length]);
 
-  const chip = (on: boolean): CSSProperties => ({
-    font: "500 14px/1 var(--font-sans)",
-    padding: "10px 16px",
-    borderRadius: "var(--r-sm)",
-    border: on ? "1px solid #0a0a0a" : "1px solid rgba(10,10,10,.14)",
-    background: on ? "var(--bg-dark)" : "transparent",
-    color: on ? "var(--fg-on-dark-1)" : "rgba(10,10,10,.7)",
-    cursor: "pointer",
-  });
-
   return (
     <div style={{ background: "var(--bg)", color: "var(--fg-1)", minHeight: "100dvh" }}>
       <SiteHeader forceLight current="Insight" />
@@ -106,9 +97,9 @@ export default function InsightPage() {
           {/* Filters */}
           <div style={{ display: "flex", gap: 8, marginBottom: 48, flexWrap: "wrap", alignItems: "center" }}>
             {TAGS.map((t) => (
-              <button key={t} style={chip(active === t)} onClick={() => setActive(t)}>
+              <FilterChip key={t} active={active === t} onClick={() => setActive(t)}>
                 {t}
-              </button>
+              </FilterChip>
             ))}
           </div>
 

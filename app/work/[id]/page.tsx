@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import SiteHeader from "../../components/SiteHeader";
 import Footer from "../../components/Footer";
 import Badge from "../../components/ui/Badge";
+import Button from "../../components/ui/Button";
 import { getWork, getInsights, recordWorkClick, type WorkItem, type InsightItem } from "../../lib/store";
 
 export default function CaseDetailPage() {
@@ -138,37 +139,27 @@ export default function CaseDetailPage() {
 
       {/* Nav */}
       {next && (
-        <nav style={{
+        <nav className="work-nav" style={{
           maxWidth: 1248, margin: "120px auto 0", padding: "60px 24px 80px",
           borderTop: "1px solid rgba(10,10,10,.08)",
           display: "flex", justifyContent: "space-between", alignItems: "center",
         }}>
-          <a href="/work" style={{
-            display: "inline-flex", alignItems: "center", gap: 8,
-            padding: "12px 20px", borderRadius: "var(--r-sm)",
-            border: "none", background: "var(--bg-elev)",
-            font: "500 14px/1 var(--font-sans)", color: "#272727",
-            textDecoration: "none", cursor: "pointer",
-            transition: "background .2s ease",
-          }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#dcdcdc"; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--bg-elev)"; }}
+          <Button
+            variant="ghost"
+            size="md"
+            href="/work"
+            style={{ color: "var(--grey-800)", padding: "12px 20px" }}
           >
             ← 목록으로
-          </a>
-          <a href={`/work/${next.id}`} style={{
-            display: "inline-flex", alignItems: "center", gap: 8,
-            padding: "12px 20px", borderRadius: "var(--r-sm)",
-            border: "none", background: "var(--bg-elev)",
-            font: "500 14px/1 var(--font-sans)", color: "#272727",
-            textDecoration: "none", cursor: "pointer",
-            transition: "background .2s ease",
-          }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#dcdcdc"; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--bg-elev)"; }}
+          </Button>
+          <Button
+            variant="ghost"
+            size="md"
+            href={`/work/${next.id}`}
+            style={{ color: "var(--grey-800)", padding: "12px 20px" }}
           >
             다음 사례 →
-          </a>
+          </Button>
         </nav>
       )}
 

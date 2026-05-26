@@ -241,6 +241,8 @@ export default function StickyActionButton({ variant = "float" }: Props) {
           .sticky-float-desc { display: none; }
           .sticky-float-ghost { margin-left: 0 !important; }
           .sticky-inline-bar .sticky-float-desc { display: none; }
+          .sticky-float-bar { justify-content: center; width: auto; padding: 20px; }
+          .sticky-inline-bar { justify-content: center; }
         }
         @media (max-width: 767px) {
           .sticky-float-bar { bottom: 20px; padding: 7px; border-radius: 18px; }

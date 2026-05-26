@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Button from "../../components/ui/Button";
 
 export default function BrochureSuccess() {
   const router = useRouter();
@@ -8,7 +9,7 @@ export default function BrochureSuccess() {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "#0a0a0a",
+      background: "var(--bg-dark)",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -28,7 +29,7 @@ export default function BrochureSuccess() {
         justifyContent: "center",
         marginBottom: 32,
       }}>
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#4950ff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--primary-500)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
           <polyline points="22,6 12,13 2,6"/>
         </svg>
@@ -57,28 +58,18 @@ export default function BrochureSuccess() {
         메일함을 확인해 주세요.
       </p>
 
-      <button
+      <Button
+        variant="primary"
+        size="lg"
         onClick={() => router.push("/")}
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 8,
-          padding: "14px 28px",
-          borderRadius: 12,
-          background: "#4950ff",
-          color: "#ffffff",
-          fontSize: 15,
-          fontWeight: 500,
-          border: "none",
-          cursor: "pointer",
-        }}
+        style={{ padding: "14px 28px" }}
       >
         메인으로 이동하기
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <line x1="5" y1="12" x2="19" y2="12"/>
           <polyline points="12 5 19 12 12 19"/>
         </svg>
-      </button>
+      </Button>
     </div>
   );
 }
