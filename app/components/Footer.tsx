@@ -66,10 +66,11 @@ export default function Footer() {
         </div>
 
         {/* Bottom row */}
-        <div className="footer-bottom" style={{ position: "relative", display: "flex", justifyContent: "flex-end", alignItems: "flex-end", paddingTop: 20 }}>
-          <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", bottom: 0, display: "flex", flexDirection: "column", gap: 0, alignItems: "center", textAlign: "center", whiteSpace: "nowrap" }}>
+        <div className="footer-bottom" style={{ display: "grid", gridTemplateColumns: "1.4fr 4fr auto", paddingTop: 20, alignItems: "end", gap: 24 }}>
+          <div className="footer-spacer" />
+          <div className="footer-info" style={{ display: "flex", flexDirection: "column", gap: 0 }}>
             <div style={{ font: "400 13px/1.4 var(--font-sans)", color: "rgba(10,10,10,.45)", marginBottom: 4 }}>04039 서울시 마포구 홍익로5안길 28, 5층</div>
-            <div style={{ display: "flex", gap: "8px 16px", flexWrap: "wrap", alignItems: "center", justifyContent: "center", font: "400 13px/1.4 var(--font-sans)", color: "rgba(10,10,10,.45)" }}>
+            <div style={{ display: "flex", gap: "8px 16px", flexWrap: "wrap", alignItems: "center", font: "400 13px/1.4 var(--font-sans)", color: "rgba(10,10,10,.45)" }}>
               <span>대표자 서장원</span>
               <span>사업자등록번호 476-81-01694</span>
               <span>© 2021 Toktokhan.dev, Inc. All Rights Reserved.</span>

@@ -531,7 +531,7 @@ export default function WhyToktok() {
               : { display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 360px)", gap: 56, alignItems: "start" };
             return (
               <div key={it.en} ref={(el) => { cardRefs.current[i] = el; }} className="wt-row" style={rowStyle}>
-                <div style={{
+                <div className="wt-card-img" style={{
                   borderRadius: 28, aspectRatio: "1 / 1.06",
                   overflow: "hidden", position: "relative",
                   transform: isActive ? "scale(1)" : "scale(0.9)", transformOrigin: "center center",

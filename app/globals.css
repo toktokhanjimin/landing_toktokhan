@@ -244,6 +244,8 @@ button, a {
   .footer-bottom { display: flex !important; justify-content: space-between !important; align-items: flex-end !important; gap: 16px !important; }
   .footer-bottom button { flex-shrink: 0 !important; width: 56px !important; height: 56px !important; min-width: 56px !important; min-height: 56px !important; }
   .footer-spacer { display: none !important; }
+  .footer-info { align-items: center !important; text-align: center !important; }
+  .footer-info > div:last-child { justify-content: center !important; }
   .footer-logo-col { grid-column: 1 / -1 !important; }
   .hero-btns { flex-direction: row !important; align-items: center !important; justify-content: center !important; flex-wrap: wrap !important; }
   .hero-btns a, .hero-btns button { justify-content: center !important; }
@@ -299,13 +301,19 @@ button, a {
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
+  .wt-card-img { display: none !important; }
+  .wt-row { grid-template-columns: 1fr !important; }
   .svc-grid { grid-template-columns: 1fr !important; }
-  .wg-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .wg-grid { grid-template-columns: repeat(2, 1fr) !important; grid-auto-rows: 280px !important; }
+  .wk-card { aspect-ratio: 5/3 !important; }
   .kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
   .axd-inner { gap: 40px !important; }
   .footer-grid { grid-template-columns: 1fr 1fr 1fr !important; gap: 32px !important; }
   .footer-logo-col { grid-column: 1 / -1 !important; }
-  .footer-bottom { grid-template-columns: 1fr auto !important; }
+  .footer-bottom { position: relative !important; display: flex !important; justify-content: flex-end !important; align-items: flex-end !important; }
+  .footer-spacer { display: none !important; }
+  .footer-info { position: absolute !important; left: 50% !important; transform: translateX(-50%) !important; bottom: 0 !important; align-items: center !important; text-align: center !important; white-space: nowrap !important; }
+  .footer-info > div:last-child { justify-content: center !important; }
   .wt-layout { gap: 40px !important; }
   .wt-row { gap: 32px !important; }
   /* Work pages */
