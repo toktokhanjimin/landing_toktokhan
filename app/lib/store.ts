@@ -45,15 +45,17 @@ export interface StickyAction {
 export interface StickyConfig {
   enabled: boolean;
   buttonLabel: string;
+  description: string;
   actions: StickyAction[];
 }
 
 const DEFAULT_STICKY: StickyConfig = {
   enabled: true,
   buttonLabel: "똑똑한개발자 더 알아보기",
+  description: "AI와 일하는 조직,\n지금 똑똑한개발자와 시작하세요",
   actions: [
-    { label: "AX 서비스 소개서 다운로드", url: "", type: "download" },
-    { label: "똑똑한 AX교육 이동하기", url: "", type: "link" },
+    { label: "서비스 소개서 받기", url: "https://www.pluuug.com/form/pbrPZzeYyu", type: "download" },
+    { label: "똑똑한 AX 교육 보기", url: "", type: "link" },
   ],
 };
 
@@ -354,7 +356,14 @@ export const getStickyConfig = (): StickyConfig => {
   if (typeof window === "undefined") return DEFAULT_STICKY;
   try {
     const raw = localStorage.getItem("ttk_sticky");
-    return raw ? { ...DEFAULT_STICKY, ...JSON.parse(raw) } : DEFAULT_STICKY;
+    if (!raw) return DEFAULT_STICKY;
+    const saved = JSON.parse(raw) as Partial<StickyConfig>;
+    // 저장된 actions를 DEFAULT와 병합 — label/type 기준으로 매칭해 url 보완
+    const actions = DEFAULT_STICKY.actions.map((def) => {
+      const stored = (saved.actions ?? []).find((a) => a.type === def.type);
+      return stored ? { ...def, ...stored, url: stored.url || def.url } : def;
+    });
+    return { ...DEFAULT_STICKY, ...saved, actions };
   } catch { return DEFAULT_STICKY; }
 };
 

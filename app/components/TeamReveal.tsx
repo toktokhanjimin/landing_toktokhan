@@ -49,14 +49,14 @@ export default function TeamReveal() {
       <div style={{ position: "relative", top: 0, height: "100%", width: "100%", overflow: "hidden", background: "transparent", display: "flex", alignItems: "flex-start", justifyContent: "center", paddingTop: 60 }}>
         <div style={{
           position: "relative", width: "100%", height: "calc(56vh - 40px)", overflow: "hidden",
-          clipPath: `inset(50px ${insetX}vw)`,
-          WebkitClipPath: `inset(50px ${insetX}vw)` as string,
+          clipPath: `inset(50px ${insetX}vw 30px)`,
+          WebkitClipPath: `inset(50px ${insetX}vw 30px)` as string,
           willChange: "clip-path",
         }}>
           <img
             src="/assets/team-office.png"
             alt="똑똑한개발자 팀"
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 22%", display: "block" }}
+            style={{ position: "absolute", top: -20, left: 0, right: 0, bottom: 0, width: "100%", height: "calc(100% + 20px)", objectFit: "cover", objectPosition: "center 22%", display: "block" }}
           />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.10) 50%, rgba(0,0,0,0.05) 100%)", pointerEvents: "none" }} />
           <h2 style={{

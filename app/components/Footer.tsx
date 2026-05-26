@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 
+const SERVICE_ITEMS = ["AX 컨설팅", "교육", "개발", "AI 에이전트"];
+
 const cols = [
-  { h: "서비스", items: ["AX 컨설팅", "교육", "개발", "AI 에이전트"] },
-  { h: "회사", items: ["회사 소개", "작업 사례", "인사이트", "채용"] },
+  { h: "서비스", items: SERVICE_ITEMS },
+  { h: "회사", items: ["회사 소개", "포트폴리오", "인사이트", "채용"] },
   { h: "우리가 만든 서비스", items: ["pluuug ↗", "POSTOO ↗"] },
   { h: "연락", items: ["sales@toktokhan.dev", "링크드인", "인스타그램"] },
 ];
@@ -21,9 +23,42 @@ export default function Footer() {
           {cols.map((c) => (
             <div key={c.h}>
               <div style={{ font: "700 14px/1 var(--font-sans)", letterSpacing: "-.01em", color: "var(--fg-1)", marginBottom: 24 }}>{c.h}</div>
-              {c.items.map((item) => (
-                <a key={item} style={{ font: "400 14px/1 var(--font-sans)", color: "rgba(10,10,10,.5)", marginBottom: 14, display: "block", cursor: "pointer" }}>{item}</a>
-              ))}
+              {c.items.map((item) => {
+                const isService = SERVICE_ITEMS.includes(item);
+                const href =
+                  isService ? undefined :
+                  item === "채용" ? "https://www.wanted.co.kr/company/30151" :
+                  item === "링크드인" ? "https://www.linkedin.com/company/toktokhan/about/" :
+                  item === "인스타그램" ? "https://www.instagram.com/toktokhan.dev/" :
+                  item === "sales@toktokhan.dev" ? "mailto:sales@toktokhan.dev" :
+                  item === "pluuug ↗" ? "https://www.pluuug.com/" :
+                  item === "POSTOO ↗" ? "https://www.postoo.io/" :
+                  item === "포트폴리오" ? "/work" :
+                  item === "인사이트" ? "/insight" :
+                  item === "회사 소개" ? "/" :
+                  undefined;
+                const isExternal = ["채용", "링크드인", "인스타그램", "pluuug ↗", "POSTOO ↗"].includes(item);
+                return (
+                  <a
+                    key={item}
+                    href={href}
+                    target={isExternal ? "_blank" : undefined}
+                    rel={isExternal ? "noopener noreferrer" : undefined}
+                    style={{
+                      font: "400 14px/1 var(--font-sans)",
+                      color: "rgba(10,10,10,.5)",
+                      marginBottom: 14,
+                      display: "block",
+                      textDecoration: "none",
+                      cursor: isService ? "default" : "pointer",
+                      userSelect: isService ? "none" : "auto",
+                      pointerEvents: isService ? "none" : "auto",
+                    }}
+                  >
+                    {item}
+                  </a>
+                );
+              })}
             </div>
           ))}
         </div>

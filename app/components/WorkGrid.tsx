@@ -53,7 +53,7 @@ export default function WorkGrid() {
             </h2>
           </div>
           <Button variant="outline" href="/work">
-            전체 작업 보기 →
+            포트폴리오 보기 →
           </Button>
         </div>
 

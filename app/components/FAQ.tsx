@@ -1,6 +1,5 @@
 "use client";
 
-import Button from "./ui/Button";
 import StickyActionButton from "./StickyActionButton";
 
 export default function FAQ() {
@@ -13,14 +12,6 @@ export default function FAQ() {
         <p style={{ font: "var(--body-md)", color: "rgba(10,10,10,.6)", margin: 0, maxWidth: 560 }}>
           우리 팀 상황에 맞는 첫걸음을 똑똑한개발자와 함께 설계해보세요.
         </p>
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center", marginTop: 8 }}>
-          <Button variant="primary" href="#contact" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent("open-contact")); }}>
-            프로젝트 문의하기
-          </Button>
-          <Button variant="outline" href="/faq">
-            자주 묻는 질문 보기
-          </Button>
-        </div>
         <StickyActionButton variant="inline" />
       </div>
     </section>

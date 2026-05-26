@@ -62,7 +62,7 @@ export default function Home() {
       <div data-screen-label="02 Services" data-no-reveal>
         <Services />
       </div>
-<div data-screen-label="02b Why Toktok" data-no-reveal>
+      <div data-screen-label="02b Why Toktok" data-no-reveal>
         <WhyToktok />
       </div>
       <div data-screen-label="03 KPI">

@@ -481,7 +481,7 @@ export default function AdminWorkPage() {
                           type="checkbox"
                           checked={selected}
                           disabled={!selected && atMax}
-                          style={{ marginTop: 2, accentColor: "#0a85f8", flexShrink: 0 }}
+                          style={{ marginTop: 2, accentColor: "var(--btn-primary)", flexShrink: 0 }}
                           onChange={() => {
                             const prev = form.relatedInsights ?? [];
                             const next = selected ? prev.filter((i) => i !== idx) : [...prev, idx];
@@ -489,7 +489,7 @@ export default function AdminWorkPage() {
                           }}
                         />
                         <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                          <span style={{ font: "500 13px/1.4 var(--font-sans, sans-serif)", color: selected ? "#0a85f8" : "#0a0a0a" }}>{ins.title}</span>
+                          <span style={{ font: "500 13px/1.4 var(--font-sans, sans-serif)", color: selected ? "var(--btn-primary)" : "#0a0a0a" }}>{ins.title}</span>
                           <span style={{ font: "400 11px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.45)" }}>{ins.tag} · {ins.date}</span>
                         </div>
                       </label>

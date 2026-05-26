@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useLayoutEffect, useState, useRef } from "react";
 import { getStickyConfig, type StickyConfig } from "../lib/store";
 
 interface Props {
@@ -9,29 +9,84 @@ interface Props {
 
 export default function StickyActionButton({ variant = "float" }: Props) {
   const [config, setConfig] = useState<StickyConfig | null>(null);
-  const [visible, setVisible] = useState(false);
+  const [isDarkBg, setIsDarkBg] = useState(true);
   const [formUrl, setFormUrl] = useState<string | null>(null);
-  const ref = useRef<HTMLDivElement>(null);
+  const floatRef = useRef<HTMLDivElement>(null);
+  const dockRef = useRef<HTMLDivElement>(null);
+  const wasDockedRef = useRef(false);
 
   useEffect(() => {
     const cfg = getStickyConfig();
     if (cfg.enabled && cfg.actions.length > 0) setConfig(cfg);
   }, []);
 
-  // 플로팅: 스크롤 80px 넘으면 등장, 인라인 버튼 위치에 닿으면 숨김
+
+  // 플로팅 바: ref로 직접 DOM 조작 → 프레임 지연 없음
   useEffect(() => {
     if (variant !== "float") return;
+    const barCenterY = window.innerHeight - 28 - 39;
+
+    const setFloat = (show: boolean, instant: boolean) => {
+      const el = floatRef.current;
+      if (!el) return;
+      el.style.transition = instant
+        ? "none"
+        : "opacity .25s ease, transform .25s ease, background .3s ease, box-shadow .3s ease";
+      el.style.opacity = show ? "1" : "0";
+      el.style.pointerEvents = show ? "auto" : "none";
+      el.style.transform = `translateX(-50%) translateY(${show ? 0 : 6}px)`;
+    };
+
     const onScroll = () => {
-      if (window.scrollY <= 80) { setVisible(false); return; }
-      const anchor = document.getElementById("sticky-inline-anchor");
-      if (anchor) {
-        const rect = anchor.getBoundingClientRect();
-        const floatTop = window.innerHeight - 32 - 50;
-        setVisible(rect.top > floatTop);
-      } else {
-        setVisible(true);
+      const scrollY = window.scrollY;
+
+      if (scrollY <= 80) { setFloat(false, false); return; }
+
+      const sentinel = document.getElementById("sticky-inline-anchor");
+      const atDock = !!sentinel && sentinel.getBoundingClientRect().top <= window.innerHeight - 28;
+      // 도킹 진입/해제 모두 instant — 어느 쪽이든 전환 순간엔 transition 없음
+      const instant = atDock || wasDockedRef.current;
+      wasDockedRef.current = atDock;
+      setFloat(!atDock, instant);
+
+      // WhyToktok 섹션 기준 테마 전환 (state는 테마만)
+      const whySection = document.querySelector('[data-screen-label="02b Why Toktok"]');
+      if (whySection) {
+        setIsDarkBg(whySection.getBoundingClientRect().bottom > barCenterY);
       }
     };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [variant]);
+
+  // 인라인 바 초기값: JSX style이 아닌 ref로 설정 — 리렌더 시 React가 덮어쓰지 않음
+  useLayoutEffect(() => {
+    if (variant !== "inline" || !dockRef.current) return;
+    dockRef.current.style.opacity = "0";
+    dockRef.current.style.pointerEvents = "none";
+    dockRef.current.style.transition = "none";
+  });
+
+  // 인라인 바: ref로 직접 DOM 조작
+  useEffect(() => {
+    if (variant !== "inline") return;
+
+    const setDock = (docked: boolean) => {
+      const el = dockRef.current;
+      if (!el) return;
+      el.style.transition = "none";
+      el.style.opacity = docked ? "1" : "0";
+      el.style.pointerEvents = docked ? "auto" : "none";
+    };
+
+    const onScroll = () => {
+      const sentinel = document.getElementById("sticky-inline-anchor");
+      if (!sentinel) return;
+      setDock(sentinel.getBoundingClientRect().top <= window.innerHeight - 28);
+    };
+
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
@@ -42,9 +97,48 @@ export default function StickyActionButton({ variant = "float" }: Props) {
   const isFloat = variant === "float";
   const isInline = variant === "inline";
 
-  // 링크 액션 / 다운로드 액션 분리
   const linkAction = config.actions.find((a) => a.type === "link");
   const downloadAction = config.actions.find((a) => a.type === "download");
+
+  const buttons = (
+    <>
+      {linkAction && (
+        <a
+          className="sticky-float-ghost"
+          href={linkAction.url || undefined}
+          target={linkAction.url ? "_blank" : undefined}
+          rel={linkAction.url ? "noopener noreferrer" : undefined}
+          style={{ marginLeft: 16 }}
+        >
+          {linkAction.label}
+        </a>
+      )}
+      {linkAction && downloadAction && <div className="sticky-float-sep" />}
+      {downloadAction && (
+        <a
+          className="sticky-float-primary"
+          href="https://www.pluuug.com/form/pbrPZzeYyu"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          {downloadAction.label}
+        </a>
+      )}
+      <button
+        className="sticky-float-chat"
+        style={{ marginLeft: 8 }}
+        onClick={() => document.getElementById("contact-cta")?.scrollIntoView({ behavior: "smooth" })}
+        aria-label="문의하기"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+      </button>
+    </>
+  );
 
   return (
     <>
@@ -53,127 +147,102 @@ export default function StickyActionButton({ variant = "float" }: Props) {
           position: fixed;
           bottom: 28px;
           left: 50%;
-          transform: translateX(-50%);
-          transition: opacity .25s ease, transform .25s ease;
+          transform: translateX(-50%) translateY(6px);
+          opacity: 0;
+          pointer-events: none;
           z-index: 40;
           display: flex;
           align-items: center;
           gap: 0;
+          border-radius: var(--r-xl);
+          padding: 20px 20px 20px 28px;
+          white-space: nowrap;
+        }
+        .sticky-float-bar[data-theme="light"] {
+          background: #fff;
+          box-shadow: 0 8px 40px rgba(0,0,0,.14), 0 2px 12px rgba(0,0,0,.08);
+        }
+        .sticky-float-bar[data-theme="dark"] {
           background: var(--bg-dark);
-          border-radius: 100px;
-          padding: 8px 8px 8px 24px;
+          box-shadow: 0 8px 40px rgba(0,0,0,.32), 0 2px 12px rgba(0,0,0,.2);
+        }
+
+        /* 설명 텍스트 */
+        .sticky-float-bar[data-theme="dark"] .sticky-float-desc,
+        .sticky-inline-bar .sticky-float-desc { color: var(--fg-on-dark-1); }
+        .sticky-float-bar[data-theme="light"] .sticky-float-desc { color: var(--fg-1); }
+        .sticky-float-desc {
+          font: 600 15px/1.4 var(--font-sans);
+          padding-right: 20px;
+          letter-spacing: -.01em;
+          transition: color .3s ease;
+          text-align: left;
+        }
+
+        /* 구분선 */
+        .sticky-float-bar[data-theme="dark"] .sticky-float-sep,
+        .sticky-inline-bar .sticky-float-sep { background: rgba(255,255,255,.18); }
+        .sticky-float-bar[data-theme="light"] .sticky-float-sep { background: rgba(0,0,0,.12); }
+        .sticky-float-sep {
+          width: 1px; height: 24px; flex-shrink: 0;
+          margin: 0 6px;
+          transition: background .3s ease;
+        }
+
+        /* ghost 버튼 */
+        .sticky-float-bar[data-theme="dark"] .sticky-float-ghost,
+        .sticky-inline-bar .sticky-float-ghost { background: rgba(255,255,255,.2); color: var(--fg-on-dark-1); }
+        .sticky-float-bar[data-theme="dark"] .sticky-float-ghost:hover,
+        .sticky-inline-bar .sticky-float-ghost:hover { background: rgba(255,255,255,.28); }
+        .sticky-float-bar[data-theme="light"] .sticky-float-ghost { background: rgba(0,0,0,.1); color: var(--fg-1); }
+        .sticky-float-bar[data-theme="light"] .sticky-float-ghost:hover { background: rgba(0,0,0,.15); }
+        .sticky-float-ghost {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 12px 18px; border-radius: var(--r-md);
+          font: 500 14px/1 var(--font-sans);
+          border: none; cursor: pointer; text-decoration: none;
+          transition: background .2s ease, color .3s ease;
+          white-space: nowrap;
+        }
+
+        /* primary 버튼 */
+        .sticky-float-primary {
+          display: inline-flex; align-items: center; gap: 8px;
+          padding: 12px 18px; border-radius: var(--r-md);
+          background: var(--btn-primary); color: var(--on-brand);
+          font: 500 14px/1 var(--font-sans);
+          border: none; cursor: pointer; text-decoration: none;
+          transition: background .2s ease; white-space: nowrap;
+        }
+        .sticky-float-primary:hover { background: var(--primary-600); }
+
+        /* 문의 아이콘 버튼 */
+        .sticky-float-chat {
+          display: inline-flex; align-items: center; justify-content: center;
+          width: 38px; height: 38px; border-radius: var(--r-md);
+          background: var(--btn-primary); color: var(--on-brand);
+          border: none; cursor: pointer; flex-shrink: 0;
+          transition: background .2s ease;
+        }
+        .sticky-float-chat:hover { background: var(--primary-600); }
+
+        /* 인라인 도킹 바 */
+        .sticky-inline-bar {
+          display: inline-flex; align-items: center; gap: 0;
+          background: var(--bg-dark);
+          border-radius: var(--r-xl);
+          padding: 20px 20px 20px 28px;
           box-shadow: 0 8px 40px rgba(0,0,0,.32), 0 2px 12px rgba(0,0,0,.2);
           white-space: nowrap;
         }
-        ${isFloat ? `.sticky-float-bar { opacity: ${visible ? 1 : 0}; pointer-events: ${visible ? "auto" : "none"}; transform: translateX(-50%) translateY(${visible ? 0 : 6}px); }` : ""}
-        .sticky-float-desc {
-          font: 600 15px/1.4 var(--font-sans);
-          color: var(--fg-on-dark-1);
-          padding-right: 20px;
-          letter-spacing: -.01em;
-        }
-        .sticky-float-sep {
-          width: 1px;
-          height: 24px;
-          background: rgba(255,255,255,.18);
-          flex-shrink: 0;
-          margin: 0 6px;
-        }
-        .sticky-float-ghost {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 12px 18px;
-          border-radius: 100px;
-          background: rgba(255,255,255,.1);
-          color: var(--fg-on-dark-1);
-          font: 500 15px/1 var(--font-sans);
-          border: none;
-          cursor: pointer;
-          text-decoration: none;
-          transition: background .2s ease;
-          white-space: nowrap;
-        }
-        .sticky-float-ghost:hover { background: rgba(255,255,255,.18); }
-        .sticky-float-primary {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 12px 20px;
-          border-radius: 100px;
-          background: var(--btn-primary);
-          color: var(--on-brand);
-          font: 600 15px/1 var(--font-sans);
-          border: none;
-          cursor: pointer;
-          text-decoration: none;
-          transition: background .2s ease;
-          white-space: nowrap;
-        }
-        .sticky-float-primary:hover { background: var(--primary-600, #0875df); }
-        .sticky-float-chat {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          width: 44px;
-          height: 44px;
-          border-radius: 100px;
-          background: rgba(255,255,255,.12);
-          color: var(--fg-on-dark-1);
-          border: none;
-          cursor: pointer;
-          flex-shrink: 0;
-          transition: background .2s ease;
-        }
-        .sticky-float-chat:hover { background: rgba(255,255,255,.2); }
-
-        /* 인라인 (CTA 섹션) */
-        .sticky-inline-bar {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          background: var(--bg);
-          border: 1px solid rgba(10,10,10,.13);
-          border-radius: var(--r-full);
-          padding: 6px 6px 6px 18px;
-          animation: inlineAppear .35s cubic-bezier(.22,.61,.36,1) both;
-        }
-        @keyframes inlineAppear {
-          from { opacity: 0; transform: translateY(10px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .sticky-inline-label {
-          font: 500 14px/1 var(--font-sans);
-          color: var(--fg-1);
-          padding-right: 4px;
-        }
-        .sticky-inline-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-          padding: 9px 16px;
-          border-radius: var(--r-full);
-          background: var(--btn-primary);
-          color: var(--on-brand);
-          font: 600 14px/1 var(--font-sans);
-          border: none;
-          cursor: pointer;
-          text-decoration: none;
-          transition: background .2s ease;
-          white-space: nowrap;
-        }
-        .sticky-inline-btn:hover { background: var(--primary-600, #0875df); }
 
         @media (max-width: 640px) {
-          .sticky-float-bar {
-            bottom: 20px;
-            padding: 7px 7px 7px 18px;
-            max-width: calc(100vw - 32px);
-          }
+          .sticky-float-bar { bottom: 20px; padding: 7px 7px 7px 18px; max-width: calc(100vw - 32px); }
           .sticky-float-desc { display: none; }
-          .sticky-float-ghost { padding: 11px 14px; font-size: 14px; }
-          .sticky-float-primary { padding: 11px 16px; font-size: 14px; }
-          .sticky-float-chat { width: 40px; height: 40px; }
+          .sticky-float-ghost { padding: 10px 14px; font-size: 13px; }
+          .sticky-float-primary { padding: 10px 14px; font-size: 13px; }
+          .sticky-float-chat { width: 34px; height: 34px; }
+          .sticky-inline-dock { bottom: 20px !important; }
         }
 
         @keyframes modalFade { from { opacity:0; } to { opacity:1; } }
@@ -182,82 +251,45 @@ export default function StickyActionButton({ variant = "float" }: Props) {
 
       {/* 플로팅 바 */}
       {isFloat && (
-        <div className="sticky-float-bar" ref={ref}>
+        <div
+          className="sticky-float-bar"
+          data-theme={isDarkBg ? "light" : "dark"}
+          ref={floatRef}
+        >
           {config.description && (
             <span className="sticky-float-desc" style={{ whiteSpace: "pre-line" }}>
               {config.description}
             </span>
           )}
-
-          {linkAction && (
-            <>
-              <div className="sticky-float-sep" />
-              <a
-                className="sticky-float-ghost"
-                href={linkAction.url || undefined}
-                target={linkAction.url ? "_blank" : undefined}
-                rel={linkAction.url ? "noopener noreferrer" : undefined}
-              >
-                {linkAction.label}
-              </a>
-            </>
-          )}
-
-          {downloadAction && (
-            <>
-              <div className="sticky-float-sep" />
-              <button
-                className="sticky-float-primary"
-                onClick={() => downloadAction.url && setFormUrl(downloadAction.url)}
-              >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-                </svg>
-                {downloadAction.label}
-              </button>
-            </>
-          )}
-
-          <div className="sticky-float-sep" />
-          <button
-            className="sticky-float-chat"
-            onClick={() => window.dispatchEvent(new CustomEvent("open-contact"))}
-            aria-label="문의하기"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            </svg>
-          </button>
+          {buttons}
         </div>
       )}
 
-      {/* 인라인 (CTA 섹션) */}
+      {/* 인라인 도킹 바 — FAQ 섹션 내 */}
       {isInline && (
-        <div id="sticky-inline-anchor" className="sticky-inline-bar">
-          <span className="sticky-inline-label">{config.buttonLabel}</span>
-          {downloadAction && (
-            <button
-              className="sticky-inline-btn"
-              onClick={() => downloadAction.url && setFormUrl(downloadAction.url)}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              {downloadAction.label}
-            </button>
-          )}
-          {linkAction && (
-            <a
-              className="sticky-inline-btn"
-              href={linkAction.url || undefined}
-              target={linkAction.url ? "_blank" : undefined}
-              rel={linkAction.url ? "noopener noreferrer" : undefined}
-              style={{ background: "rgba(10,10,10,.08)", color: "var(--fg-1)" }}
-            >
-              {linkAction.label}
-            </a>
-          )}
-        </div>
+        <>
+          <div id="sticky-inline-anchor" style={{ height: 0 }} />
+          <div
+            ref={dockRef}
+            className="sticky-inline-dock"
+            style={{
+              position: "sticky",
+              bottom: 28,
+              display: "flex",
+              justifyContent: "center",
+              zIndex: 40,
+            }}
+          >
+            <div className="sticky-inline-bar">
+              {config.description && (
+                <span className="sticky-float-desc" style={{ whiteSpace: "pre-line" }}>
+                  {config.description}
+                </span>
+              )}
+              {buttons}
+            </div>
+          </div>
+        </>
       )}
 
       {/* 다운로드 폼 드로어 */}

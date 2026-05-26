@@ -56,17 +56,6 @@ export default function AdminDashboard() {
     setSticky({ ...sticky, actions });
   }
 
-  async function handleActionFile(idx: number, file: File) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (!sticky) return;
-      const actions = sticky.actions.map((a, i) =>
-        i === idx ? { ...a, url: reader.result as string, fileName: file.name } : a
-      );
-      setSticky({ ...sticky, actions });
-    };
-    reader.readAsDataURL(file);
-  }
 
   const cards = [
     { label: "포트폴리오", count: counts.work, href: "/admin/work", color: "#0a0a0a" },
@@ -153,7 +142,7 @@ export default function AdminDashboard() {
               <input
                 type="checkbox"
                 checked={sticky.enabled}
-                style={{ width: 16, height: 16, accentColor: "#0a85f8", cursor: "pointer" }}
+                style={{ width: 16, height: 16, accentColor: "var(--btn-primary)", cursor: "pointer" }}
                 onChange={(e) => setSticky({ ...sticky, enabled: e.target.checked })}
               />
             </label>
@@ -171,6 +160,17 @@ export default function AdminDashboard() {
               />
             </div>
 
+            {/* 왼쪽 설명 텍스트 */}
+            <div>
+              <label style={{ display: "block", font: "500 12px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.5)", letterSpacing: ".04em", marginBottom: 6 }}>왼쪽 설명 텍스트 (줄바꿈 가능)</label>
+              <textarea
+                style={{ width: "100%", font: "400 14px/1.5 var(--font-sans, sans-serif)", padding: "10px 12px", border: "1px solid rgba(10,10,10,.14)", borderRadius: 8, color: "#0a0a0a", background: "#fff", outline: "none", boxSizing: "border-box" as const, resize: "vertical", height: 60 }}
+                value={sticky.description ?? ""}
+                onChange={(e) => setSticky({ ...sticky, description: e.target.value })}
+                placeholder={"AI와 일하는 조직,\n지금 똑똑한개발자와 시작하세요"}
+              />
+            </div>
+
             {/* 액션 아이템들 */}
             <div>
               <label style={{ display: "block", font: "500 12px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.5)", letterSpacing: ".04em", marginBottom: 8 }}>액션 항목 (최대 4개)</label>
@@ -183,50 +183,12 @@ export default function AdminDashboard() {
                       onChange={(e) => updateAction(i, "label", e.target.value)}
                       placeholder="항목 이름"
                     />
-                    {action.type === "download" ? (
-                      <div style={{ position: "relative" }}>
-                        <input
-                          id={`sticky-file-${i}`}
-                          type="file"
-                          style={{ display: "none" }}
-                          onChange={(e) => { const f = e.target.files?.[0]; if (f) handleActionFile(i, f); e.target.value = ""; }}
-                        />
-                        <div
-                          onClick={() => document.getElementById(`sticky-file-${i}`)?.click()}
-                          style={{
-                            font: "400 13px/1 var(--font-sans, sans-serif)",
-                            padding: "9px 10px",
-                            border: action.fileName ? "1px solid rgba(10,10,10,.2)" : "1px dashed rgba(10,10,10,.2)",
-                            borderRadius: 7,
-                            color: action.fileName ? "#0a0a0a" : "rgba(10,10,10,.35)",
-                            background: action.fileName ? "rgba(10,10,10,.03)" : "transparent",
-                            cursor: "pointer",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            gap: 8,
-                            overflow: "hidden",
-                          }}
-                        >
-                          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                            {action.fileName ?? "파일 업로드"}
-                          </span>
-                          {action.fileName && (
-                            <button
-                              onClick={(e) => { e.stopPropagation(); const actions = sticky.actions.map((a, j) => j === i ? { ...a, url: "", fileName: "" } : a); setSticky({ ...sticky, actions }); }}
-                              style={{ flexShrink: 0, background: "none", border: "none", color: "rgba(10,10,10,.35)", cursor: "pointer", font: "400 13px/1 var(--font-sans, sans-serif)", padding: 0 }}
-                            >✕</button>
-                          )}
-                        </div>
-                      </div>
-                    ) : (
-                      <input
-                        style={{ font: "400 13px/1 var(--font-sans, sans-serif)", padding: "9px 10px", border: "1px solid rgba(10,10,10,.14)", borderRadius: 7, color: "#0a0a0a", outline: "none" }}
-                        value={action.url}
-                        onChange={(e) => updateAction(i, "url", e.target.value)}
-                        placeholder="https://..."
-                      />
-                    )}
+                    <input
+                      style={{ font: "400 13px/1 var(--font-sans, sans-serif)", padding: "9px 10px", border: "1px solid rgba(10,10,10,.14)", borderRadius: 7, color: "#0a0a0a", outline: "none" }}
+                      value={action.url}
+                      onChange={(e) => updateAction(i, "url", e.target.value)}
+                      placeholder={action.type === "download" ? "pluuug 폼 URL" : "https://..."}
+                    />
                     <select
                       style={{ font: "400 13px/1 var(--font-sans, sans-serif)", padding: "9px 10px", border: "1px solid rgba(10,10,10,.14)", borderRadius: 7, color: "#0a0a0a", background: "#fff", outline: "none", cursor: "pointer" }}
                       value={action.type}

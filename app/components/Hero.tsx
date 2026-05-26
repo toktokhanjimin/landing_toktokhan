@@ -19,7 +19,7 @@ export default function Hero() {
             프로젝트 문의하기
           </Button>
           <Button variant="secondary" href="/work">
-            전체 작업 보기
+            포트폴리오 보기
           </Button>
         </div>
       </div>
