@@ -141,7 +141,7 @@ export default function SiteHeader({ forceLight = false, current = "" }: { force
           <a href="/work" style={{ font: "600 22px/1 var(--font-sans)", color: light ? "var(--fg-1)" : "var(--fg-on-dark-1)", padding: "16px 0", borderBottom: `1px solid ${light ? "rgba(10,10,10,.08)" : "rgba(255,255,255,.08)"}` }} onClick={() => setMenuOpen(false)}>Work</a>
           <a href="/insight" style={{ font: "600 22px/1 var(--font-sans)", color: light ? "var(--fg-1)" : "var(--fg-on-dark-1)", padding: "16px 0", borderBottom: `1px solid ${light ? "rgba(10,10,10,.08)" : "rgba(255,255,255,.08)"}` }} onClick={() => setMenuOpen(false)}>Insight</a>
           <a href="/faq" style={{ font: "600 22px/1 var(--font-sans)", color: light ? "var(--fg-1)" : "var(--fg-on-dark-1)", padding: "16px 0", borderBottom: `1px solid ${light ? "rgba(10,10,10,.08)" : "rgba(255,255,255,.08)"}` }} onClick={() => setMenuOpen(false)}>FAQ</a>
-          <Button variant="primary" size="md" onClick={() => { setMenuOpen(false); setContactOpen(true); }}>문의하기</Button>
+          <Button variant="primary" size="md" onClick={() => { setMenuOpen(false); setContactOpen(true); }} style={{ justifyContent: "center", marginTop: 8 }}>문의하기</Button>
         </div>
       )}
 

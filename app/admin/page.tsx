@@ -6,8 +6,6 @@ import { getWork, getInsights, getFAQs, getWorkClicks, getInsightClicks, getStic
 
 type RankItem = { label: string; sub: string; count: number };
 
-const EMPTY_ACTION: StickyAction = { label: "", url: "", type: "link" };
-
 export default function AdminDashboard() {
   const [counts, setCounts] = useState({ work: 0, insights: 0, faqs: 0 });
   const [topWork, setTopWork] = useState<RankItem[]>([]);

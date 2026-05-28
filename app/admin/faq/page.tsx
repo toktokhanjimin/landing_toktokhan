@@ -171,7 +171,7 @@ export default function AdminFAQPage() {
 
                 {/* Question preview / toggle */}
                 <button
-                  onClick={() => { toggleOpen(idx); if (!isEditing) { /* just toggle */ } }}
+                  onClick={() => toggleOpen(idx)}
                   style={{
                     flex: 1,
                     background: "transparent",

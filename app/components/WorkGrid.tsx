@@ -57,7 +57,7 @@ export default function WorkGrid() {
           </Button>
         </div>
 
-        <div className="wg-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, gridAutoRows: "320px" }}>
+        <div className="wg-grid" style={{ display: "grid", gap: 16 }}>
           {items.map((it, i) => (
             <a
               key={it.id}

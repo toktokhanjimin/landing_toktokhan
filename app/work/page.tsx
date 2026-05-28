@@ -22,14 +22,6 @@ export default function WorkPage() {
 
   return (
     <div style={{ background: "var(--bg)", color: "var(--fg-1)", minHeight: "100dvh" }}>
-      <style>{`
-        .wk-card .wk-thumb { transition: transform .55s cubic-bezier(.4,0,.2,1); }
-        .wk-card:hover .wk-thumb { transform: scale(1.05) !important; }
-        .wk-card .wk-overlay { opacity: 0; transition: opacity .35s ease; }
-        .wk-card:hover .wk-overlay { opacity: 1; }
-        .wk-card .wk-info { opacity: 0; transform: translateY(10px); transition: opacity .35s ease, transform .35s ease; }
-        .wk-card:hover .wk-info { opacity: 1; transform: translateY(0); }
-      `}</style>
       <SiteHeader forceLight current="Work" />
 
       {/* Page hero */}

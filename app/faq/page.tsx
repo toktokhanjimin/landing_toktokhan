@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, CSSProperties } from "react";
+import { useState, useEffect, type CSSProperties } from "react";
 import SiteHeader from "../components/SiteHeader";
 import Footer from "../components/Footer";
 import { getFAQs, type FAQItem } from "../lib/store";
@@ -16,8 +16,6 @@ export default function FAQPage() {
     document.body.style.background = "#ffffff";
     return () => { document.body.style.background = prev; };
   }, []);
-
-  const mono = "'IBM Plex Mono', monospace";
 
   return (
     <div style={{ background: "var(--bg)", color: "var(--fg-1)", minHeight: "100dvh" }}>

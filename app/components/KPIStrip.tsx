@@ -42,17 +42,8 @@ const kpis = [
 ];
 
 export default function KPIStrip() {
-  const wrapRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const el = wrapRef.current;
-    if (!el) return;
-    el.style.setProperty("padding-bottom", "0px", "important");
-    el.style.setProperty("padding-top", "100px", "important");
-  }, []);
-
   return (
-    <section ref={wrapRef} style={{ position: "relative", background: "transparent", color: "var(--fg-1)", padding: "100px 24px 0", overflow: "hidden" }}>
+    <section style={{ position: "relative", background: "transparent", color: "var(--fg-1)", padding: "100px 24px 0", overflow: "hidden" }}>
       <div style={{ position: "relative", maxWidth: 1200, margin: "0 auto" }}>
         <div style={{ textAlign: "left", marginBottom: 88, maxWidth: 720 }}>
           <h2 className="section-title">

@@ -183,7 +183,7 @@ export default function CaseDetailPage() {
             </div>
             <div className="work-insights-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
               {related.map((r, i) => (
-                <a key={i} href="/insight" style={{ display: "flex", flexDirection: "column", gap: 14, textDecoration: "none", color: "inherit" }}>
+                <a key={i} href={r.url || "/insight"} target={r.url ? "_blank" : undefined} rel={r.url ? "noopener noreferrer" : undefined} style={{ display: "flex", flexDirection: "column", gap: 14, textDecoration: "none", color: "inherit" }}>
                   <div style={{ width: "100%", aspectRatio: "16/10", borderRadius: "var(--r-md)", background: r.thumb }} />
                   <div style={{ font: `500 12px/1 ${mono}`, letterSpacing: ".1em", color: "rgba(10,10,10,.5)" }}>{r.tag} · {r.date}</div>
                   <h3 style={{ font: "600 17px/1.4 var(--font-sans)", letterSpacing: "-.01em", color: "var(--fg-1)", margin: 0, whiteSpace: "pre-line" }}>{r.title}</h3>

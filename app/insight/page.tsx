@@ -56,13 +56,6 @@ export default function InsightPage() {
     <div style={{ background: "var(--bg)", color: "var(--fg-1)", minHeight: "100dvh" }}>
       <SiteHeader forceLight current="Insight" />
 
-      <style>{`
-        .ins-card h3 { transition: color .45s cubic-bezier(.4,0,.2,1); }
-        .ins-card:hover h3 { color: #00B7FF !important; }
-        .ins-thumb { transition: transform .5s cubic-bezier(.4,0,.2,1); }
-        .ins-card:hover .ins-thumb { transform: scale(.97); }
-      `}</style>
-
       {/* Hero */}
       <header className="ins-page-header page-hero-header" style={{
         padding: "180px 24px 80px",
@@ -119,10 +112,9 @@ export default function InsightPage() {
               <div style={{
                 width: 22, height: 22, borderRadius: "50%",
                 border: "2px solid rgba(10,10,10,.12)",
-                borderTopColor: "#0a0a0a",
+                borderTopColor: "var(--bg-dark)",
                 animation: "spin .7s linear infinite",
               }} />
-              <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
             </div>
           )}
         </div>
