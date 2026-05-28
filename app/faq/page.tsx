@@ -11,6 +11,7 @@ export default function FAQPage() {
   const [items, setItems] = useState<FAQItem[]>([]);
 
   useEffect(() => {
+    document.title = "자주 묻는 질문 | 똑똑한개발자";
     setItems(getFAQs());
     const prev = document.body.style.background;
     document.body.style.background = "#ffffff";

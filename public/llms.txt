@@ -1,0 +1,23 @@
+# 똑똑한개발자 (TOKTOKHAN.DEV)
+
+> 기업 AX 전환 전문 개발사. 제미나이, GPT, 클로드를 활용해 AI Agent를 탑재하고 AX 전환의 전문성을 갖춘 IT 프러덕트 에이전시.
+
+복잡한 업무 흐름과 기존 시스템을 이해하고, AI가 실제 업무 안에서 작동하도록 전략·개발·운영까지 함께 설계합니다.
+
+## 주요 페이지
+
+- [홈](https://www.toktokhan.dev): AX 전환 전문 개발사 소개, 서비스 안내, 포트폴리오 하이라이트, KPI, AI 인사이트, FAQ
+- [Work (포트폴리오)](https://www.toktokhan.dev/work): AX·AI·Ops 분야 실제 프로젝트 사례 목록
+- [Insight (인사이트)](https://www.toktokhan.dev/insight): AX·AI를 만들며 배운 것들과 일하는 방식에 대한 글. 기술 블로그 및 링크드인 아카이브
+- [FAQ](https://www.toktokhan.dev/faq): AX 도입을 고민하며 가장 많이 받는 질문 모음
+
+## 서비스 영역
+
+- **AX (AI Transformation)**: 기업 내 AI 도입 전략 수립 및 구현
+- **AI Agent 개발**: 제미나이, GPT, 클로드 기반 에이전트 설계 및 개발
+- **Ops 자동화**: 업무 흐름 자동화, 기존 시스템 AI 연동
+- **IT 프러덕트 에이전시**: 전략·개발·운영 통합 파트너
+
+## 연락처 및 소개서
+
+서비스 소개서 신청: https://www.pluuug.com/form/pbrPZzeYyu

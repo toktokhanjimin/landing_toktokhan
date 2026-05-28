@@ -20,6 +20,11 @@ export default function CaseDetailPage() {
     const insightData = getInsights();
     setCases(workData);
     const thisWork = workData.find((w) => w.id === id);
+    if (thisWork) {
+      document.title = `${thisWork.title} | 똑똑한개발자`;
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) metaDesc.setAttribute("content", thisWork.lead || thisWork.title);
+    }
     if (thisWork?.relatedInsights && thisWork.relatedInsights.length > 0) {
       setRelated(thisWork.relatedInsights.map((i) => insightData[i]).filter(Boolean));
     } else {
@@ -27,7 +32,10 @@ export default function CaseDetailPage() {
     }
     const prev = document.body.style.background;
     document.body.style.background = "#ffffff";
-    return () => { document.body.style.background = prev; };
+    return () => {
+      document.body.style.background = prev;
+      document.title = "똑똑한개발자 | 기업 AX 전환 전문 개발사";
+    };
   }, []);
 
   const idx = cases.length > 0 ? Math.max(0, cases.findIndex((c) => c.id === id)) : 0;

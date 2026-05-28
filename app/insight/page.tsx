@@ -17,6 +17,7 @@ export default function InsightPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    document.title = "인사이트 | 똑똑한개발자";
     setAllItems(getInsights());
     const prev = document.body.style.background;
     document.body.style.background = "#ffffff";

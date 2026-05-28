@@ -13,6 +13,7 @@ export default function WorkPage() {
   const [items, setItems] = useState<WorkItem[]>([]);
 
   useEffect(() => {
+    document.title = "포트폴리오 | 똑똑한개발자";
     setItems(getWork());
     const prev = document.body.style.background;
     document.body.style.background = "#ffffff";
