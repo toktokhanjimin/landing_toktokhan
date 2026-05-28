@@ -111,3 +111,45 @@ app/
 - 채팅 아이콘 버튼 → `/faq` 이동
 - 서비스 소개서 버튼 → Pluuug 폼 (`https://www.pluuug.com/form/pbrPZzeYyu`) 새 탭
 - "똑똑한 AX 교육 보기" 버튼 → 어드민에서 URL 관리 (`ttk_sticky`)
+
+---
+
+## 다음 작업 목록
+
+### 마케팅 세팅 (마케터 정보 대기 중)
+
+**마케터한테 받아야 할 것들:**
+- GA4 측정 ID (`G-XXXXXXXXXX`)
+- SEO 카피 검토 (아래 초안 마케터 확인 필요)
+- 추적할 이벤트 목록 확정
+- 추가 픽셀 필요 여부 (Meta, 카카오 광고 등)
+
+**SEO 카피 초안 (마케터 검토 필요):**
+```
+홈:      똑똑한개발자 | No.1 AX 파트너
+         복잡한 업무 흐름과 기존 시스템을 이해하고, AI가 실제 업무 안에서 작동하도록 전략·개발·운영까지 함께 설계합니다.
+
+Work:    포트폴리오 | 똑똑한개발자
+         AX·AI·Ops 분야 실제 프로젝트 사례들. 각 작업은 똑똑한개발자의 일하는 방식이 남긴 기록입니다.
+
+Insight: 인사이트 | 똑똑한개발자
+         AX·AI를 만들며 배운 것들과, 일하는 방식에 대한 짧은 글들.
+
+FAQ:     자주 묻는 질문 | 똑똑한개발자
+         AX 도입을 고민하면서 가장 많이 받는 질문들을 모았습니다.
+
+키워드:  AX, AI 도입, 업무 자동화, AI 에이전트, AX 컨설팅, 똑똑한개발자, 기업 AI 전환
+```
+
+**OG 이미지:** `/public/OG.png` (1200×630px) ✅ 준비 완료
+
+**작업할 파일들:**
+- `app/layout.tsx` — metadata (SEO + OG) + GA 스크립트
+- `app/work/page.tsx`, `app/insight/page.tsx`, `app/faq/page.tsx` — 페이지별 metadata
+- `app/sitemap.ts` — 신규 생성
+- `app/robots.ts` — 신규 생성
+
+**실배포 시 추가로 해야 할 것:**
+- Google Search Console 등록 + 소유권 인증
+- sitemap.xml Search Console 제출
+- OG 미리보기 디버거 확인 (카카오/페이스북)
