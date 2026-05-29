@@ -9,6 +9,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.toktokhan.dev"),
   title: {
     default: "똑똑한개발자 | 기업 AX 전환 전문 개발사",
     template: "%s | 똑똑한개발자",

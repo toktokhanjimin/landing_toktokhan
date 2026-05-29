@@ -1,143 +1,25 @@
-"use client";
+import type { Metadata } from "next";
+import { supabase } from "../lib/supabase";
+import type { WorkItem } from "../lib/store";
+import { dbToWorkItem } from "../lib/db-mappers";
+import WorkPageClient from "../components/WorkPageClient";
 
-import { useState, useEffect } from "react";
-import SiteHeader from "../components/SiteHeader";
-import Footer from "../components/Footer";
-import FilterChip from "../components/ui/FilterChip";
-import { getWork, type WorkItem } from "../lib/store";
+export const metadata: Metadata = {
+  title: "포트폴리오",
+  description: "AX·AI·Ops 분야 실제 프로젝트 사례들. 각 작업은 똑똑한개발자의 일하는 방식이 남긴 기록입니다.",
+};
 
-const CATEGORIES = ["전체", "AX", "AI", "Ops"];
+export default async function WorkPage() {
+  const { data, error } = await supabase
+    .from("work")
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
 
-export default function WorkPage() {
-  const [active, setActive] = useState("전체");
-  const [items, setItems] = useState<WorkItem[]>([]);
+  if (error) console.error("[WorkPage] Supabase error:", error.message);
 
-  useEffect(() => {
-    document.title = "포트폴리오 | 똑똑한개발자";
-    setItems(getWork());
-    const prev = document.body.style.background;
-    document.body.style.background = "#ffffff";
-    return () => { document.body.style.background = prev; };
-  }, []);
-  const filtered = active === "전체" ? items : items.filter((i) => i.category === active);
+  // DB 컬럼명(snake_case) → WorkItem(camelCase) 매핑
+  const items: WorkItem[] = (data ?? []).map(dbToWorkItem);
 
-  return (
-    <div style={{ background: "var(--bg)", color: "var(--fg-1)", minHeight: "100dvh" }}>
-      <SiteHeader forceLight current="Work" />
-
-      {/* Page hero */}
-      <header className="wk-header page-hero-header" style={{
-        padding: "180px 24px 80px",
-        maxWidth: 1248,
-        margin: "0 auto",
-        display: "flex",
-        flexDirection: "column",
-        gap: 24,
-      }}>
-        <h1 style={{
-          font: "700 clamp(32px,4.4vw,60px)/1.24 var(--font-sans)",
-          letterSpacing: "-.03em",
-          margin: 0,
-          color: "var(--fg-1)",
-        }}>
-          Work
-        </h1>
-        <p style={{
-          font: "var(--body-lg)",
-          color: "rgba(10,10,10,.6)",
-          maxWidth: 620,
-          margin: 0,
-        }}>
-          고객사와 함께 만든 AX · AI · Ops 프로젝트들.<br />
-          각 작업은 우리의 일하는 방식이 남긴 기록이에요.
-        </p>
-      </header>
-
-      {/* Work grid */}
-      <section style={{ padding: "0 24px 120px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          {/* Filters */}
-          <div style={{ display: "flex", gap: 8, marginBottom: 48, flexWrap: "wrap" }}>
-            {CATEGORIES.map((c) => (
-              <FilterChip key={c} active={active === c} onClick={() => setActive(c)}>
-                {c}
-              </FilterChip>
-            ))}
-          </div>
-
-          {/* Grid */}
-          {filtered.length === 0 ? (
-            <div style={{
-              padding: "80px 24px",
-              textAlign: "center",
-              color: "rgba(10,10,10,.45)",
-              font: "400 15px/1.6 var(--font-sans)",
-            }}>
-              해당 카테고리의 작업이 아직 없어요.
-            </div>
-          ) : (
-            <div className="wk-grid" style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 20,
-            }}>
-              {filtered.map((it) => (
-                <WorkCard key={it.id} item={it} />
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      <Footer />
-    </div>
-  );
-}
-
-function WorkCard({ item }: { item: WorkItem }) {
-  return (
-    <a
-      href={`/work/${item.id}`}
-      className="wk-card"
-      style={{
-        borderRadius: "var(--r-lg)",
-        overflow: "hidden",
-        position: "relative",
-        cursor: "pointer",
-        display: "block",
-        aspectRatio: "5/4",
-        background: item.bg,
-        textDecoration: "none",
-      }}
-    >
-      {/* 이미지 */}
-      {item.thumbImg && (
-        <img
-          src={item.thumbImg}
-          alt=""
-          className="wk-thumb"
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-        />
-      )}
-
-      {/* 호버 그라디언트 */}
-      <div
-        className="wk-overlay"
-        style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.18) 50%, transparent 100%)" }}
-      />
-
-      {/* 텍스트 — 호버 시 등장 */}
-      <div
-        className="wk-info"
-        style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "24px 24px 22px" }}
-      >
-        <div style={{ font: "700 15px/1 var(--font-sans)", letterSpacing: ".02em", color: "var(--fg-on-dark-1)" }}>
-          {item.client}
-        </div>
-        <div style={{ font: "500 12px/1 var(--font-sans)", color: "rgba(255,255,255,.65)", marginTop: 6 }}>
-          {item.tag}
-        </div>
-      </div>
-    </a>
-  );
+  return <WorkPageClient initialItems={items} />;
 }

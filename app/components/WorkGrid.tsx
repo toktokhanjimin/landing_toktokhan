@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { getWork, type WorkItem } from "../lib/store";
+import type { WorkItem } from "../lib/store";
+import { supabase } from "../lib/supabase";
+import { dbToWorkItem } from "../lib/db-mappers";
 import Button from "./ui/Button";
 
 const STYLE = `
@@ -20,8 +22,13 @@ export default function WorkGrid() {
   const cardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
   useEffect(() => {
-    const all = getWork();
-    setItems(all.filter((it) => it.featured).slice(0, 6));
+    supabase
+      .from("work")
+      .select("*")
+      .eq("featured", true)
+      .order("sort_order", { ascending: true })
+      .limit(6)
+      .then(({ data }) => setItems((data ?? []).map(dbToWorkItem)));
   }, []);
 
   useEffect(() => {

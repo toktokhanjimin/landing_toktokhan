@@ -1,59 +1,92 @@
-"use client";
-
-import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { supabase } from "../../lib/supabase";
+import { dbToWorkItem, dbToInsightItem } from "../../lib/db-mappers";
+import type { WorkItem, InsightItem } from "../../lib/store";
 import SiteHeader from "../../components/SiteHeader";
 import Footer from "../../components/Footer";
 import Badge from "../../components/ui/Badge";
 import Button from "../../components/ui/Button";
-import { getWork, getInsights, recordWorkClick, type WorkItem, type InsightItem } from "../../lib/store";
+import WhiteBackground from "../../components/WhiteBackground";
+import WorkDetailClient from "../../components/WorkDetailClient";
 
-export default function CaseDetailPage() {
-  const params = useParams();
-  const id = params.id as string;
-  const [cases, setCases] = useState<WorkItem[]>([]);
-  const [related, setRelated] = useState<InsightItem[]>([]);
+// ── Metadata ──────────────────────────────────────────────────────────────────
 
-  useEffect(() => {
-    recordWorkClick(id);
-    const workData = getWork();
-    const insightData = getInsights();
-    setCases(workData);
-    const thisWork = workData.find((w) => w.id === id);
-    if (thisWork) {
-      document.title = `${thisWork.title} | 똑똑한개발자`;
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) metaDesc.setAttribute("content", thisWork.lead || thisWork.title);
-    }
-    if (thisWork?.relatedInsights && thisWork.relatedInsights.length > 0) {
-      setRelated(thisWork.relatedInsights.map((i) => insightData[i]).filter(Boolean));
-    } else {
-      setRelated(insightData.slice(0, 3));
-    }
-    const prev = document.body.style.background;
-    document.body.style.background = "#ffffff";
-    return () => {
-      document.body.style.background = prev;
-      document.title = "똑똑한개발자 | 기업 AX 전환 전문 개발사";
-    };
-  }, []);
+export async function generateMetadata(
+  { params }: { params: Promise<{ id: string }> }
+): Promise<Metadata> {
+  const { id } = await params;
+  const { data } = await supabase
+    .from("work")
+    .select("title, lead")
+    .eq("id", id)
+    .single();
 
-  const idx = cases.length > 0 ? Math.max(0, cases.findIndex((c) => c.id === id)) : 0;
-  const c = cases[idx] ?? null;
-  const next = cases.length > 0 ? cases[(idx + 1) % cases.length] : null;
+  if (!data) return {};
+
+  return {
+    title: data.title,
+    description: data.lead || data.title,
+    openGraph: {
+      title: `${data.title} | 똑똑한개발자`,
+      description: data.lead || data.title,
+    },
+  };
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+
+export default async function CaseDetailPage(
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+
+  // 현재 work 조회
+  const { data: raw } = await supabase
+    .from("work")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (!raw) notFound();
+
+  const c: WorkItem = dbToWorkItem(raw as Record<string, unknown>);
+
+  // 전체 work 목록 (다음 사례 네비게이션용)
+  const { data: allRaw } = await supabase
+    .from("work")
+    .select("id, title, client")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
+
+  const allIds = (allRaw ?? []).map((r) => r.id as string);
+  const idx = allIds.indexOf(id);
+  const nextRaw = allRaw?.[(idx + 1) % allIds.length];
+  const next = nextRaw ? { id: nextRaw.id as string, client: nextRaw.client as string } : null;
+
+  // 관련 인사이트 조회
+  let related: InsightItem[] = [];
+  if (c.relatedInsights && c.relatedInsights.length > 0) {
+    const { data } = await supabase
+      .from("insights")
+      .select("*")
+      .in("id", c.relatedInsights);
+    related = (data ?? []).map(dbToInsightItem);
+  } else {
+    const { data } = await supabase
+      .from("insights")
+      .select("*")
+      .order("sort_order", { ascending: true })
+      .limit(3);
+    related = (data ?? []).map(dbToInsightItem);
+  }
 
   const mono = "var(--font-sans)";
 
-  if (!c) {
-    return (
-      <div style={{ background: "var(--bg)", color: "var(--fg-1)", minHeight: "100dvh" }}>
-        <SiteHeader forceLight current="Work" />
-      </div>
-    );
-  }
-
   return (
     <div style={{ background: "var(--bg)", color: "var(--fg-1)", minHeight: "100dvh" }}>
+      <WhiteBackground />
+      <WorkDetailClient workId={id} />
       <SiteHeader forceLight current="Work" />
 
       {/* Cover */}
@@ -62,21 +95,17 @@ export default function CaseDetailPage() {
           <img src={c.thumbImg} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.35, display: "block" }} />
         )}
         <div style={{ maxWidth: 1248, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
-          {/* 회사명 */}
-          <div style={{ font: `700 14px/1 var(--font-sans)`, letterSpacing: ".06em", color: "var(--fg-on-dark-1)", marginBottom: 20 }}>
+          <div style={{ font: "700 14px/1 var(--font-sans)", letterSpacing: ".06em", color: "var(--fg-on-dark-1)", marginBottom: 20 }}>
             {c.client}
           </div>
-          {/* 타이틀 */}
           <h1 style={{
             font: "700 clamp(34px,5vw,68px)/1.18 var(--font-sans)",
             letterSpacing: "-.035em", color: "var(--fg-on-dark-1)", margin: 0, maxWidth: 940,
           }}>{c.title}</h1>
-          {/* 리드 */}
           <p style={{
             font: "var(--body-lg)",
             color: "rgba(255,255,255,.8)", margin: "24px 0 0", maxWidth: 720,
           }}>{c.lead}</p>
-          {/* 태그들 */}
           <div style={{
             display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap",
             font: `500 12px/1 var(--font-sans)`, letterSpacing: ".06em",
@@ -152,20 +181,10 @@ export default function CaseDetailPage() {
           borderTop: "1px solid rgba(10,10,10,.08)",
           display: "flex", justifyContent: "space-between", alignItems: "center",
         }}>
-          <Button
-            variant="ghost"
-            size="md"
-            href="/work"
-            style={{ color: "var(--grey-800)", padding: "12px 20px" }}
-          >
+          <Button variant="ghost" size="md" href="/work" style={{ color: "var(--grey-800)", padding: "12px 20px" }}>
             ← 목록으로
           </Button>
-          <Button
-            variant="ghost"
-            size="md"
-            href={`/work/${next.id}`}
-            style={{ color: "var(--grey-800)", padding: "12px 20px" }}
-          >
+          <Button variant="ghost" size="md" href={`/work/${next.id}`} style={{ color: "var(--grey-800)", padding: "12px 20px" }}>
             다음 사례 →
           </Button>
         </nav>
@@ -177,17 +196,13 @@ export default function CaseDetailPage() {
           <div style={{ maxWidth: 1248, margin: "0 auto" }}>
             <div className="work-insights-header" style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 36 }}>
               <h2 style={{ font: "var(--h3)", letterSpacing: "-.02em", color: "var(--fg-1)", margin: 0 }}>관련 인사이트</h2>
-              <a href="/insight" style={{
+              <a href="/insight" className="work-insights-all-link" style={{
                 display: "inline-flex", alignItems: "center", gap: 6,
                 padding: "10px 16px", borderRadius: "var(--r-sm)",
                 border: "1px solid rgba(10,10,10,.14)", background: "var(--bg)",
                 font: "500 13px/1 var(--font-sans)", color: "var(--fg-1)",
-                textDecoration: "none", cursor: "pointer",
-                transition: "background .2s ease",
-              }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = "#f4f4f4"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = "var(--bg)"; }}
-              >전체 보기 →</a>
+                textDecoration: "none",
+              }}>전체 보기 →</a>
             </div>
             <div className="work-insights-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
               {related.map((r, i) => (
@@ -206,3 +221,4 @@ export default function CaseDetailPage() {
     </div>
   );
 }
+

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getWork, getInsights, getFAQs, getWorkClicks, getInsightClicks, getStickyConfig, saveStickyConfig, type StickyConfig, type StickyAction } from "../lib/store";
+import { getFAQs, getWorkClicks, getInsightClicks, getStickyConfig, saveStickyConfig, type StickyConfig, type StickyAction, type WorkItem, type InsightItem } from "../lib/store";
 
 type RankItem = { label: string; sub: string; count: number };
 
@@ -14,31 +14,37 @@ export default function AdminDashboard() {
   const [stickySaved, setStickySaved] = useState(false);
 
   useEffect(() => {
-    const workItems = getWork();
-    const insightItems = getInsights();
-    setCounts({
-      work: workItems.length,
-      insights: insightItems.length,
-      faqs: getFAQs().length,
-    });
+    async function load() {
+      const [workItems, insightItems]: [WorkItem[], InsightItem[]] = await Promise.all([
+        fetch("/api/admin/work").then((r) => r.json()),
+        fetch("/api/admin/insight").then((r) => r.json()),
+      ]);
 
-    // Top work
-    const wClicks = getWorkClicks();
-    const ranked = workItems
-      .map((w) => ({ label: w.title, sub: w.client, count: wClicks[w.id] ?? 0 }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5);
-    setTopWork(ranked);
+      setCounts({
+        work: workItems.length,
+        insights: insightItems.length,
+        faqs: getFAQs().length,
+      });
 
-    // Top insights
-    const iClicks = getInsightClicks();
-    const rankedI = insightItems
-      .map((ins) => ({ label: ins.title, sub: ins.tag + " · " + ins.date, count: iClicks[ins.title] ?? 0 }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5);
-    setTopInsights(rankedI);
+      const wClicks = getWorkClicks();
+      setTopWork(
+        workItems
+          .map((w) => ({ label: w.title, sub: w.client, count: wClicks[w.id] ?? 0 }))
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 5)
+      );
 
-    setSticky(getStickyConfig());
+      const iClicks = getInsightClicks();
+      setTopInsights(
+        insightItems
+          .map((ins) => ({ label: ins.title, sub: ins.tag + " · " + ins.date, count: iClicks[ins.title] ?? 0 }))
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 5)
+      );
+
+      setSticky(getStickyConfig());
+    }
+    load().catch(console.error);
   }, []);
 
   function saveSticky() {

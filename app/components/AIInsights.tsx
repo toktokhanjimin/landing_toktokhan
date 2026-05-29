@@ -1,7 +1,9 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback } from "react";
-import { getInsights, type InsightItem } from "../lib/store";
+import type { InsightItem } from "../lib/store";
+import { supabase } from "../lib/supabase";
+import { dbToInsightItem } from "../lib/db-mappers";
 import Badge from "./ui/Badge";
 
 export default function AIInsights() {
@@ -11,8 +13,12 @@ export default function AIInsights() {
   const [items, setItems] = useState<InsightItem[]>([]);
 
   useEffect(() => {
-    const all = getInsights();
-    setItems(all.filter((it) => it.featured));
+    supabase
+      .from("insights")
+      .select("*")
+      .eq("featured", true)
+      .order("sort_order", { ascending: true })
+      .then(({ data }) => setItems((data ?? []).map(dbToInsightItem)));
   }, []);
 
   const updateButtons = useCallback(() => {
