@@ -20,7 +20,7 @@ export default function InsightDetailClient({ item }: { item: InsightItem }) {
           const cat = item.category ?? item.tag;
           const src = item.thumbImg ?? (["log", "talk", "tech"].includes(cat) ? `/assets/${cat}.png` : null);
           return src ? (
-            <div style={{ width: "100%", aspectRatio: "16/9", borderRadius: "var(--r-xl)", overflow: "hidden", marginBottom: 40, background: item.thumb }}>
+            <div style={{ width: "100%", aspectRatio: "16/9", borderRadius: "var(--r-xl)", overflow: "hidden", marginBottom: 40 }}>
               <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
             </div>
           ) : null;

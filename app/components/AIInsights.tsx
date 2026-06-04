@@ -148,7 +148,7 @@ export default function AIInsights() {
                   }}>{it.title}</h3>
                 </div>
                 {/* Image area */}
-                <div style={{ width: "100%", height: 220, overflow: "hidden", flexShrink: 0, background: it.thumb }}>
+                <div style={{ width: "100%", height: 220, overflow: "hidden", flexShrink: 0 }}>
                   {src && (
                     <img
                       className="ins-card-img"

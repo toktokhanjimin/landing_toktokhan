@@ -131,7 +131,6 @@ function InsightCard({ item }: { item: InsightItem }) {
       <div className="ins-thumb" style={{
         width: 100, height: 100,
         borderRadius: "var(--r-md)",
-        background: item.thumb,
         flexShrink: 0,
         overflow: "hidden",
         position: "relative",

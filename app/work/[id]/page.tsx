@@ -217,7 +217,9 @@ export default async function CaseDetailPage(
             <div className="work-insights-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
               {related.map((r, i) => (
                 <a key={i} href={r.id ? `/insight/${r.slug || r.id}` : "/insight"} style={{ display: "flex", flexDirection: "column", gap: 14, textDecoration: "none", color: "inherit" }}>
-                  <div style={{ width: "100%", aspectRatio: "16/10", borderRadius: "var(--r-md)", background: r.thumb }} />
+                  <div style={{ width: "100%", aspectRatio: "16/10", borderRadius: "var(--r-md)", overflow: "hidden" }}>
+                    {r.thumbImg && <img src={r.thumbImg} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />}
+                  </div>
                   <div style={{ font: `500 12px/1 ${mono}`, letterSpacing: ".1em", color: "rgba(10,10,10,.5)" }}>{r.tag} · {r.date}</div>
                   <h3 style={{ font: "600 17px/1.4 var(--font-sans)", letterSpacing: "-.01em", color: "var(--fg-1)", margin: 0, whiteSpace: "pre-line" }}>{r.title}</h3>
                 </a>
