@@ -3,6 +3,7 @@
 
 export interface WorkItem {
   id: string;
+  slug?: string;            // URL slug (없으면 id 사용)
   client: string;
   tag: string;
   category: string;
@@ -22,6 +23,7 @@ export interface WorkItem {
 
 export interface InsightItem {
   id?: number;              // Supabase auto-increment PK
+  slug?: string;            // URL slug (없으면 id 사용)
   mark: string;
   markColor: string;
   thumb: string;
@@ -32,6 +34,7 @@ export interface InsightItem {
   date: string;
   excerpt: string;
   url?: string;
+  body?: string;            // Tiptap HTML content
   featured?: boolean;
   sort_order?: number;
 }
@@ -110,7 +113,7 @@ const DEFAULT_STICKY: StickyConfig = {
   buttonLabel: "똑똑한개발자 더 알아보기",
   description: "No.1 AX 파트너\n똑똑한개발자가 궁금하다면?",
   actions: [
-    { label: "서비스 소개서 받기", url: "https://www.pluuug.com/form/pbrPZzeYyu", type: "download" },
+    { label: "서비스 소개서 받기", url: "/brochure", type: "download" },
     { label: "똑똑한 AX 교육 보기", url: "", type: "link" },
   ],
 };

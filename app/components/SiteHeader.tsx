@@ -11,16 +11,9 @@ export default function SiteHeader({ forceLight = false, current = "" }: { force
   const [light, setLight] = useState(forceLight);
   const [solid, setSolid] = useState(forceLight);
   const [toast, setToast] = useState(false);
-  const [contactOpen, setContactOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const showSoon = () => { setToast(true); setTimeout(() => setToast(false), 1800); };
-
-  useEffect(() => {
-    const onOpen = () => setContactOpen(true);
-    window.addEventListener("open-contact", onOpen);
-    return () => window.removeEventListener("open-contact", onOpen);
-  }, []);
 
   useEffect(() => {
     if (forceLight) { setLight(true); setSolid(true); }
@@ -109,7 +102,7 @@ export default function SiteHeader({ forceLight = false, current = "" }: { force
 
           {/* Right: CTA */}
           <div className="nav-cta" style={{ display: "flex", gap: 8, alignItems: "center", marginLeft: "auto" }}>
-            <Button variant="primary" size="md" onClick={() => setContactOpen(true)}>
+            <Button variant="primary" size="md" href="/contact">
               문의하기
             </Button>
           </div>
@@ -141,33 +134,10 @@ export default function SiteHeader({ forceLight = false, current = "" }: { force
           <a href="/work" style={{ font: "600 22px/1 var(--font-sans)", color: light ? "var(--fg-1)" : "var(--fg-on-dark-1)", padding: "16px 0", borderBottom: `1px solid ${light ? "rgba(10,10,10,.08)" : "rgba(255,255,255,.08)"}` }} onClick={() => setMenuOpen(false)}>Work</a>
           <a href="/insight" style={{ font: "600 22px/1 var(--font-sans)", color: light ? "var(--fg-1)" : "var(--fg-on-dark-1)", padding: "16px 0", borderBottom: `1px solid ${light ? "rgba(10,10,10,.08)" : "rgba(255,255,255,.08)"}` }} onClick={() => setMenuOpen(false)}>Insight</a>
           <a href="/faq" style={{ font: "600 22px/1 var(--font-sans)", color: light ? "var(--fg-1)" : "var(--fg-on-dark-1)", padding: "16px 0", borderBottom: `1px solid ${light ? "rgba(10,10,10,.08)" : "rgba(255,255,255,.08)"}` }} onClick={() => setMenuOpen(false)}>FAQ</a>
-          <Button variant="primary" size="md" onClick={() => { setMenuOpen(false); setContactOpen(true); }} style={{ justifyContent: "center", marginTop: 8 }}>문의하기</Button>
+          <Button variant="primary" size="md" href="/contact" style={{ justifyContent: "center", marginTop: 8 }}>문의하기</Button>
         </div>
       )}
 
-      {/* Contact Drawer */}
-      {contactOpen && (
-        <div
-          style={{ position: "fixed", inset: 0, background: "rgba(10,10,10,.6)", zIndex: 80, backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", animation: "modalFade .25s ease-out" }}
-          onClick={() => setContactOpen(false)}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: "100%", maxWidth: 560, background: "var(--bg)", boxShadow: "-24px 0 80px rgba(0,0,0,.3)", animation: "drawerSlide .35s cubic-bezier(.22,.61,.36,1)", display: "flex", flexDirection: "column", overflow: "hidden" }}
-          >
-            <button
-              onClick={() => setContactOpen(false)}
-              aria-label="닫기"
-              style={{ position: "absolute", top: 16, right: 16, zIndex: 2, width: 36, height: 36, borderRadius: "var(--r-full)", background: "rgba(10,10,10,.06)", border: 0, color: "var(--fg-1)", cursor: "pointer", font: "400 18px/1 var(--font-sans)", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
-            >✕</button>
-            <iframe
-              src="https://www.pluuug.com/form/w464pT1uRZ"
-              style={{ flex: 1, width: "100%", border: "none", display: "block" }}
-              title="문의하기"
-            />
-          </div>
-        </div>
-      )}
     </>
   );
 }

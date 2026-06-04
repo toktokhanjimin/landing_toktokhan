@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import ScrollReset from "./components/ScrollReset";
 
 const ibmPlexMono = IBM_Plex_Mono({
   variable: "--font-mono",
@@ -46,7 +47,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={ibmPlexMono.variable}>
-      <body>{children}</body>
+      <body>
+        <ScrollReset />
+        {children}
+      </body>
     </html>
   );
 }

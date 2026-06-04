@@ -122,9 +122,7 @@ export default function AIInsights() {
                 key={idx}
                 className="ins-card-new"
                 data-idx={idx}
-                href={it.url || undefined}
-                target={it.url ? "_blank" : undefined}
-                rel={it.url ? "noopener noreferrer" : undefined}
+                href={it.id ? `/insight/${it.slug || it.id}` : undefined}
                 style={{
                   flexShrink: 0,
                   width: 320,

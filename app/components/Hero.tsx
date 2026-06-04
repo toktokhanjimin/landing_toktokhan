@@ -15,7 +15,7 @@ export default function Hero() {
           AI가 실제 업무 안에서 작동하도록 전략·개발·운영까지 함께 설계합니다.
         </p>
         <div className="hero-btns" style={{ marginTop: 30, display: "flex", gap: 10, justifyContent: "center" }}>
-          <Button variant="primary" onClick={() => window.dispatchEvent(new CustomEvent("open-contact"))}>
+          <Button variant="primary" href="/contact">
             프로젝트 문의하기
           </Button>
           <Button variant="secondary" href="/work">

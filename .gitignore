@@ -40,3 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .claude/
+
+# 시크릿 포함된 일회성 스크립트
+supabase/seed.ts
+supabase/migrate-slugs.ts

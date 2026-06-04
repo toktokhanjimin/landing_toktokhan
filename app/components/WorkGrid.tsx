@@ -68,7 +68,7 @@ export default function WorkGrid() {
           {items.map((it, i) => (
             <a
               key={it.id}
-              href={`/work/${it.id}`}
+              href={`/work/${it.slug || it.id}`}
               className="wg-card"
               ref={(el) => { cardRefs.current[i] = el; }}
               data-idx={i}

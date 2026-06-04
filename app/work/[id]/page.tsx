@@ -9,19 +9,34 @@ import Badge from "../../components/ui/Badge";
 import Button from "../../components/ui/Button";
 import WhiteBackground from "../../components/WhiteBackground";
 import WorkDetailClient from "../../components/WorkDetailClient";
+import WorkContactPopup from "../../components/WorkContactPopup";
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
+
+/** slug 또는 text ID로 work 조회 */
+async function fetchWork(idOrSlug: string) {
+  // 1) slug로 먼저 시도
+  const { data: bySlug } = await supabase
+    .from("work")
+    .select("*")
+    .eq("slug", idOrSlug)
+    .maybeSingle();
+  if (bySlug) return bySlug;
+
+  // 2) text ID 폴백 (기존 URL 호환)
+  const { data: byId } = await supabase
+    .from("work")
+    .select("*")
+    .eq("id", idOrSlug)
+    .maybeSingle();
+  return byId ?? null;
+}
 
 export async function generateMetadata(
   { params }: { params: Promise<{ id: string }> }
 ): Promise<Metadata> {
   const { id } = await params;
-  const { data } = await supabase
-    .from("work")
-    .select("title, lead")
-    .eq("id", id)
-    .single();
-
+  const data = await fetchWork(decodeURIComponent(id));
   if (!data) return {};
 
   return {
@@ -40,14 +55,7 @@ export default async function CaseDetailPage(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-
-  // 현재 work 조회
-  const { data: raw } = await supabase
-    .from("work")
-    .select("*")
-    .eq("id", id)
-    .single();
-
+  const raw = await fetchWork(decodeURIComponent(id));
   if (!raw) notFound();
 
   const c: WorkItem = dbToWorkItem(raw as Record<string, unknown>);
@@ -55,14 +63,16 @@ export default async function CaseDetailPage(
   // 전체 work 목록 (다음 사례 네비게이션용)
   const { data: allRaw } = await supabase
     .from("work")
-    .select("id, title, client")
+    .select("id, slug, title, client")
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
 
   const allIds = (allRaw ?? []).map((r) => r.id as string);
-  const idx = allIds.indexOf(id);
+  const idx = allIds.indexOf(c.id);
   const nextRaw = allRaw?.[(idx + 1) % allIds.length];
-  const next = nextRaw ? { id: nextRaw.id as string, client: nextRaw.client as string } : null;
+  const next = nextRaw
+    ? { href: (nextRaw.slug as string) || (nextRaw.id as string), client: nextRaw.client as string }
+    : null;
 
   // 관련 인사이트 조회
   let related: InsightItem[] = [];
@@ -184,7 +194,7 @@ export default async function CaseDetailPage(
           <Button variant="ghost" size="md" href="/work" style={{ color: "var(--grey-800)", padding: "12px 20px" }}>
             ← 목록으로
           </Button>
-          <Button variant="ghost" size="md" href={`/work/${next.id}`} style={{ color: "var(--grey-800)", padding: "12px 20px" }}>
+          <Button variant="ghost" size="md" href={`/work/${next.href}`} style={{ color: "var(--grey-800)", padding: "12px 20px" }}>
             다음 사례 →
           </Button>
         </nav>
@@ -192,7 +202,7 @@ export default async function CaseDetailPage(
 
       {/* Related insights */}
       {related.length > 0 && (
-        <section className="work-insights-section" style={{ background: "var(--bg-elev)", padding: "100px 24px 120px", marginTop: 0 }}>
+        <section id="work-related-insights" className="work-insights-section" style={{ background: "var(--bg-elev)", padding: "100px 24px 120px", marginTop: 0 }}>
           <div style={{ maxWidth: 1248, margin: "0 auto" }}>
             <div className="work-insights-header" style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 36 }}>
               <h2 style={{ font: "var(--h3)", letterSpacing: "-.02em", color: "var(--fg-1)", margin: 0 }}>관련 인사이트</h2>
@@ -206,7 +216,7 @@ export default async function CaseDetailPage(
             </div>
             <div className="work-insights-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
               {related.map((r, i) => (
-                <a key={i} href={r.url || "/insight"} target={r.url ? "_blank" : undefined} rel={r.url ? "noopener noreferrer" : undefined} style={{ display: "flex", flexDirection: "column", gap: 14, textDecoration: "none", color: "inherit" }}>
+                <a key={i} href={r.id ? `/insight/${r.slug || r.id}` : "/insight"} style={{ display: "flex", flexDirection: "column", gap: 14, textDecoration: "none", color: "inherit" }}>
                   <div style={{ width: "100%", aspectRatio: "16/10", borderRadius: "var(--r-md)", background: r.thumb }} />
                   <div style={{ font: `500 12px/1 ${mono}`, letterSpacing: ".1em", color: "rgba(10,10,10,.5)" }}>{r.tag} · {r.date}</div>
                   <h3 style={{ font: "600 17px/1.4 var(--font-sans)", letterSpacing: "-.01em", color: "var(--fg-1)", margin: 0, whiteSpace: "pre-line" }}>{r.title}</h3>
@@ -218,6 +228,7 @@ export default async function CaseDetailPage(
       )}
 
       <Footer />
+      <WorkContactPopup />
     </div>
   );
 }

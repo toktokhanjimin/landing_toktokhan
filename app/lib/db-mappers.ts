@@ -4,6 +4,7 @@ import type { WorkItem, InsightItem } from "./store";
 export function dbToWorkItem(row: Record<string, unknown>): WorkItem {
   return {
     id:               String(row.id ?? ""),
+    slug:             row.slug ? String(row.slug) : undefined,
     client:           String(row.client ?? ""),
     tag:              String(row.tag ?? ""),
     category:         String(row.category ?? ""),
@@ -25,6 +26,7 @@ export function dbToWorkItem(row: Record<string, unknown>): WorkItem {
 export function dbToInsightItem(row: Record<string, unknown>): InsightItem {
   return {
     id:         Number(row.id ?? 0),
+    slug:       row.slug ? String(row.slug) : undefined,
     mark:       String(row.mark ?? ""),
     markColor:  String(row.mark_color ?? "#0a0a0a"),
     thumb:      String(row.thumb ?? ""),
@@ -35,6 +37,7 @@ export function dbToInsightItem(row: Record<string, unknown>): InsightItem {
     date:       String(row.date ?? ""),
     excerpt:    String(row.excerpt ?? ""),
     url:        row.url ? String(row.url) : undefined,
+    body:       row.body ? String(row.body) : undefined,
     featured:   Boolean(row.featured),
     sort_order: Number(row.sort_order ?? 0),
   };

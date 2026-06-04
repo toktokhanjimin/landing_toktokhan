@@ -2,13 +2,14 @@
 
 import { useState, useEffect, useRef, type CSSProperties } from "react";
 import type { WorkItem, InsightItem } from "../../lib/store";
+import { toSlug } from "../../lib/slug";
 import { overlayStyle, panelStyle, inputStyle, labelStyle, btnBase } from "../adminStyles";
 
 const EMPTY_SECTION = { h: "", p: "", grad: "", img: "" };
 
 const EMPTY_ITEM: Omit<WorkItem, "id"> = {
   client: "", tag: "", category: "AI", year: "", date: "",
-  bg: "", desc: "", title: "", lead: "", thumbImg: "",
+  bg: "", desc: "", title: "", lead: "", thumbImg: "", slug: "",
   sections: [{ ...EMPTY_SECTION }, { ...EMPTY_SECTION }, { ...EMPTY_SECTION }],
   points: [], featured: false, relatedInsights: [],
 };
@@ -141,7 +142,7 @@ export default function AdminWorkPage() {
   }, []);
 
   function openAdd() { setEditing(null); setForm(EMPTY_ITEM); setModalOpen(true); }
-  function openEdit(item: WorkItem) { setEditing(item); const { id, ...rest } = item; setForm(rest); setModalOpen(true); }
+  function openEdit(item: WorkItem) { setEditing(item); const { id, ...rest } = item; setForm({ ...rest, slug: rest.slug ?? "" }); setModalOpen(true); }
   function closeModal() { setModalOpen(false); setEditing(null); }
 
   async function handleSave() {
@@ -158,6 +159,7 @@ export default function AdminWorkPage() {
         description:         form.lead,
         title:               form.title,
         lead:                form.lead,
+        slug:                form.slug || toSlug(form.title),
         thumb_img:           form.thumbImg ?? "",
         sections:            form.sections,
         points:              form.points,
@@ -334,8 +336,34 @@ export default function AdminWorkPage() {
               </div>
 
               <FieldWithCount label="Title" value={form.title} maxLength={40}>
-                <input style={inputStyle} value={form.title} maxLength={40} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} placeholder="프로젝트 제목" />
+                <input
+                  style={inputStyle}
+                  value={form.title}
+                  maxLength={40}
+                  onChange={(e) => {
+                    const title = e.target.value;
+                    setForm((f) => ({
+                      ...f,
+                      title,
+                      slug: f.slug === toSlug(f.title) || f.slug === "" ? toSlug(title) : f.slug,
+                    }));
+                  }}
+                  placeholder="프로젝트 제목"
+                />
               </FieldWithCount>
+
+              <div>
+                <label style={labelStyle}>URL 슬러그</label>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ font: "400 12px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.4)", flexShrink: 0 }}>/work/</span>
+                  <input
+                    style={{ ...inputStyle, font: "400 13px/1 var(--font-mono, monospace)", color: "rgba(10,10,10,.7)" }}
+                    value={form.slug ?? ""}
+                    onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
+                    placeholder="url-slug"
+                  />
+                </div>
+              </div>
 
               <FieldWithCount label="Lead (소개 문구)" value={form.lead} maxLength={120}>
                 <textarea style={{ ...inputStyle, height: 80, resize: "vertical" }} value={form.lead} maxLength={120} onChange={(e) => setForm((f) => ({ ...f, lead: e.target.value }))} placeholder="프로젝트 소개..." />

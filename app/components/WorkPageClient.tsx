@@ -90,7 +90,7 @@ export default function WorkPageClient({ initialItems }: { initialItems: WorkIte
 function WorkCard({ item }: { item: WorkItem }) {
   return (
     <a
-      href={`/work/${item.id}`}
+      href={`/work/${item.slug || item.id}`}
       className="wk-card"
       style={{
         borderRadius: "var(--r-lg)",

@@ -12,6 +12,7 @@ export default async function InsightPage() {
   const { data, error } = await supabase
     .from("insights")
     .select("*")
+    .eq("featured", true)
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
 

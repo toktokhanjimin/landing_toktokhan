@@ -110,19 +110,18 @@ export default function InsightPageClient({ initialItems }: { initialItems: Insi
 }
 
 function InsightCard({ item }: { item: InsightItem }) {
+  const href = item.id ? `/insight/${item.slug || item.id}` : undefined;
   return (
     <a
       className="ins-card"
-      href={item.url || undefined}
-      target={item.url ? "_blank" : undefined}
-      rel={item.url ? "noopener noreferrer" : undefined}
+      href={href}
       onClick={() => { if (item.url) recordInsightClick(item.title); }}
       style={{
         display: "grid",
         gridTemplateColumns: "100px 1fr",
         gap: 20,
         alignItems: "center",
-        cursor: item.url ? "pointer" : "default",
+        cursor: href ? "pointer" : "default",
         textDecoration: "none",
         color: "inherit",
         padding: "20px 0",

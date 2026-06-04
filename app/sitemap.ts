@@ -4,17 +4,24 @@ import { supabase } from "./lib/supabase";
 const BASE = "https://www.toktokhan.dev";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // work 상세 페이지 동적 추가
-  const { data: works } = await supabase
-    .from("work")
-    .select("id, created_at")
-    .order("created_at", { ascending: false });
+  // work 상세 + insight 상세 동적 추가
+  const [{ data: works }, { data: insights }] = await Promise.all([
+    supabase.from("work").select("id, created_at").order("created_at", { ascending: false }),
+    supabase.from("insights").select("id, created_at").eq("featured", true).order("created_at", { ascending: false }),
+  ]);
 
   const workDetailUrls: MetadataRoute.Sitemap = (works ?? []).map((w) => ({
     url: `${BASE}/work/${w.id}`,
     lastModified: new Date(w.created_at as string),
     changeFrequency: "monthly" as const,
     priority: 0.7,
+  }));
+
+  const insightDetailUrls: MetadataRoute.Sitemap = (insights ?? []).map((i) => ({
+    url: `${BASE}/insight/${i.id}`,
+    lastModified: new Date(i.created_at as string),
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
   }));
 
   return [
@@ -43,5 +50,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     ...workDetailUrls,
+    ...insightDetailUrls,
   ];
 }
