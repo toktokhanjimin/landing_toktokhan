@@ -134,7 +134,6 @@ function InsightCard({ item }: { item: InsightItem }) {
         background: item.thumb,
         flexShrink: 0,
         overflow: "hidden",
-        boxShadow: "0 2px 12px rgba(0,0,0,.08)",
         position: "relative",
       }}>
         {(() => {

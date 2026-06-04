@@ -245,8 +245,8 @@ button, a {
 /* Insight card hover */
 .ins-card h3 { transition: color .45s cubic-bezier(.4,0,.2,1); }
 .ins-card:hover h3 { color: var(--blue-600) !important; }
-.ins-thumb { transition: transform .5s cubic-bezier(.4,0,.2,1); }
-.ins-card:hover .ins-thumb { transform: scale(.97); }
+.ins-thumb img { transition: transform .5s cubic-bezier(.4,0,.2,1); }
+.ins-card:hover .ins-thumb img { transform: scale(1.05); }
 
 /* Spinner */
 @keyframes spin { to { transform: rotate(360deg); } }

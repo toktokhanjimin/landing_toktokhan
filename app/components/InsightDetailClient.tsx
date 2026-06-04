@@ -15,25 +15,6 @@ export default function InsightDetailClient({ item }: { item: InsightItem }) {
       <SiteHeader forceLight current="Insight" />
 
       <article style={{ flex: 1, maxWidth: 760, margin: "0 auto", padding: "120px 24px 100px", width: "100%" }}>
-        {/* 뒤로가기 */}
-        <a
-          href="/insight"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            font: "500 13px/1 var(--font-sans)",
-            color: "rgba(10,10,10,.45)",
-            textDecoration: "none",
-            marginBottom: 40,
-            transition: "color .2s",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "var(--fg-1)")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(10,10,10,.45)")}
-        >
-          ← 인사이트
-        </a>
-
         {/* 썸네일 */}
         {(() => {
           const cat = item.category ?? item.tag;
