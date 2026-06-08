@@ -9,12 +9,11 @@ const imgs = Array.from({ length: 15 }, (_, i) => `/assets/p-${i + 1}.png`);
 const img = (n: number) => imgs[(n - 1) % 15];
 
 const cols: { speed: number; tiles: Tile[] }[] = [
-  { speed: 120, tiles: [ { h: 260, src: img(1) }, { h: 340, src: img(2) }, { h: 220, src: img(3) }, { h: 300, src: img(4) } ] },
-  { speed: 180, tiles: [ { h: 380, src: img(5) }, { h: 260, src: img(6) }, { h: 300, src: img(7) }, { h: 240, src: img(8) } ] },
-  { speed: 60,  tiles: [ { h: 300, src: img(9) }, { h: 260, src: img(10) }, { h: 340, src: img(11) }, { h: 220, src: img(12) } ] },
-  { speed: 220, tiles: [ { h: 360, src: img(13) }, { h: 260, src: img(14) }, { h: 280, src: img(15) }, { h: 240, src: img(1) } ] },
-  { speed: 100, tiles: [ { h: 280, src: img(2) }, { h: 320, src: img(9) }, { h: 240, src: img(4) }, { h: 300, src: img(5) } ] },
-  { speed: 160, tiles: [ { h: 340, src: img(6) }, { h: 260, src: img(7) }, { h: 280, src: img(8) }, { h: 240, src: img(9) } ] },
+  { speed: 120, tiles: [ { h: 260, src: img(1)  }, { h: 340, src: img(2)  }, { h: 220, src: img(3)  } ] },
+  { speed: 180, tiles: [ { h: 380, src: img(4)  }, { h: 260, src: img(5)  }, { h: 300, src: img(6)  } ] },
+  { speed: 60,  tiles: [ { h: 300, src: img(7)  }, { h: 260, src: img(8)  }, { h: 340, src: img(9)  } ] },
+  { speed: 220, tiles: [ { h: 360, src: img(10) }, { h: 260, src: img(11) }, { h: 280, src: img(12) } ] },
+  { speed: 100, tiles: [ { h: 280, src: img(13) }, { h: 320, src: img(14) }, { h: 240, src: img(15) } ] },
 ];
 
 export default function PortfolioWall() {
@@ -41,8 +40,9 @@ export default function PortfolioWall() {
 
   return (
     <section ref={ref} className="no-px" style={{ position: "relative", background: "#0a0a0a", overflow: "hidden", height: "80vh", minHeight: 560, marginBottom: 20 }} aria-hidden="true">
-      <style>{`@media(max-width:767px){.pw-grid{grid-template-columns:repeat(3,1fr)!important}.pw-grid>div:nth-child(n+4){display:none}.pw-tile{height:160px!important}}`}</style>
-      <div className="pw-grid" style={{ position: "absolute", inset: 0, display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 10, padding: "60px 10px 0" }}>
+      <style>{`@media(max-width:767px){.pw-grid{grid-template-columns:repeat(3,1fr)!important}.pw-grid>div:nth-child(n+4){display:none}.pw-tile{height:160px!important}}@media(min-width:768px)and(max-width:1023px){.pw-tile{height:200px!important}}`}</style>
+      <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", padding: "60px 10px 0" }}>
+      <div className="pw-grid" style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10, width: "100%", maxWidth: 1440, alignContent: "start" }}>
         {cols.map((c, ci) => {
           const y = -c.speed * Math.max(0, progress);
           return (
@@ -64,6 +64,7 @@ export default function PortfolioWall() {
             </div>
           );
         })}
+      </div>
       </div>
       <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: 220, background: "linear-gradient(180deg,#0a0a0a 40%,rgba(10,10,10,0))", zIndex: 4, pointerEvents: "none" }} />
       <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 140, background: "linear-gradient(0deg,#0a0a0a,rgba(10,10,10,0))", zIndex: 4, pointerEvents: "none" }} />
