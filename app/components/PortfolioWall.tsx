@@ -40,8 +40,7 @@ export default function PortfolioWall() {
   return (
     <section ref={ref} className="no-px" style={{ position: "relative", background: "#0a0a0a", overflow: "hidden", height: "80vh", minHeight: 560, marginBottom: 20 }} aria-hidden="true">
       <style>{`@media(max-width:767px){.pw-grid{grid-template-columns:repeat(3,1fr)!important}.pw-grid>div:nth-child(n+4){display:none}.pw-tile{height:160px!important}}@media(min-width:768px)and(max-width:1023px){.pw-tile{height:200px!important}}`}</style>
-      <div style={{ position: "absolute", inset: 0, display: "flex", justifyContent: "center", padding: "60px 10px 0" }}>
-      <div className="pw-grid" style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10, width: "100%", maxWidth: 1440, alignContent: "start" }}>
+      <div className="pw-grid" style={{ position: "absolute", inset: 0, display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10, padding: "60px 10px 0", alignContent: "start" }}>
         {cols.map((c, ci) => {
           const y = -c.speed * Math.max(0, progress);
           return (
@@ -63,7 +62,6 @@ export default function PortfolioWall() {
             </div>
           );
         })}
-      </div>
       </div>
       <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: 220, background: "linear-gradient(180deg,#0a0a0a 40%,rgba(10,10,10,0))", zIndex: 4, pointerEvents: "none" }} />
       <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 140, background: "linear-gradient(0deg,#0a0a0a,rgba(10,10,10,0))", zIndex: 4, pointerEvents: "none" }} />
