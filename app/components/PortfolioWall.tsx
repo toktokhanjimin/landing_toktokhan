@@ -8,11 +8,11 @@ const imgs = Array.from({ length: 15 }, (_, i) => `/assets/p-${i + 1}.png`);
 const img = (n: number) => imgs[(n - 1) % 15];
 
 const cols: { speed: number; tiles: Tile[] }[] = [
-  { speed: 120, tiles: [ { h: 260, src: img(1)  }, { h: 340, src: img(2)  }, { h: 220, src: img(3)  } ] },
-  { speed: 180, tiles: [ { h: 380, src: img(4)  }, { h: 260, src: img(5)  }, { h: 300, src: img(6)  } ] },
-  { speed: 60,  tiles: [ { h: 300, src: img(7)  }, { h: 260, src: img(8)  }, { h: 340, src: img(9)  } ] },
-  { speed: 220, tiles: [ { h: 360, src: img(10) }, { h: 260, src: img(11) }, { h: 280, src: img(12) } ] },
-  { speed: 100, tiles: [ { h: 280, src: img(13) }, { h: 320, src: img(14) }, { h: 240, src: img(15) } ] },
+  { speed: 100, tiles: [ { h: 260, src: img(1)  }, { h: 340, src: img(2)  }, { h: 220, src: img(3)  } ] },
+  { speed: 200, tiles: [ { h: 380, src: img(4)  }, { h: 260, src: img(5)  }, { h: 300, src: img(6)  } ] },
+  { speed: 140, tiles: [ { h: 300, src: img(7)  }, { h: 260, src: img(8)  }, { h: 340, src: img(9)  } ] },
+  { speed: 240, tiles: [ { h: 360, src: img(10) }, { h: 260, src: img(11) }, { h: 280, src: img(12) } ] },
+  { speed: 160, tiles: [ { h: 280, src: img(13) }, { h: 320, src: img(14) }, { h: 240, src: img(15) } ] },
 ];
 
 export default function PortfolioWall() {
