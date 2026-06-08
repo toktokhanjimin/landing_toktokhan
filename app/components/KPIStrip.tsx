@@ -42,8 +42,31 @@ const kpis = [
 ];
 
 export default function KPIStrip() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+    const onScroll = () => {
+      const el = sectionRef.current;
+      if (!el) return;
+      const vh = window.innerHeight;
+      const r = el.getBoundingClientRect();
+      // KPI가 아래에서 올라올 때 body 배경 전환 (r.top: vh → 0)
+      let t = (vh - r.top) / vh;
+      t = Math.max(0, Math.min(1, t));
+      const eased = t * t * (3 - 2 * t);
+      const v = Math.round(lerp(10, 255, eased));
+      document.body.style.background = `rgb(${v},${v},${v})`;
+      document.documentElement.style.setProperty("--dissolve-progress", eased.toFixed(3));
+      document.body.dataset.theme = eased > 0.5 ? "light" : "dark";
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <section style={{ position: "relative", background: "transparent", color: "var(--fg-1)", padding: "100px 24px 0", overflow: "hidden" }}>
+    <section ref={sectionRef} style={{ position: "relative", background: "transparent", color: "var(--fg-1)", padding: "100px 24px 0", overflow: "hidden" }}>
       <div style={{ position: "relative", maxWidth: 1200, margin: "0 auto" }}>
         <div style={{ textAlign: "left", marginBottom: 88, maxWidth: 720 }}>
           <h2 className="section-title">

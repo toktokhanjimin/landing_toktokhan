@@ -484,7 +484,7 @@ export default function WhyToktok() {
         setActiveCard(best);
       }
 
-      // Dark→light background dissolve
+      // Dark→light background dissolve — lastCard가 화면에서 올라간 후 시작
       const lastCard = cardRefs.current[cardRefs.current.length - 1];
       if (lastCard) {
         const r = lastCard.getBoundingClientRect();

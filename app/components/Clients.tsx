@@ -70,8 +70,8 @@ export default function Clients() {
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
-        <LogoRow items={row1} duration="55s" />
-        <LogoRow items={row2} duration="65s" reverse />
+        <LogoRow items={row1} duration="80s" />
+        <LogoRow items={row2} duration="95s" reverse />
       </div>
     </section>
   );
