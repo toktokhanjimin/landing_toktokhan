@@ -25,10 +25,9 @@ export default function PortfolioWall() {
       if (!el) return;
       const rect = el.getBoundingClientRect();
       const vh = window.innerHeight;
-      const docTop = rect.top + window.scrollY;
-      const start = Math.max(0, docTop - vh);
-      const end = docTop;
-      const t = Math.max(0, Math.min(1, (window.scrollY - start) / Math.max(1, end - start)));
+      // 섹션이 화면에 있는 동안 scrollY 기반으로 progress 계산
+      const range = vh * 1.5;
+      const t = Math.max(0, Math.min(1, window.scrollY / range));
       setProgress(t);
     };
     onScroll();

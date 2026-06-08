@@ -20,7 +20,7 @@ export default function TeamReveal() {
         if (!el) return;
         const r = el.getBoundingClientRect();
         const vh = window.innerHeight;
-        const distance = vh * 0.5;
+        const distance = vh * 0.9;
         const fromTop = vh - r.top;
         const p = Math.max(0, Math.min(1, fromTop / distance));
         setProgress(p);
