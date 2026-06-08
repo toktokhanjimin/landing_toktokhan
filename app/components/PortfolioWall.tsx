@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import Image from "next/image";
 
 type Tile = { h: number; src: string };
 
@@ -58,7 +57,7 @@ export default function PortfolioWall() {
                     flexShrink: 0, position: "relative",
                   }}
                 >
-                  <Image src={t.src} alt="" fill style={{ objectFit: "cover" }} sizes="20vw" />
+                  <img src={t.src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
             </div>
