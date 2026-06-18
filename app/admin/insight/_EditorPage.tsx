@@ -5,7 +5,22 @@ import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import type { InsightItem } from "../../lib/store";
 import { toSlug } from "../../lib/slug";
-import { inputStyle, labelStyle, btnBase } from "../adminStyles";
+import { inputStyle, textareaStyle, labelStyle, btnBase } from "../adminStyles";
+import AdminSelect from "../AdminSelect";
+
+const CATEGORY_OPTIONS = [
+  { value: "log",   label: "log"                 },
+  { value: "talk",  label: "talk"                },
+  { value: "tech",  label: "tech"                },
+  { value: "other", label: "other (직접 업로드)" },
+];
+
+const TAG_OPTIONS = [
+  { value: "기술 블로그", label: "기술 블로그" },
+  { value: "링크드인",   label: "링크드인"     },
+  { value: "유튜브",     label: "유튜브"       },
+  { value: "아티클",     label: "아티클"       },
+];
 
 const TiptapEditor = dynamic(() => import("../../components/TiptapEditor"), { ssr: false });
 
@@ -219,16 +234,14 @@ export default function InsightEditorPage({ mode, id }: Props) {
             </div>
 
             {/* 카테고리 선택 */}
-            <select style={inputStyle} value={form.category ?? "log"} onChange={(e) => {
-              const cat = e.target.value;
-              const cfg = CATEGORY_CONFIG[cat];
-              setForm((f) => ({ ...f, category: cat, thumb: cfg?.thumb ?? f.thumb, thumbImg: cfg?.img ?? "" }));
-            }}>
-              <option value="log">log</option>
-              <option value="talk">talk</option>
-              <option value="tech">tech</option>
-              <option value="other">other (직접 업로드)</option>
-            </select>
+            <AdminSelect
+              value={form.category ?? "log"}
+              onValueChange={(cat) => {
+                const cfg = CATEGORY_CONFIG[cat];
+                setForm((f) => ({ ...f, category: cat, thumb: cfg?.thumb ?? f.thumb, thumbImg: cfg?.img ?? "" }));
+              }}
+              options={CATEGORY_OPTIONS}
+            />
 
             {/* other 이미지 업로드 */}
             {form.category === "other" && (
@@ -263,12 +276,11 @@ export default function InsightEditorPage({ mode, id }: Props) {
 
           <div>
             <label style={labelStyle}>태그</label>
-            <select style={inputStyle} value={form.tag} onChange={(e) => setForm((f) => ({ ...f, tag: e.target.value }))}>
-              <option value="기술 블로그">기술 블로그</option>
-              <option value="링크드인">링크드인</option>
-              <option value="유튜브">유튜브</option>
-              <option value="아티클">아티클</option>
-            </select>
+            <AdminSelect
+              value={form.tag}
+              onValueChange={(v) => setForm((f) => ({ ...f, tag: v }))}
+              options={TAG_OPTIONS}
+            />
           </div>
 
           <div>
@@ -279,7 +291,7 @@ export default function InsightEditorPage({ mode, id }: Props) {
           <div>
             <label style={labelStyle}>요약 (excerpt)</label>
             <textarea
-              style={{ ...inputStyle, height: 90, resize: "vertical" }}
+              style={{ ...textareaStyle, height: 90 }}
               value={form.excerpt}
               onChange={(e) => setForm((f) => ({ ...f, excerpt: e.target.value }))}
               placeholder="목록에 표시되는 짧은 요약..."

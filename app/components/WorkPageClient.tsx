@@ -7,13 +7,13 @@ import FilterChip from "./ui/FilterChip";
 import WhiteBackground from "./WhiteBackground";
 import type { WorkItem } from "../lib/store";
 
-const CATEGORIES = ["전체", "AX", "AI", "Ops"];
+const CATEGORIES = ["ALL", "Commerce & Community", "Entertainment & O2O", "NFT & Blockchain", "Finance", "SaaS&Admin", "Brand Consulting", "ETC"];
 
 export default function WorkPageClient({ initialItems }: { initialItems: WorkItem[] }) {
-  const [active, setActive] = useState("전체");
+  const [active, setActive] = useState("ALL");
 
   const filtered =
-    active === "전체" ? initialItems : initialItems.filter((i) => i.category === active);
+    active === "ALL" ? initialItems : initialItems.filter((i) => i.category === active);
 
   return (
     <div style={{ background: "var(--bg)", color: "var(--fg-1)", minHeight: "100dvh" }}>

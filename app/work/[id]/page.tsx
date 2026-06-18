@@ -100,32 +100,41 @@ export default async function CaseDetailPage(
       <SiteHeader forceLight current="Work" />
 
       {/* Cover */}
-      <section className="work-cover" style={{ background: c.bg, padding: "168px 0 80px", color: "var(--fg-on-dark-1)", position: "relative", overflow: "hidden" }}>
-        {c.thumbImg && (
-          <img src={c.thumbImg} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.35, display: "block" }} />
-        )}
-        <div style={{ maxWidth: 1248, margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
-          <div style={{ font: "700 14px/1 var(--font-sans)", letterSpacing: ".06em", color: "var(--fg-on-dark-1)", marginBottom: 20 }}>
-            {c.client}
-          </div>
-          <h1 style={{
-            font: "700 clamp(34px,5vw,68px)/1.18 var(--font-sans)",
-            letterSpacing: "-.035em", color: "var(--fg-on-dark-1)", margin: 0, maxWidth: 940,
-          }}>{c.title}</h1>
-          <p style={{
-            font: "var(--body-lg)",
-            color: "rgba(255,255,255,.8)", margin: "24px 0 0", maxWidth: 720,
-          }}>{c.lead}</p>
-          <div style={{
-            display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap",
-            font: `500 12px/1 var(--font-sans)`, letterSpacing: ".06em",
-            color: "rgba(255,255,255,.7)", margin: "24px 0 0",
-          }}>
-            <span>{c.tag}</span>
-            <span style={{ color: "rgba(255,255,255,.3)" }}>•</span>
-            <Badge style={{ background: "rgba(255,255,255,.18)", color: "var(--fg-on-dark-1)", borderRadius: "var(--r-xs)", font: "500 11px/1 var(--font-sans)", letterSpacing: ".1em", padding: "5px 8px" }}>{c.category}</Badge>
-            <span style={{ color: "rgba(255,255,255,.3)" }}>•</span>
-            <span>{c.date}</span>
+      <section className="work-cover" style={{ background: "var(--bg)", padding: "160px 0 72px", borderBottom: "1px solid rgba(10,10,10,.08)" }}>
+        <div style={{ maxWidth: 1248, margin: "0 auto", padding: "0 24px" }}>
+          <div className="work-cover-inner" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 48 }}>
+            {/* Left */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <span style={{
+                display: "inline-flex", alignItems: "center",
+                border: "1.5px solid rgba(10,10,10,.2)", borderRadius: 999,
+                padding: "5px 14px", font: "600 12px/1 var(--font-sans)",
+                letterSpacing: ".08em", color: "var(--fg-1)", marginBottom: 24,
+              }}>{c.tag}</span>
+              <h1 style={{
+                font: "700 clamp(36px,5vw,68px)/1.14 var(--font-sans)",
+                letterSpacing: "-.035em", color: "var(--fg-1)", margin: "0 0 28px",
+              }}>{c.client}</h1>
+              <p style={{
+                font: "400 16px/1.7 var(--font-sans)",
+                color: "rgba(10,10,10,.6)", margin: 0, maxWidth: 680,
+              }}>{c.lead}</p>
+            </div>
+            {/* Right — meta */}
+            <div className="work-cover-meta" style={{ display: "flex", flexDirection: "column", gap: 20, flexShrink: 0, paddingTop: 8 }}>
+              {c.date && (
+                <div style={{ display: "flex", gap: 24, alignItems: "baseline" }}>
+                  <span style={{ font: "700 13px/1 var(--font-sans)", letterSpacing: ".04em", color: "var(--fg-1)", minWidth: 56 }}>Launch</span>
+                  <span style={{ font: "400 13px/1 var(--font-sans)", color: "rgba(10,10,10,.6)" }}>{c.date}</span>
+                </div>
+              )}
+              {c.client && (
+                <div style={{ display: "flex", gap: 24, alignItems: "baseline" }}>
+                  <span style={{ font: "700 13px/1 var(--font-sans)", letterSpacing: ".04em", color: "var(--fg-1)", minWidth: 56 }}>Client</span>
+                  <span style={{ font: "400 13px/1 var(--font-sans)", color: "rgba(10,10,10,.6)" }}>{c.client}</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
@@ -138,17 +147,13 @@ export default async function CaseDetailPage(
               0{i + 1} / 0{c.sections.length}
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
-              <h2 style={{ font: "var(--h3)", letterSpacing: "-.02em", color: "var(--fg-1)", margin: 0 }}>
-                {sec.h}
-              </h2>
-              <p style={{ font: "var(--body-lg)", color: "rgba(10,10,10,.78)", margin: 0, maxWidth: 720 }}>
-                {sec.p}
-              </p>
-              <div style={{ height: 320, borderRadius: "var(--r-md)", background: sec.grad, position: "relative", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,.08)" }}>
-                {sec.img && (
-                  <img src={sec.img} alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                )}
-              </div>
+              {sec.h && <h2 style={{ font: "var(--h3)", letterSpacing: "-.02em", color: "var(--fg-1)", margin: 0 }}>{sec.h}</h2>}
+              {sec.p && <p style={{ font: "var(--body-lg)", color: "rgba(10,10,10,.78)", margin: 0, maxWidth: 720 }}>{sec.p}</p>}
+              {sec.img && (
+                <div style={{ borderRadius: "var(--r-md)", overflow: "hidden" }}>
+                  <img src={sec.img} alt="" style={{ width: "100%", height: "auto", display: "block" }} />
+                </div>
+              )}
             </div>
           </section>
         ))}
@@ -217,9 +222,15 @@ export default async function CaseDetailPage(
             <div className="work-insights-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
               {related.map((r, i) => (
                 <a key={i} href={r.id ? `/insight/${r.slug || r.id}` : "/insight"} style={{ display: "flex", flexDirection: "column", gap: 14, textDecoration: "none", color: "inherit" }}>
-                  <div style={{ width: "100%", aspectRatio: "16/10", borderRadius: "var(--r-md)", overflow: "hidden" }}>
-                    {r.thumbImg && <img src={r.thumbImg} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />}
-                  </div>
+                  {(() => {
+                    const cat = r.category ?? r.tag;
+                    const src = r.thumbImg ?? (["log", "talk", "tech"].includes(cat) ? `/assets/${cat}.png` : null);
+                    return (
+                      <div style={{ width: "100%", aspectRatio: "16/10", borderRadius: "var(--r-md)", overflow: "hidden", background: src ? undefined : (r.thumb || "var(--bg-elev)") }}>
+                        {src && <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />}
+                      </div>
+                    );
+                  })()}
                   <div style={{ font: `500 12px/1 ${mono}`, letterSpacing: ".1em", color: "rgba(10,10,10,.5)" }}>{r.tag} · {r.date}</div>
                   <h3 style={{ font: "600 17px/1.4 var(--font-sans)", letterSpacing: "-.01em", color: "var(--fg-1)", margin: 0, whiteSpace: "pre-line" }}>{r.title}</h3>
                 </a>

@@ -289,7 +289,8 @@ button, a {
   .page-hero-header { padding-top: 100px !important; padding-left: 16px !important; padding-right: 16px !important; }
   /* Work detail */
   .work-cover { padding: 120px 16px 48px !important; }
-  .work-cover-meta { flex-wrap: wrap !important; gap: 8px 12px !important; }
+  .work-cover-inner { flex-direction: column !important; gap: 32px !important; }
+  .work-cover-meta { flex-direction: row !important; flex-wrap: wrap !important; gap: 16px 32px !important; }
   .work-body { padding: 48px 16px 0 !important; gap: 48px !important; }
   .work-section { grid-template-columns: 1fr !important; gap: 20px !important; padding-left: 0 !important; padding-right: 0 !important; }
   .work-section-label { display: none !important; }

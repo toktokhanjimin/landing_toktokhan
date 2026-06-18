@@ -24,7 +24,20 @@ export const panelStyle = (maxWidth: number = 620): CSSProperties => ({
 
 export const inputStyle: CSSProperties = {
   width: "100%",
-  font: "400 14px/1.5 var(--font-sans, sans-serif)",
+  height: 38,
+  font: "400 13px/1 var(--font-sans, sans-serif)",
+  padding: "0 12px",
+  border: "1px solid rgba(10,10,10,.14)",
+  borderRadius: 8,
+  color: "#0a0a0a",
+  background: "#fff",
+  outline: "none",
+  boxSizing: "border-box",
+};
+
+export const textareaStyle: CSSProperties = {
+  width: "100%",
+  font: "400 13px/1.6 var(--font-sans, sans-serif)",
   padding: "10px 12px",
   border: "1px solid rgba(10,10,10,.14)",
   borderRadius: 8,
@@ -32,6 +45,7 @@ export const inputStyle: CSSProperties = {
   background: "#fff",
   outline: "none",
   boxSizing: "border-box",
+  resize: "vertical",
 };
 
 export const labelStyle: CSSProperties = {

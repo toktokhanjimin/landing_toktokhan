@@ -2,15 +2,50 @@
 
 import { useState, useEffect, useRef, type CSSProperties } from "react";
 import type { WorkItem, InsightItem } from "../../lib/store";
+import { dbToWorkItem, dbToInsightItem } from "../../lib/db-mappers";
 import { toSlug } from "../../lib/slug";
-import { overlayStyle, panelStyle, inputStyle, labelStyle, btnBase } from "../adminStyles";
+import { overlayStyle, panelStyle, inputStyle, textareaStyle, labelStyle, btnBase } from "../adminStyles";
+import AdminSelect from "../AdminSelect";
+
+const WORK_TYPES = [
+  { value: "WEB", label: "WEB" },
+  { value: "APP", label: "APP" },
+];
+
+const WORK_CATEGORIES = [
+  { value: "Commerce & Community", label: "Commerce & Community" },
+  { value: "Entertainment & O2O",  label: "Entertainment & O2O"  },
+  { value: "NFT & Blockchain",     label: "NFT & Blockchain"     },
+  { value: "Finance",              label: "Finance"              },
+  { value: "SaaS&Admin",           label: "SaaS&Admin"           },
+  { value: "Brand Consulting",     label: "Brand Consulting"     },
+  { value: "ETC",                  label: "ETC"                  },
+];
+
+const MONTHS = [
+  { value: "Jan", label: "Jan" }, { value: "Feb", label: "Feb" },
+  { value: "Mar", label: "Mar" }, { value: "Apr", label: "Apr" },
+  { value: "May", label: "May" }, { value: "Jun", label: "Jun" },
+  { value: "Jul", label: "Jul" }, { value: "Aug", label: "Aug" },
+  { value: "Sep", label: "Sep" }, { value: "Oct", label: "Oct" },
+  { value: "Nov", label: "Nov" }, { value: "Dec", label: "Dec" },
+];
+const YEARS = Array.from({ length: 12 }, (_, i) => {
+  const y = String(2024 + i - 6);
+  return { value: y, label: y };
+});
+
+function parseDateParts(date: string): { month: string; year: string } {
+  const m = date.match(/^([A-Za-z]+),?\s*(\d{4})$/);
+  return m ? { month: m[1], year: m[2] } : { month: "", year: "" };
+}
 
 const EMPTY_SECTION = { h: "", p: "", grad: "", img: "" };
 
 const EMPTY_ITEM: Omit<WorkItem, "id"> = {
-  client: "", tag: "", category: "AI", year: "", date: "",
+  client: "", tag: "WEB", category: "Commerce & Community", year: "", date: "",
   bg: "", desc: "", title: "", lead: "", thumbImg: "", slug: "",
-  sections: [{ ...EMPTY_SECTION }, { ...EMPTY_SECTION }, { ...EMPTY_SECTION }],
+  sections: [{ ...EMPTY_SECTION }, { ...EMPTY_SECTION }],
   points: [], featured: false, relatedInsights: [],
 };
 
@@ -135,14 +170,15 @@ export default function AdminWorkPage() {
   const [form, setForm] = useState<Omit<WorkItem, "id">>(EMPTY_ITEM);
   const [saving, setSaving] = useState(false);
   const mouseDownOnOverlay = useRef(false);
+  const slugManuallyEdited = useRef(false);
 
   useEffect(() => {
-    fetch("/api/admin/work").then((r) => r.json()).then(setItems).catch(console.error);
-    fetch("/api/admin/insight").then((r) => r.json()).then(setAllInsights).catch(console.error);
+    fetch("/api/admin/work").then((r) => r.json()).then((d) => setItems(d.map(dbToWorkItem))).catch(console.error);
+    fetch("/api/admin/insight").then((r) => r.json()).then((d) => setAllInsights(d.map(dbToInsightItem))).catch(console.error);
   }, []);
 
-  function openAdd() { setEditing(null); setForm(EMPTY_ITEM); setModalOpen(true); }
-  function openEdit(item: WorkItem) { setEditing(item); const { id, ...rest } = item; setForm({ ...rest, slug: rest.slug ?? "" }); setModalOpen(true); }
+  function openAdd() { slugManuallyEdited.current = false; setEditing(null); setForm(EMPTY_ITEM); setModalOpen(true); }
+  function openEdit(item: WorkItem) { slugManuallyEdited.current = false; setEditing(item); const { id, ...rest } = item; setForm({ ...rest, slug: toSlug(rest.title) }); setModalOpen(true); }
   function closeModal() { setModalOpen(false); setEditing(null); }
 
   async function handleSave() {
@@ -183,7 +219,7 @@ export default function AdminWorkPage() {
 
       // 목록 갱신
       const fresh = await fetch("/api/admin/work").then((r) => r.json());
-      setItems(fresh);
+      setItems(fresh.map(dbToWorkItem));
       closeModal();
     } catch (err) {
       alert("저장에 실패했어요.");
@@ -213,7 +249,7 @@ export default function AdminWorkPage() {
   }
   function addSection() { setForm((f) => ({ ...f, sections: [...f.sections, { ...EMPTY_SECTION }] })); }
   function removeSection(idx: number) {
-    if (form.sections.length <= 3) return;
+    if (form.sections.length <= 2) return;
     setForm((f) => ({ ...f, sections: f.sections.filter((_, i) => i !== idx) }));
   }
 
@@ -295,11 +331,21 @@ export default function AdminWorkPage() {
 
       {modalOpen && (
         <div
-          style={overlayStyle}
+          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,.3)", zIndex: 200 }}
           onMouseDown={(e) => { mouseDownOnOverlay.current = e.target === e.currentTarget; }}
           onClick={(e) => { if (mouseDownOnOverlay.current && e.target === e.currentTarget) closeModal(); }}
         >
-          <div style={panelStyle(640)}>
+          <style>{`@keyframes drawerIn{from{transform:translateX(100%)}to{transform:translateX(0)}}`}</style>
+          <div style={{
+            position: "fixed", top: 0, right: 0, bottom: 0,
+            width: "clamp(360px, 33vw, 560px)",
+            background: "#fff",
+            boxShadow: "-4px 0 24px rgba(0,0,0,.12)",
+            overflowY: "auto",
+            padding: "32px 28px",
+            animation: "drawerIn .25s cubic-bezier(.32,.72,0,1)",
+            zIndex: 201,
+          }}>
             <h2 style={{ font: "700 20px/1.2 var(--font-sans, sans-serif)", color: "#0a0a0a", margin: "0 0 24px" }}>
               {editing ? "케이스 수정" : "케이스 추가"}
             </h2>
@@ -311,41 +357,65 @@ export default function AdminWorkPage() {
                 <FieldWithCount label="Client" value={form.client} maxLength={20}>
                   <input style={inputStyle} value={form.client} maxLength={20} onChange={(e) => setForm((f) => ({ ...f, client: e.target.value }))} placeholder="BLUEGARAGE" />
                 </FieldWithCount>
-                <FieldWithCount label="Tag" value={form.tag} maxLength={20}>
-                  <input style={inputStyle} value={form.tag} maxLength={20} onChange={(e) => setForm((f) => ({ ...f, tag: e.target.value }))} placeholder="JYP360" />
-                </FieldWithCount>
+                <div>
+                  <label style={labelStyle}>Type</label>
+                  <AdminSelect
+                    value={form.tag}
+                    onValueChange={(v) => setForm((f) => ({ ...f, tag: v }))}
+                    options={WORK_TYPES}
+                    placeholder="WEB / APP"
+                  />
+                </div>
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
                 <div>
                   <label style={labelStyle}>Category</label>
-                  <select style={inputStyle} value={form.category} onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}>
-                    <option value="AX">AX</option>
-                    <option value="AI">AI</option>
-                    <option value="Ops">Ops</option>
-                  </select>
+                  <AdminSelect
+                    value={form.category}
+                    onValueChange={(v) => setForm((f) => ({ ...f, category: v }))}
+                    options={WORK_CATEGORIES}
+                  />
+                </div>
+                <div>
+                  <label style={labelStyle}>Month</label>
+                  <AdminSelect
+                    value={parseDateParts(form.date).month}
+                    onValueChange={(m) => {
+                      const { year } = parseDateParts(form.date);
+                      const y = year || String(new Date().getFullYear());
+                      setForm((f) => ({ ...f, date: `${m}, ${y}` }));
+                    }}
+                    options={MONTHS}
+                    placeholder="Month"
+                  />
                 </div>
                 <div>
                   <label style={labelStyle}>Year</label>
-                  <input style={inputStyle} value={form.year} onChange={(e) => setForm((f) => ({ ...f, year: e.target.value }))} placeholder="2026" />
-                </div>
-                <div>
-                  <label style={labelStyle}>Date</label>
-                  <input style={inputStyle} value={form.date} onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))} placeholder="2026.03.18" />
+                  <AdminSelect
+                    value={parseDateParts(form.date).year}
+                    onValueChange={(y) => {
+                      const { month } = parseDateParts(form.date);
+                      const m = month || "Jan";
+                      setForm((f) => ({ ...f, date: `${m}, ${y}`, year: y }));
+                    }}
+                    options={YEARS}
+                    placeholder="Year"
+                  />
                 </div>
               </div>
 
-              <FieldWithCount label="Title" value={form.title} maxLength={40}>
+              <FieldWithCount label="Title" value={form.title} maxLength={50}>
                 <input
                   style={inputStyle}
                   value={form.title}
-                  maxLength={40}
+                  maxLength={50}
                   onChange={(e) => {
                     const title = e.target.value;
                     setForm((f) => ({
                       ...f,
                       title,
-                      slug: f.slug === toSlug(f.title) || f.slug === "" ? toSlug(title) : f.slug,
+                      slug: slugManuallyEdited.current ? f.slug : toSlug(title),
                     }));
                   }}
                   placeholder="프로젝트 제목"
@@ -359,14 +429,14 @@ export default function AdminWorkPage() {
                   <input
                     style={{ ...inputStyle, font: "400 13px/1 var(--font-mono, monospace)", color: "rgba(10,10,10,.7)" }}
                     value={form.slug ?? ""}
-                    onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
+                    onChange={(e) => { slugManuallyEdited.current = true; setForm((f) => ({ ...f, slug: e.target.value })); }}
                     placeholder="url-slug"
                   />
                 </div>
               </div>
 
-              <FieldWithCount label="Lead (소개 문구)" value={form.lead} maxLength={120}>
-                <textarea style={{ ...inputStyle, height: 80, resize: "vertical" }} value={form.lead} maxLength={120} onChange={(e) => setForm((f) => ({ ...f, lead: e.target.value }))} placeholder="프로젝트 소개..." />
+              <FieldWithCount label="Lead (소개 문구)" value={form.lead} maxLength={300}>
+                <textarea style={{ ...textareaStyle, height: 100 }} value={form.lead} maxLength={300} onChange={(e) => setForm((f) => ({ ...f, lead: e.target.value }))} placeholder="프로젝트 소개..." />
               </FieldWithCount>
 
               {/* 섹션 */}
@@ -379,16 +449,16 @@ export default function AdminWorkPage() {
                     <div key={i} style={{ padding: 16, background: "#f9f9f9", borderRadius: 8 }}>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
                         <div style={{ font: "600 12px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.5)", letterSpacing: ".06em" }}>섹션 {i + 1}</div>
-                        {form.sections.length > 3 && (
+                        {form.sections.length > 2 && (
                           <button onClick={() => removeSection(i)} style={{ ...btnBase, background: "transparent", color: "#e53e3e", border: "1px solid #e53e3e", padding: "4px 8px", font: "500 11px/1 var(--font-sans, sans-serif)" }}>삭제</button>
                         )}
                       </div>
                       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                        <FieldWithCount label="제목 (h)" value={sec.h} maxLength={30}>
-                          <input style={inputStyle} value={sec.h} maxLength={30} onChange={(e) => setSection(i, "h", e.target.value)} placeholder="문제 / 접근 / 결과" />
+                        <FieldWithCount label="제목 (h)" value={sec.h} maxLength={50}>
+                          <input style={inputStyle} value={sec.h} maxLength={50} onChange={(e) => setSection(i, "h", e.target.value)} placeholder="문제 / 접근 / 결과" />
                         </FieldWithCount>
-                        <FieldWithCount label="내용 (p)" value={sec.p} maxLength={150}>
-                          <textarea style={{ ...inputStyle, height: 72, resize: "vertical" }} value={sec.p} maxLength={150} onChange={(e) => setSection(i, "p", e.target.value)} />
+                        <FieldWithCount label="내용 (p)" value={sec.p} maxLength={300}>
+                          <textarea style={{ ...textareaStyle, height: 96, resize: "vertical" }} value={sec.p} maxLength={300} onChange={(e) => setSection(i, "p", e.target.value)} />
                         </FieldWithCount>
                         <ImageUpload label="섹션 이미지" value={sec.img ?? ""} onChange={(v) => setSection(i, "img", v)} inputId={`work-sec-img-${i}`} height={80} bucket="work-images" />
                       </div>
@@ -441,7 +511,7 @@ export default function AdminWorkPage() {
                   <span style={{ font: "400 11px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.35)" }}>줄당 최대 40자</span>
                 </div>
                 <textarea
-                  style={{ ...inputStyle, height: 80, resize: "vertical" }}
+                  style={{ ...textareaStyle, height: 80 }}
                   value={form.points.join("\n")}
                   onChange={(e) => {
                     const lines = e.target.value.split("\n").map((l) => l.slice(0, 40));
