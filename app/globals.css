@@ -256,7 +256,7 @@ button, a {
 .ins-layout {
   max-width: 1248px;
   margin: 0 auto;
-  padding: 120px 40px 120px;
+  padding: 140px 40px 80px;
   display: flex;
   gap: 56px;
   align-items: flex-start;
@@ -289,7 +289,7 @@ button, a {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   column-gap: 24px;
-  row-gap: 64px;
+  row-gap: 40px;
 }
 .ins-small-card {
   display: flex;
@@ -299,15 +299,38 @@ button, a {
 .ins-small-card .ins-thumb {
   overflow: hidden;
   border-radius: 14px;
+  position: relative !important;
+  width: 100% !important;
+  height: 0 !important;
+  padding-bottom: 56.25% !important; /* 16:9 */
+  background: var(--grey-100) !important;
+  aspect-ratio: unset !important;
+  border: 1px solid var(--grey-100);
 }
 .ins-small-card .ins-thumb img {
+  position: absolute !important;
+  top: 0 !important; left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
   display: block;
-  width: 100%;
-  height: auto;
   transition: transform .45s cubic-bezier(.4,0,.2,1);
 }
 .ins-small-card:hover .ins-thumb img {
   transform: scale(1.025);
+}
+/* Work 카드 — 업로드 원본 비율 그대로 */
+.wk-small-card .ins-thumb {
+  height: auto !important;
+  padding-bottom: 0 !important;
+  aspect-ratio: unset !important;
+  border: 1px solid var(--grey-100);
+}
+.wk-small-card .ins-thumb img {
+  position: static !important;
+  width: 100% !important;
+  height: auto !important;
+  object-fit: fill !important;
 }
 
 /* Insight card — vertical */
@@ -425,7 +448,7 @@ button, a {
   .ins-page-section { padding: 0 16px 80px !important; }
 
   /* 새 Insight 레이아웃 — 모바일 */
-  .ins-layout { flex-direction: column !important; gap: 0 !important; padding: 90px 16px 80px !important; }
+  .ins-layout { flex-direction: column !important; gap: 0 !important; padding: 100px 16px 64px !important; }
   .ins-sidebar { display: none !important; }
   .ins-mobile-tabs { display: flex !important; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 28px; scrollbar-width: none; }
   .ins-mobile-tabs::-webkit-scrollbar { display: none; }
@@ -454,7 +477,7 @@ button, a {
   /* Insight list grid — 태블릿 2열 */
   .ins-page-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 44px 24px !important; }
   /* 새 Insight 레이아웃 — 태블릿 */
-  .ins-layout { flex-direction: column !important; gap: 0 !important; padding: 100px 24px 100px !important; }
+  .ins-layout { flex-direction: column !important; gap: 0 !important; padding: 120px 24px 72px !important; }
   .ins-sidebar { display: none !important; }
   .ins-mobile-tabs { display: flex !important; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 32px; scrollbar-width: none; }
   .ins-new-grid { grid-template-columns: repeat(2, 1fr) !important; }

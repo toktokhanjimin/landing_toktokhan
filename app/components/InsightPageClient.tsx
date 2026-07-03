@@ -127,18 +127,11 @@ export default function InsightPageClient({ initialItems }: { initialItems: Insi
             <h1 style={{
               font: "700 clamp(28px,3vw,42px)/1.2 var(--font-sans)",
               letterSpacing: "-.03em",
-              margin: "0 0 10px",
+              margin: 0,
               color: "#0a0a0a",
             }}>
               {activeCat.label === "전체" ? "Insight" : activeCat.label}
             </h1>
-            <p style={{
-              font: "400 15px/1.65 var(--font-sans)",
-              color: "rgba(10,10,10,.5)",
-              margin: 0,
-            }}>
-              {activeCat.desc}
-            </p>
           </div>
 
           {/* 피처드 카드 */}
