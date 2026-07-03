@@ -36,7 +36,14 @@ export default function AIInsights() {
     updateButtons();
     el.addEventListener("scroll", updateButtons, { passive: true });
     window.addEventListener("resize", updateButtons);
-    return () => { el.removeEventListener("scroll", updateButtons); window.removeEventListener("resize", updateButtons); };
+    // 트랙패드/마우스 휠 스크롤 차단 (버튼으로만 이동)
+    const onWheel = (e: WheelEvent) => e.preventDefault();
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      el.removeEventListener("scroll", updateButtons);
+      window.removeEventListener("resize", updateButtons);
+      el.removeEventListener("wheel", onWheel);
+    };
   }, [updateButtons, items]);
 
   useEffect(() => {
