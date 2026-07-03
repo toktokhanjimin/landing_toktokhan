@@ -281,6 +281,7 @@ button, a {
   overflow: hidden;
   margin-bottom: 48px;
   cursor: pointer;
+  border: 1px solid var(--grey-100);
 }
 .ins-featured-card > div:first-child { flex: 1 1 55%; }
 .ins-featured-card > div:last-child  { flex: 0 0 45%; }
