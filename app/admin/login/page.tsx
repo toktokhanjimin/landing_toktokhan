@@ -54,7 +54,7 @@ export default function AdminLoginPage() {
   return (
     <div style={{
       minHeight: "100dvh",
-      background: "#f5f5f5",
+      background: "var(--grey-100)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",

@@ -113,10 +113,11 @@ export default function AIInsights() {
           }}
         >
           {items.map((it, idx) => {
-            const cat = it.category ?? it.tag;
-            const src = it.thumbImg?.startsWith("data:") ? it.thumbImg
-              : ["log", "talk", "tech"].includes(cat) ? `/assets/${cat}.png`
-              : null;
+            // 본문 첫 이미지 → thumbImg
+            const firstBodyImg = it.body?.match(/<img[^>]+src="([^"]+)"/i)?.[1] ?? null;
+            const src = firstBodyImg
+              ?? (it.thumbImg?.startsWith("data:") ? it.thumbImg : null)
+              ?? null;
             return (
               <a
                 key={idx}
@@ -127,7 +128,7 @@ export default function AIInsights() {
                   flexShrink: 0,
                   width: 320,
                   borderRadius: "var(--r-xl)",
-                  background: "#f4f4f5",
+                  background: "var(--grey-100)",
                   overflow: "hidden",
                   display: "flex",
                   flexDirection: "column",

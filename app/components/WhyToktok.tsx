@@ -9,7 +9,7 @@ function SpinCircle({ active }: { active?: boolean }) {
   return (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
       <style>{`@keyframes wt-spin{to{transform:rotate(360deg)}} .wt-arc{transform-origin:12px 12px;animation:wt-spin 1.1s linear infinite}`}</style>
-      <circle cx="12" cy="12" r="9.5" stroke={active ? "#dde0f0" : "#ebebeb"} strokeWidth="2.4" />
+      <circle cx="12" cy="12" r="9.5" stroke={active ? "#dde0f0" : "var(--grey-200)"} strokeWidth="2.4" />
       {active && <path className="wt-arc" d="M12 2.5a9.5 9.5 0 0 1 9.5 9.5" stroke="#4e5fd4" strokeWidth="2.4" strokeLinecap="round" style={{ animationDuration: "1.2s" }} />}
     </svg>
   );

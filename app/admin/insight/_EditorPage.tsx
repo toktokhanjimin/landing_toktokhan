@@ -9,10 +9,10 @@ import { inputStyle, textareaStyle, labelStyle, btnBase } from "../adminStyles";
 import AdminSelect from "../AdminSelect";
 
 const CATEGORY_OPTIONS = [
-  { value: "log",   label: "log"                 },
-  { value: "talk",  label: "talk"                },
-  { value: "tech",  label: "tech"                },
-  { value: "other", label: "other (직접 업로드)" },
+  { value: "ax",       label: "AX"       },
+  { value: "team",     label: "팀문화"   },
+  { value: "outsource", label: "외주개발팁" },
+  { value: "launch",   label: "런칭"     },
 ];
 
 const TAG_OPTIONS = [
@@ -25,16 +25,16 @@ const TAG_OPTIONS = [
 const TiptapEditor = dynamic(() => import("../../components/TiptapEditor"), { ssr: false });
 
 const CATEGORY_CONFIG: Record<string, { thumb: string; img?: string }> = {
-  log:   { thumb: "linear-gradient(135deg,#34D399,#059669)", img: "/assets/log.png" },
-  talk:  { thumb: "linear-gradient(135deg,#8B5CF6,#3B82F6)", img: "/assets/talk.png" },
-  tech:  { thumb: "linear-gradient(135deg,#38BDF8,#6366F1)", img: "/assets/tech.png" },
-  other: { thumb: "linear-gradient(135deg,#1a1d24,#0a0a0a)" },
+  ax:        { thumb: "linear-gradient(135deg,#38BDF8,#6366F1)" },
+  team:      { thumb: "linear-gradient(135deg,#34D399,#059669)" },
+  outsource: { thumb: "linear-gradient(135deg,#8B5CF6,#3B82F6)" },
+  launch:    { thumb: "linear-gradient(135deg,#F59E0B,#EF4444)" },
 };
 
 const EMPTY: Omit<InsightItem, "id"> = {
   mark: "", markColor: "#0a0a0a",
-  thumb: CATEGORY_CONFIG.log.thumb, thumbImg: CATEGORY_CONFIG.log.img,
-  title: "", slug: "", tag: "기술 블로그", category: "log",
+  thumb: CATEGORY_CONFIG.ax.thumb, thumbImg: CATEGORY_CONFIG.ax.img,
+  title: "", slug: "", tag: "기술 블로그", category: "ax",
   date: new Date().toISOString().slice(0, 10),
   excerpt: "", url: "", body: "", featured: false,
 };
@@ -68,7 +68,6 @@ export default function InsightEditorPage({ mode, id }: Props) {
   const [form, setForm] = useState<Omit<InsightItem, "id">>(EMPTY);
   const [loading, setLoading] = useState(mode === "edit");
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (mode !== "edit" || !id) return;
@@ -83,7 +82,7 @@ export default function InsightEditorPage({ mode, id }: Props) {
           title:      row.title ?? "",
           slug:       row.slug ?? "",
           tag:        row.tag ?? "기술 블로그",
-          category:   row.category ?? "log",
+          category:   row.category ?? "ax",
           date:       row.date ?? "",
           excerpt:    row.excerpt ?? "",
           url:        row.url ?? "",
@@ -107,7 +106,7 @@ export default function InsightEditorPage({ mode, id }: Props) {
         title:      form.title,
         slug:       form.slug || toSlug(form.title),
         tag:        form.tag,
-        category:   form.category ?? "log",
+        category:   form.category ?? "ax",
         date:       form.date,
         excerpt:    form.excerpt,
         url:        form.url ?? "",
@@ -147,8 +146,19 @@ export default function InsightEditorPage({ mode, id }: Props) {
 
   return (
     <div>
-      {/* ── 상단 헤더 ── */}
-      <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 32 }}>
+      {/* ── 상단 헤더 ── sticky + full-bleed (main padding 40px 상쇄) */}
+      <div style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 50,
+        display: "flex",
+        alignItems: "center",
+        gap: 16,
+        margin: "-40px -40px 32px -40px",
+        padding: "12px 40px",
+        background: "var(--grey-100)",
+        borderBottom: "1px solid rgba(10,10,10,.08)",
+      }}>
         <button
           onClick={() => router.push("/admin/insight")}
           style={{ ...btnBase, background: "transparent", color: "rgba(10,10,10,.5)", border: "1px solid rgba(10,10,10,.14)", padding: "8px 14px", font: "400 13px/1 var(--font-sans, sans-serif)" }}
@@ -219,21 +229,15 @@ export default function InsightEditorPage({ mode, id }: Props) {
             content={form.body ?? ""}
             onChange={(html) => setForm((f) => ({ ...f, body: html }))}
             onImageUpload={uploadImage}
+            stickyTop={58}
           />
         </div>
 
         {/* ── 메타 사이드바 ── */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16, background: "#fff", border: "1px solid rgba(10,10,10,.08)", borderRadius: 12, padding: 20 }}>
-          {/* 썸네일 미리보기 */}
+          {/* 카테고리 */}
           <div>
-            <label style={labelStyle}>썸네일</label>
-            <div style={{ width: "100%", aspectRatio: "16/9", borderRadius: 8, overflow: "hidden", background: form.thumb, marginBottom: 10 }}>
-              {form.thumbImg && (
-                <img src={form.thumbImg} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-              )}
-            </div>
-
-            {/* 카테고리 선택 */}
+            <label style={labelStyle}>카테고리</label>
             <AdminSelect
               value={form.category ?? "log"}
               onValueChange={(cat) => {
@@ -242,36 +246,6 @@ export default function InsightEditorPage({ mode, id }: Props) {
               }}
               options={CATEGORY_OPTIONS}
             />
-
-            {/* other 이미지 업로드 */}
-            {form.category === "other" && (
-              <div style={{ marginTop: 10 }}>
-                <div
-                  style={{
-                    width: "100%", height: 40, borderRadius: 7, border: "1px dashed rgba(10,10,10,.2)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    cursor: uploading ? "default" : "pointer",
-                    font: "400 12px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.45)",
-                  }}
-                  onClick={() => !uploading && document.getElementById("thumb-upload")?.click()}
-                >
-                  {uploading ? "업로드 중..." : form.thumbImg?.startsWith("http") ? "이미지 변경" : "이미지 업로드"}
-                </div>
-                <input id="thumb-upload" type="file" accept="image/*" style={{ display: "none" }}
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (!file) return;
-                    setUploading(true);
-                    try {
-                      if (form.thumbImg?.startsWith("http")) await deleteStorageImage(form.thumbImg);
-                      const url = await uploadImage(file);
-                      setForm((f) => ({ ...f, thumbImg: url }));
-                    } catch { alert("업로드 실패"); }
-                    finally { setUploading(false); }
-                  }}
-                />
-              </div>
-            )}
           </div>
 
           <div>

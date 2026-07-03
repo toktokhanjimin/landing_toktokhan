@@ -17,6 +17,7 @@ export interface WorkItem {
   sections: { h: string; p: string; grad: string; img?: string }[];
   points: string[];
   featured?: boolean;
+  comingSoon?: boolean;
   relatedInsights?: number[]; // insight ID 배열 (Supabase insights.id)
   sort_order?: number;
 }

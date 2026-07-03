@@ -31,7 +31,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       <aside style={{
         width: 240,
         flexShrink: 0,
-        background: "#f5f5f5",
+        background: "var(--grey-100)",
         borderRight: "1px solid rgba(10,10,10,.08)",
         display: "flex",
         flexDirection: "column",
@@ -129,7 +129,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       <main style={{
         flex: 1,
         marginLeft: 240,
-        background: "#f5f5f5",
+        background: "var(--grey-100)",
         minHeight: "100dvh",
         padding: "40px",
       }}>

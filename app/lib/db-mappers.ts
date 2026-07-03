@@ -18,6 +18,7 @@ export function dbToWorkItem(row: Record<string, unknown>): WorkItem {
     sections:         (row.sections as WorkItem["sections"]) ?? [],
     points:           (row.points as string[]) ?? [],
     featured:         Boolean(row.featured),
+    comingSoon:       Boolean(row.coming_soon),
     relatedInsights:  (row.related_insight_ids as number[]) ?? [],
     sort_order:       Number(row.sort_order ?? 0),
   };
