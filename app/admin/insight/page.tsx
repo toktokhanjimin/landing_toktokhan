@@ -5,6 +5,13 @@ import { useRouter } from "next/navigation";
 import type { InsightItem } from "../../lib/store";
 import { btnBase } from "../adminStyles";
 
+/** body HTML에서 첫 번째 <img> src 추출 */
+function getFirstBodyImage(body?: string): string | null {
+  if (!body) return null;
+  const m = body.match(/<img[^>]+src="([^"]+)"/i);
+  return m?.[1] ?? null;
+}
+
 async function deleteStorageImage(url: string) {
   if (!url?.startsWith("http")) return;
   await fetch("/api/admin/storage", {
@@ -108,10 +115,21 @@ export default function AdminInsightPage() {
               transition: "opacity .2s",
             }}
           >
-            {/* 썸네일 */}
-            <div style={{ width: 48, height: 48, borderRadius: 8, background: item.thumb, flexShrink: 0, overflow: "hidden" }}>
-              {item.thumbImg && <img src={item.thumbImg} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />}
-            </div>
+            {/* 썸네일 — 본문 첫 이미지 → thumbImg → 카테고리 그라디언트 */}
+            {(() => {
+              const src = getFirstBodyImage(item.body) ?? item.thumbImg ?? null;
+              return (
+                <div style={{
+                  width: 80, height: 52, borderRadius: 8,
+                  background: src ? "rgba(10,10,10,.06)" : item.thumb,
+                  flexShrink: 0, overflow: "hidden",
+                }}>
+                  {src && (
+                    <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  )}
+                </div>
+              );
+            })()}
 
             {/* 텍스트 */}
             <div style={{ flex: 1, minWidth: 0 }}>

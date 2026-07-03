@@ -5,6 +5,7 @@ import type { InsightItem } from "../lib/store";
 import { supabase } from "../lib/supabase";
 import { dbToInsightItem } from "../lib/db-mappers";
 import Badge from "./ui/Badge";
+import { CATEGORY_LABEL } from "./InsightPageClient";
 
 export default function AIInsights() {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -18,6 +19,7 @@ export default function AIInsights() {
       .select("*")
       .eq("featured", true)
       .order("sort_order", { ascending: true })
+      .limit(7)
       .then(({ data }) => setItems((data ?? []).map(dbToInsightItem)));
   }, []);
 
@@ -138,8 +140,8 @@ export default function AIInsights() {
                 }}
               >
                 {/* Text area */}
-                <div style={{ padding: "24px 24px 60px", display: "flex", flexDirection: "column", gap: 14, flex: 1 }}>
-                  <Badge>{it.tag}</Badge>
+                <div style={{ padding: "24px 24px 28px", display: "flex", flexDirection: "column", gap: 14, flex: 1 }}>
+                  <Badge>{CATEGORY_LABEL[it.category ?? ""] ?? it.tag}</Badge>
                   <h3 style={{
                     font: "var(--h4)",
                     letterSpacing: "-.02em",

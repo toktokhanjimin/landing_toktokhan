@@ -114,7 +114,7 @@ export default async function CaseDetailPage(
               <h1 style={{
                 font: "700 clamp(36px,5vw,68px)/1.14 var(--font-sans)",
                 letterSpacing: "-.035em", color: "var(--fg-1)", margin: "0 0 28px",
-              }}>{c.client}</h1>
+              }}>{c.title}</h1>
               <p style={{
                 font: "400 16px/1.7 var(--font-sans)",
                 color: "rgba(10,10,10,.6)", margin: 0, maxWidth: 680,

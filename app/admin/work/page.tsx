@@ -13,6 +13,7 @@ const WORK_TYPES = [
 ];
 
 const WORK_CATEGORIES = [
+  { value: "AI/AX",                label: "AI/AX"                },
   { value: "Commerce & Community", label: "Commerce & Community" },
   { value: "Entertainment & O2O",  label: "Entertainment & O2O"  },
   { value: "NFT & Blockchain",     label: "NFT & Blockchain"     },
@@ -45,8 +46,8 @@ const EMPTY_SECTION = { h: "", p: "", grad: "", img: "" };
 const EMPTY_ITEM: Omit<WorkItem, "id"> = {
   client: "", tag: "WEB", category: "Commerce & Community", year: "", date: "",
   bg: "", desc: "", title: "", lead: "", thumbImg: "", slug: "",
-  sections: [{ ...EMPTY_SECTION }, { ...EMPTY_SECTION }],
-  points: [], featured: false, relatedInsights: [],
+  sections: [{ ...EMPTY_SECTION }],
+  points: [], featured: false, comingSoon: false, relatedInsights: [],
 };
 
 function genId() {
@@ -169,6 +170,7 @@ export default function AdminWorkPage() {
   const [editing, setEditing] = useState<WorkItem | null>(null);
   const [form, setForm] = useState<Omit<WorkItem, "id">>(EMPTY_ITEM);
   const [saving, setSaving] = useState(false);
+  const [pointsText, setPointsText] = useState("");
   const mouseDownOnOverlay = useRef(false);
   const slugManuallyEdited = useRef(false);
 
@@ -177,9 +179,21 @@ export default function AdminWorkPage() {
     fetch("/api/admin/insight").then((r) => r.json()).then((d) => setAllInsights(d.map(dbToInsightItem))).catch(console.error);
   }, []);
 
-  function openAdd() { slugManuallyEdited.current = false; setEditing(null); setForm(EMPTY_ITEM); setModalOpen(true); }
-  function openEdit(item: WorkItem) { slugManuallyEdited.current = false; setEditing(item); const { id, ...rest } = item; setForm({ ...rest, slug: toSlug(rest.title) }); setModalOpen(true); }
-  function closeModal() { setModalOpen(false); setEditing(null); }
+  function openAdd() { slugManuallyEdited.current = false; setEditing(null); setForm(EMPTY_ITEM); setPointsText(""); setModalOpen(true); }
+  function openEdit(item: WorkItem) { slugManuallyEdited.current = false; setEditing(item); const { id, ...rest } = item; setForm({ ...rest, slug: toSlug(rest.title) }); setPointsText(rest.points.join("\n")); setModalOpen(true); }
+
+  function isDirty() {
+    if (form.client || form.title || form.lead || form.desc) return true;
+    if (form.sections.some((s) => s.h || s.p)) return true;
+    if (form.points.some((p) => p)) return true;
+    return false;
+  }
+
+  function forceCloseModal() { setModalOpen(false); setEditing(null); }
+  function closeModal() {
+    if (isDirty() && !confirm("작성 중인 내용이 있어요. 정말 닫으시겠어요?")) return;
+    forceCloseModal();
+  }
 
   async function handleSave() {
     setSaving(true);
@@ -198,8 +212,9 @@ export default function AdminWorkPage() {
         slug:                form.slug || toSlug(form.title),
         thumb_img:           form.thumbImg ?? "",
         sections:            form.sections,
-        points:              form.points,
+        points:              pointsText.split("\n").map((l) => l.slice(0, 40)).filter((p) => p.trim()),
         featured:            form.featured ?? false,
+        coming_soon:         form.comingSoon ?? false,
         related_insight_ids: form.relatedInsights ?? [],
       };
 
@@ -220,7 +235,7 @@ export default function AdminWorkPage() {
       // 목록 갱신
       const fresh = await fetch("/api/admin/work").then((r) => r.json());
       setItems(fresh.map(dbToWorkItem));
-      closeModal();
+      forceCloseModal();
     } catch (err) {
       alert("저장에 실패했어요.");
       console.error(err);
@@ -233,6 +248,27 @@ export default function AdminWorkPage() {
     if (!confirm("정말 삭제하시겠어요?")) return;
     await fetch(`/api/admin/work/${id}`, { method: "DELETE" });
     setItems((prev) => prev.filter((it) => it.id !== id));
+  }
+
+  async function handleReorder(idx: number, dir: -1 | 1) {
+    const next = idx + dir;
+    if (next < 0 || next >= items.length) return;
+    const updated = [...items];
+    [updated[idx], updated[next]] = [updated[next], updated[idx]];
+    // sort_order를 인덱스 기준으로 재할당
+    const reordered = updated.map((it, i) => ({ ...it, sort_order: i }));
+    setItems(reordered);
+    // Supabase 업데이트 (두 항목)
+    await Promise.all([
+      fetch(`/api/admin/work/${reordered[idx].id}`, {
+        method: "PUT", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sort_order: reordered[idx].sort_order }),
+      }),
+      fetch(`/api/admin/work/${reordered[next].id}`, {
+        method: "PUT", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sort_order: reordered[next].sort_order }),
+      }),
+    ]);
   }
 
   async function toggleFeatured(item: WorkItem) {
@@ -249,7 +285,7 @@ export default function AdminWorkPage() {
   }
   function addSection() { setForm((f) => ({ ...f, sections: [...f.sections, { ...EMPTY_SECTION }] })); }
   function removeSection(idx: number) {
-    if (form.sections.length <= 2) return;
+    if (form.sections.length <= 1) return;
     setForm((f) => ({ ...f, sections: f.sections.filter((_, i) => i !== idx) }));
   }
 
@@ -273,7 +309,7 @@ export default function AdminWorkPage() {
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ borderBottom: "1px solid rgba(10,10,10,.08)" }}>
-              {["썸네일", "Client", "Tag", "Category", "Year", "메인 노출", ""].map((h) => (
+              {["순서", "썸네일", "Client", "Tag", "Category", "Year", "메인 노출", ""].map((h) => (
                 <th key={h} style={{ padding: "14px 16px", font: "500 12px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.45)", letterSpacing: ".04em", textAlign: "left" }}>
                   {h}
                 </th>
@@ -281,8 +317,22 @@ export default function AdminWorkPage() {
             </tr>
           </thead>
           <tbody>
-            {items.map((item) => (
+            {items.map((item, idx) => (
               <tr key={item.id} style={{ borderBottom: "1px solid rgba(10,10,10,.05)" }}>
+                <td style={{ padding: "8px 12px" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                    <button
+                      onClick={() => handleReorder(idx, -1)}
+                      disabled={idx === 0}
+                      style={{ ...btnBase, padding: "3px 8px", font: "500 12px/1 var(--font-sans, sans-serif)", background: "transparent", border: "1px solid rgba(10,10,10,.15)", color: idx === 0 ? "rgba(10,10,10,.2)" : "#0a0a0a", cursor: idx === 0 ? "default" : "pointer" }}
+                    >↑</button>
+                    <button
+                      onClick={() => handleReorder(idx, 1)}
+                      disabled={idx === items.length - 1}
+                      style={{ ...btnBase, padding: "3px 8px", font: "500 12px/1 var(--font-sans, sans-serif)", background: "transparent", border: "1px solid rgba(10,10,10,.15)", color: idx === items.length - 1 ? "rgba(10,10,10,.2)" : "#0a0a0a", cursor: idx === items.length - 1 ? "default" : "pointer" }}
+                    >↓</button>
+                  </div>
+                </td>
                 <td style={{ padding: "12px 16px" }}>
                   <div style={{ width: 44, height: 44, borderRadius: 8, overflow: "hidden", background: item.bg || "#eee" }}>
                     {item.thumbImg && <img src={item.thumbImg} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />}
@@ -449,7 +499,7 @@ export default function AdminWorkPage() {
                     <div key={i} style={{ padding: 16, background: "#f9f9f9", borderRadius: 8 }}>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
                         <div style={{ font: "600 12px/1 var(--font-sans, sans-serif)", color: "rgba(10,10,10,.5)", letterSpacing: ".06em" }}>섹션 {i + 1}</div>
-                        {form.sections.length > 2 && (
+                        {form.sections.length > 1 && (
                           <button onClick={() => removeSection(i)} style={{ ...btnBase, background: "transparent", color: "#e53e3e", border: "1px solid #e53e3e", padding: "4px 8px", font: "500 11px/1 var(--font-sans, sans-serif)" }}>삭제</button>
                         )}
                       </div>
@@ -512,21 +562,41 @@ export default function AdminWorkPage() {
                 </div>
                 <textarea
                   style={{ ...textareaStyle, height: 80 }}
-                  value={form.points.join("\n")}
-                  onChange={(e) => {
-                    const lines = e.target.value.split("\n").map((l) => l.slice(0, 40));
-                    setForm((f) => ({ ...f, points: lines.filter((p) => p.trim()) }));
-                  }}
+                  value={pointsText}
+                  onChange={(e) => setPointsText(e.target.value)}
                   placeholder={"포인트 1\n포인트 2\n포인트 3"}
                 />
               </div>
             </div>
 
-            <div style={{ display: "flex", gap: 10, marginTop: 28, justifyContent: "flex-end" }}>
-              <button onClick={closeModal} style={{ ...btnBase, background: "transparent", color: "rgba(10,10,10,.6)", border: "1px solid rgba(10,10,10,.14)" }}>취소</button>
-              <button onClick={handleSave} disabled={saving} style={{ ...btnBase, background: saving ? "rgba(10,10,10,.4)" : "#0a0a0a", color: "#fff", padding: "10px 20px" }}>
-                {saving ? "저장 중..." : "저장"}
-              </button>
+            <div style={{ display: "flex", gap: 10, marginTop: 28, justifyContent: "space-between", alignItems: "center" }}>
+              {/* 준비중 토글 */}
+              <label style={{ display: "flex", alignItems: "center", gap: 10, cursor: "pointer", userSelect: "none" }}>
+                <div
+                  onClick={() => setForm((f) => ({ ...f, comingSoon: !f.comingSoon }))}
+                  style={{
+                    width: 40, height: 22, borderRadius: 11,
+                    background: form.comingSoon ? "#0a0a0a" : "rgba(10,10,10,.15)",
+                    position: "relative", transition: "background .2s", cursor: "pointer", flexShrink: 0,
+                  }}
+                >
+                  <div style={{
+                    position: "absolute", top: 3, left: form.comingSoon ? 21 : 3,
+                    width: 16, height: 16, borderRadius: "50%", background: "#fff",
+                    transition: "left .2s", boxShadow: "0 1px 3px rgba(0,0,0,.2)",
+                  }} />
+                </div>
+                <span style={{ font: "500 13px/1 var(--font-sans, sans-serif)", color: form.comingSoon ? "#0a0a0a" : "rgba(10,10,10,.45)" }}>
+                  Coming Soon
+                </span>
+              </label>
+
+              <div style={{ display: "flex", gap: 10 }}>
+                <button onClick={closeModal} style={{ ...btnBase, background: "transparent", color: "rgba(10,10,10,.6)", border: "1px solid rgba(10,10,10,.14)" }}>취소</button>
+                <button onClick={handleSave} disabled={saving} style={{ ...btnBase, background: saving ? "rgba(10,10,10,.4)" : "#0a0a0a", color: "#fff", padding: "10px 20px" }}>
+                  {saving ? "저장 중..." : "저장"}
+                </button>
+              </div>
             </div>
           </div>
         </div>

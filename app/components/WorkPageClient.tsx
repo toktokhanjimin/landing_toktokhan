@@ -7,7 +7,7 @@ import FilterChip from "./ui/FilterChip";
 import WhiteBackground from "./WhiteBackground";
 import type { WorkItem } from "../lib/store";
 
-const CATEGORIES = ["ALL", "Commerce & Community", "Entertainment & O2O", "NFT & Blockchain", "Finance", "SaaS&Admin", "Brand Consulting", "ETC"];
+const CATEGORIES = ["ALL", "AI/AX", "Commerce & Community", "Entertainment & O2O", "NFT & Blockchain", "Finance", "SaaS&Admin", "Brand Consulting", "ETC"];
 
 export default function WorkPageClient({ initialItems }: { initialItems: WorkItem[] }) {
   const [active, setActive] = useState("ALL");
@@ -88,21 +88,8 @@ export default function WorkPageClient({ initialItems }: { initialItems: WorkIte
 }
 
 function WorkCard({ item }: { item: WorkItem }) {
-  return (
-    <a
-      href={`/work/${item.slug || item.id}`}
-      className="wk-card"
-      style={{
-        borderRadius: "var(--r-lg)",
-        overflow: "hidden",
-        position: "relative",
-        cursor: "pointer",
-        display: "block",
-        aspectRatio: "5/4",
-        background: item.bg,
-        textDecoration: "none",
-      }}
-    >
+  const inner = (
+    <>
       {item.thumbImg && (
         <img
           src={item.thumbImg}
@@ -115,6 +102,19 @@ function WorkCard({ item }: { item: WorkItem }) {
         className="wk-overlay"
         style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,.72) 0%, rgba(0,0,0,.18) 50%, transparent 100%)" }}
       />
+      {item.comingSoon && (
+        <div className="wk-coming-soon" style={{
+          position: "absolute", inset: 0,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          background: "rgba(0,0,0,.55)",
+          opacity: 0, transition: "opacity .2s ease",
+        }}>
+          <span style={{
+            font: "600 13px/1 var(--font-sans)", letterSpacing: ".02em",
+            color: "#fff",
+          }}>Coming Soon</span>
+        </div>
+      )}
       <div
         className="wk-info"
         style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "24px 24px 22px" }}
@@ -126,6 +126,27 @@ function WorkCard({ item }: { item: WorkItem }) {
           {item.tag}
         </div>
       </div>
+    </>
+  );
+
+  const cardStyle = {
+    borderRadius: "var(--r-lg)",
+    overflow: "hidden",
+    position: "relative" as const,
+    display: "block",
+    aspectRatio: "5/4",
+    background: item.bg,
+    textDecoration: "none",
+    cursor: item.comingSoon ? "default" : "pointer",
+  };
+
+  if (item.comingSoon) {
+    return <div className="wk-card wk-card-coming" style={cardStyle}>{inner}</div>;
+  }
+
+  return (
+    <a href={`/work/${item.slug || item.id}`} className="wk-card" style={cardStyle}>
+      {inner}
     </a>
   );
 }
