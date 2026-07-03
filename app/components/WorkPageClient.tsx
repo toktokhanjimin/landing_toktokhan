@@ -251,7 +251,11 @@ function FeaturedCard({ item }: { item: WorkItem }) {
 /* ── 작은 그리드 카드 ────────────────────────────────────── */
 function SmallCard({ item }: { item: WorkItem }) {
   return (
-    <div className="ins-small-card wk-small-card" style={{ cursor: "default" }}>
+    <a
+      className="ins-small-card wk-small-card"
+      href={item.id ? `/work/${item.slug || item.id}` : undefined}
+      style={{ textDecoration: "none", color: "inherit", cursor: item.id ? "pointer" : "default" }}
+    >
       {/* 썸네일 */}
       <div className="ins-thumb" style={{
         background: item.bg || "var(--grey-200)",
@@ -311,6 +315,6 @@ function SmallCard({ item }: { item: WorkItem }) {
           )}
         </span>
       </div>
-    </div>
+    </a>
   );
 }
