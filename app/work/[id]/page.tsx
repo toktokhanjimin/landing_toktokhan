@@ -223,8 +223,8 @@ export default async function CaseDetailPage(
               {related.map((r, i) => (
                 <a key={i} href={r.id ? `/insight/${r.slug || r.id}` : "/insight"} style={{ display: "flex", flexDirection: "column", gap: 14, textDecoration: "none", color: "inherit" }}>
                   {(() => {
-                    const cat = r.category ?? r.tag;
-                    const src = r.thumbImg ?? (["log", "talk", "tech"].includes(cat) ? `/assets/${cat}.png` : null);
+                    const firstBodyImg = r.body?.match(/<img[^>]+src="([^"]+)"/i)?.[1] ?? null;
+                    const src = firstBodyImg ?? r.thumbImg ?? null;
                     return (
                       <div style={{ width: "100%", aspectRatio: "16/10", borderRadius: "var(--r-md)", overflow: "hidden", background: src ? undefined : (r.thumb || "var(--bg-elev)") }}>
                         {src && <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />}
