@@ -158,8 +158,8 @@ export default async function CaseDetailPage(
           </section>
         ))}
 
-        {/* Points */}
-        <section className="work-section no-px" style={{ display: "grid", gridTemplateColumns: "180px 1fr", gap: 60, alignItems: "start" }}>
+        {/* Points — 어드민에서 내용이 있을 때만 표시 */}
+        {c.points && c.points.length > 0 && <section className="work-section no-px" style={{ display: "grid", gridTemplateColumns: "180px 1fr", gap: 60, alignItems: "start" }}>
           <div className="work-section-label" style={{ font: `500 13px/1 ${mono}`, letterSpacing: ".16em", color: "rgba(10,10,10,.45)", paddingTop: 8 }}>
             핵심 포인트
           </div>
