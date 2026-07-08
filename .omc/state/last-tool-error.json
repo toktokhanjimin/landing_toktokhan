@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cat package.json | grep -A2 -B2 next && ls node_modules/@next/ 2>/dev/null\",\"description\":\"Check next version and third-parties availability\"}",
+  "error": "Exit code 1\n  \"private\": true,\n  \"scripts\": {\n    \"dev\": \"next dev\",\n    \"build\": \"next build\",\n    \"start\": \"next start\",\n    \"lint\": \"eslint\"\n  },\n--\n    \"@tiptap/react\": \"^3.23.6\",\n    \"@tiptap/starter-kit\": \"^3.23.6\",\n    \"next\": \"16.2.6\",\n    \"react\": \"19.2.4\",\n    \"react-dom\": \"19.2.4\"\n--\n    \"@types/react-dom\": \"^19\",\n    \"eslint\": \"^9\",\n    \"eslint-config-next\": \"16.2.6\",\n    \"tailwindcss\": \"^4\",\n    \"typescript\": \"^5\"",
+  "timestamp": "2026-07-08T08:32:36.676Z",
+  "retry_count": 1
+}

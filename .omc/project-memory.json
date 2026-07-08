@@ -1,0 +1,150 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1783499157905,
+  "projectRoot": "/Users/seojang-won/Dev/toktokhan-landing",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "tsconfig.json"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "next",
+        "version": "16.2.6",
+        "category": "fullstack"
+      },
+      {
+        "name": "react",
+        "version": "19.2.4",
+        "category": "frontend"
+      },
+      {
+        "name": "react-dom",
+        "version": "19.2.4",
+        "category": "frontend"
+      }
+    ],
+    "packageManager": "npm",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": "npm run build",
+    "testCommand": null,
+    "lintCommand": "npm run lint",
+    "devCommand": "npm run dev",
+    "scripts": {
+      "dev": "next dev",
+      "build": "next build",
+      "start": "next start",
+      "lint": "eslint"
+    }
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "app",
+      "public"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "app": {
+      "path": "app",
+      "purpose": "Application code",
+      "fileCount": 6,
+      "lastAccessed": 1783499157885,
+      "keyFiles": [
+        "globals.css",
+        "icon.png",
+        "layout.tsx",
+        "page.tsx",
+        "robots.ts"
+      ]
+    },
+    "public": {
+      "path": "public",
+      "purpose": "Public files",
+      "fileCount": 11,
+      "lastAccessed": 1783499157885,
+      "keyFiles": [
+        "OG.png",
+        "TOK.gif",
+        "design_icon.svg",
+        "favicon.ico",
+        "file.svg"
+      ]
+    },
+    "supabase": {
+      "path": "supabase",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1783499157888,
+      "keyFiles": [
+        "schema.sql"
+      ]
+    },
+    "app/api": {
+      "path": "app/api",
+      "purpose": "API routes",
+      "fileCount": 0,
+      "lastAccessed": 1783499157889,
+      "keyFiles": []
+    },
+    "app/components": {
+      "path": "app/components",
+      "purpose": "UI components",
+      "fileCount": 26,
+      "lastAccessed": 1783499157889,
+      "keyFiles": [
+        "AIInsights.tsx",
+        "AXDefinition.tsx",
+        "Clients.tsx"
+      ]
+    },
+    "public/assets": {
+      "path": "public/assets",
+      "purpose": "Static assets",
+      "fileCount": 38,
+      "lastAccessed": 1783499157889,
+      "keyFiles": [
+        "Design-icon.png",
+        "Dev-icon.png",
+        "Group-design-icon.png"
+      ]
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "app/layout.tsx",
+      "accessCount": 5,
+      "lastAccessed": 1783499615713,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
