@@ -10,9 +10,10 @@ export const metadata: Metadata = {
 };
 
 export default async function WorkPage() {
+  // 목록 카드에 필요한 컬럼만 선택 (sections·points·lead 등 상세 전용 필드 제외)
   const { data, error } = await supabase
     .from("work")
-    .select("*")
+    .select("id, slug, title, client, tag, category, year, bg, coming_soon, thumb_img, featured, sort_order, created_at")
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
 

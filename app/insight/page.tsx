@@ -9,9 +9,10 @@ export const metadata: Metadata = {
 };
 
 export default async function InsightPage() {
+  // 목록 카드에 필요한 컬럼만 선택 (body 등 상세 전용 필드 제외)
   const { data, error } = await supabase
     .from("insights")
-    .select("*")
+    .select("id, slug, title, tag, category, date, excerpt, thumb_img, url, featured, sort_order, created_at")
     .eq("featured", true)
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });

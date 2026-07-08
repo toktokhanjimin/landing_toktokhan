@@ -124,9 +124,7 @@ export default function AIInsights() {
           {items.map((it, idx) => {
             // 본문 첫 이미지 → thumbImg
             const firstBodyImg = it.body?.match(/<img[^>]+src="([^"]+)"/i)?.[1] ?? null;
-            const src = firstBodyImg
-              ?? (it.thumbImg?.startsWith("data:") ? it.thumbImg : null)
-              ?? null;
+            const src = it.thumbImg ?? firstBodyImg ?? null;
             return (
               <a
                 key={idx}

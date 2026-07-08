@@ -174,7 +174,7 @@ function getFirstBodyImage(body?: string): string | null {
 /* ── 피처드 카드 ──────────────────────────────────────────── */
 function FeaturedCard({ item }: { item: InsightItem }) {
   const href = item.id ? `/insight/${item.slug || item.id}` : undefined;
-  const imgSrc = getFirstBodyImage(item.body) ?? item.thumbImg ?? null;
+  const imgSrc = item.thumbImg ?? getFirstBodyImage(item.body) ?? null;
   const catLabel = CATEGORY_LABEL[item.category ?? ""] ?? item.tag;
   const gradient = CATEGORY_GRADIENT[item.category ?? ""] ?? "linear-gradient(135deg,#38BDF8,#6366F1)";
 
@@ -259,7 +259,7 @@ function FeaturedCard({ item }: { item: InsightItem }) {
 /* ── 작은 그리드 카드 ──────────────────────────────────────── */
 function SmallCard({ item }: { item: InsightItem }) {
   const href = item.id ? `/insight/${item.slug || item.id}` : undefined;
-  const imgSrc = getFirstBodyImage(item.body) ?? item.thumbImg ?? null;
+  const imgSrc = item.thumbImg ?? getFirstBodyImage(item.body) ?? null;
   const catLabel = CATEGORY_LABEL[item.category ?? ""] ?? item.tag;
   const gradient = CATEGORY_GRADIENT[item.category ?? ""] ?? "linear-gradient(135deg,#38BDF8,#6366F1)";
 
