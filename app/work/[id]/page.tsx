@@ -159,34 +159,36 @@ export default async function CaseDetailPage(
         ))}
 
         {/* Points — 어드민에서 내용이 있을 때만 표시 */}
-        {c.points && c.points.length > 0 && <section className="work-section no-px" style={{ display: "grid", gridTemplateColumns: "180px 1fr", gap: 60, alignItems: "start" }}>
-          <div className="work-section-label" style={{ font: `500 13px/1 ${mono}`, letterSpacing: ".16em", color: "rgba(10,10,10,.45)", paddingTop: 8 }}>
-            핵심 포인트
-          </div>
-          <div>
-            <div className="work-points-box" style={{ background: "var(--bg-elev)", borderRadius: "var(--r-lg)", padding: "40px 48px" }}>
-              <div style={{
-                font: "700 18px/1 var(--font-sans)", letterSpacing: "-.01em",
-                color: "var(--fg-1)", marginBottom: 24, display: "flex", alignItems: "center", gap: 10,
-              }}>
-                📌 이 작업의 포인트
-              </div>
-              <ul style={{ display: "flex", flexDirection: "column", gap: 16, margin: 0, padding: 0, listStyle: "none" }}>
-                {c.points.map((pt, i) => (
-                  <li key={i} style={{
-                    display: "grid", gridTemplateColumns: "28px 1fr", gap: 14,
-                    alignItems: "baseline", font: "500 16px/1.55 var(--font-sans)", color: "var(--fg-1)",
-                  }}>
-                    <span style={{ font: `500 12px/1 ${mono}`, color: "rgba(10,10,10,.45)", letterSpacing: ".1em" }}>
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span>{pt}</span>
-                  </li>
-                ))}
-              </ul>
+        {c.points && c.points.length > 0 && (
+          <section className="work-section no-px" style={{ display: "grid", gridTemplateColumns: "180px 1fr", gap: 60, alignItems: "start" }}>
+            <div className="work-section-label" style={{ font: `500 13px/1 ${mono}`, letterSpacing: ".16em", color: "rgba(10,10,10,.45)", paddingTop: 8 }}>
+              핵심 포인트
             </div>
-          </div>
-        </section>
+            <div>
+              <div className="work-points-box" style={{ background: "var(--bg-elev)", borderRadius: "var(--r-lg)", padding: "40px 48px" }}>
+                <div style={{
+                  font: "700 18px/1 var(--font-sans)", letterSpacing: "-.01em",
+                  color: "var(--fg-1)", marginBottom: 24, display: "flex", alignItems: "center", gap: 10,
+                }}>
+                  📌 이 작업의 포인트
+                </div>
+                <ul style={{ display: "flex", flexDirection: "column", gap: 16, margin: 0, padding: 0, listStyle: "none" }}>
+                  {c.points.map((pt, i) => (
+                    <li key={i} style={{
+                      display: "grid", gridTemplateColumns: "28px 1fr", gap: 14,
+                      alignItems: "baseline", font: "500 16px/1.55 var(--font-sans)", color: "var(--fg-1)",
+                    }}>
+                      <span style={{ font: `500 12px/1 ${mono}`, color: "rgba(10,10,10,.45)", letterSpacing: ".1em" }}>
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span>{pt}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </section>
+        )}
       </main>
 
       {/* Nav */}
