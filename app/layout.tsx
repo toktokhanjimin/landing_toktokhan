@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import ScrollReset from "./components/ScrollReset";
+
+const GA_MEASUREMENT_ID = "G-JDHG76V3KJ";
 
 const ibmPlexMono = IBM_Plex_Mono({
   variable: "--font-mono",
@@ -38,6 +41,11 @@ export const metadata: Metadata = {
       "제미나이, GPT, 클로드를 활용해 AI Agent 탑재 및 AX 전환의 전문성을 갖춘 IT 프러덕트 에이전시.",
     images: ["/OG.png"],
   },
+  verification: {
+    other: {
+      "naver-site-verification": "794baae9b57819e9ab9dc1d6b2026545b853c71b",
+    },
+  },
 };
 
 export default function RootLayout({
@@ -50,6 +58,18 @@ export default function RootLayout({
       <body>
         <ScrollReset />
         {children}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
       </body>
     </html>
   );
